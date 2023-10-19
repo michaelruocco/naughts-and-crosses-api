@@ -1,6 +1,7 @@
 package uk.co.mruoc.nac.app.rest;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.co.mruoc.nac.app.api.ApiBoard;
@@ -17,7 +18,7 @@ import java.util.UUID;
 @RequestMapping("/v1/games")
 public class GameController {
 
-    @GetMapping
+    @PostMapping
     public ApiGame createGame() {
         ApiPlayer player1 = player1();
         ApiPlayer player2 = player2();

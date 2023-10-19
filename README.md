@@ -78,3 +78,17 @@ following secrets to be set up:
 // checks dependencies for vulnerabilities
 ./gradlew clean dependencyUpdates lintGradle spotlessApply build
 ```
+
+### Starting a game
+
+To start up the API you can run:
+
+```gradle
+./gradlew bootRun
+```
+
+And then to generate a game you can run:
+
+```bash
+curl -X POST http://localhost:8080/v1/games
+```
