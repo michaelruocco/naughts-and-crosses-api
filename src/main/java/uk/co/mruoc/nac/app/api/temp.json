@@ -1,0 +1,6 @@
+POST /v1/games
+
+{
+  "id": "{uuid}",
+  "players"
+}

@@ -1,3 +1,9 @@
+buildscript {
+    ext {
+        springBootVersion = "3.1.5"
+    }
+}
+
 plugins {
     id "java-library"
     id "jacoco"
@@ -10,6 +16,9 @@ plugins {
     id "org.sonarqube" version "4.4.1.3373"
     id "com.adarshr.test-logger" version "4.0.0"
     id "nebula.lint" version "18.1.0"
+    id "org.springframework.boot" version "${springBootVersion}"
+    id "io.spring.dependency-management" version "1.1.0"
+    id "com.gorylenko.gradle-git-properties" version "2.4.1"
 }
 
 group "com.github.michaelruocco"
@@ -43,6 +52,9 @@ dependencies {
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+    implementation "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
 
     testRuntimeOnly "org.slf4j:slf4j-simple:${slf4jVersion}"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
@@ -92,7 +104,7 @@ java {
     withSourcesJar()
 }
 
-def gitUrl = "https://github.com/michaelruocco/library-template"
+def gitUrl = "https://github.com/michaelruocco/naughts-and-crosses-api"
 def pomConfig = {
     licenses {
         license {
