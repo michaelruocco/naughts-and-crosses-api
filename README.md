@@ -92,3 +92,9 @@ And then to generate a game you can run:
 ```bash
 curl -X POST http://localhost:8080/v1/games
 ```
+
+To take a turn you can run:
+
+```bash
+curl -X PUT http://localhost:8080/v1/games/5b6bff66-7361-4d8b-9eb1-d7b3500a6bf3/turns -H "Content-Type: application/json" -d '{"coordinates":{"x":1,"y":1},"token":"X"}'  
+```

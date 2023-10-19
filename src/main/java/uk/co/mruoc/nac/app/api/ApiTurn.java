@@ -5,12 +5,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
+import java.util.UUID;
+
 @RequiredArgsConstructor
 @NoArgsConstructor(force = true)
 @Builder
 @Data
-public class ApiPlayer {
+public class ApiTurn {
 
-    private final String name;
+    private final ApiCoordinates coordinates;
     private final char token;
 }
