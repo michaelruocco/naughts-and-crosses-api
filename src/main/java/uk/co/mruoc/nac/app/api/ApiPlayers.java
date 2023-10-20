@@ -1,5 +1,6 @@
 package uk.co.mruoc.nac.app.api;
 
+import java.util.Collection;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,8 +10,8 @@ import lombok.RequiredArgsConstructor;
 @NoArgsConstructor(force = true)
 @Builder
 @Data
-public class ApiStatus {
+public class ApiPlayers {
 
-    private final boolean complete;
-    private final ApiPlayer winner;
+    private final char currentPlayerToken;
+    private final Collection<ApiPlayer> players;
 }

@@ -1,6 +1,5 @@
 package uk.co.mruoc.nac.app.api;
 
-import java.util.Collection;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.Data;
@@ -15,6 +14,6 @@ public class ApiGame {
 
     private final UUID id;
     private final ApiStatus status;
-    private final Collection<ApiPlayer> players;
+    private final ApiPlayers players;
     private final ApiBoard board;
 }

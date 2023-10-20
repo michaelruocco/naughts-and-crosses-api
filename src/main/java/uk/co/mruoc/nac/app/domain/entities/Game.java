@@ -4,8 +4,6 @@ import java.util.UUID;
 import lombok.Builder;
 import lombok.Data;
 import uk.co.mruoc.nac.app.domain.usecases.GameAlreadyCompleteException;
-import uk.co.mruoc.nac.app.domain.usecases.LocationNotAvailableException;
-import uk.co.mruoc.nac.app.domain.usecases.NotPlayersTurnException;
 
 @Builder(toBuilder = true)
 @Data
@@ -18,16 +16,11 @@ public class Game {
 
     public Game take(Turn turn) {
         validateGameNotComplete();
-
-        Player player = getNextPlayerIfTurn(turn.getToken());
-        Location location = getLocationIfAvailable(turn.getCoordinates());
-
-        Board updatedBoard = board.update(location.withToken(player.getToken()));
-        Status updatedStatus = Status.builder()
-                .complete(false)
-                .nextPlayer(players.getNextPlayer(turn.getToken()))
+        validateIsPlayerTurn(turn);
+        return toBuilder()
+                .players(players.updateCurrentPlayer())
+                .board(board.update(turn))
                 .build();
-        return toBuilder().board(updatedBoard).status(updatedStatus).build();
     }
 
     private void validateGameNotComplete() {
@@ -36,15 +29,7 @@ public class Game {
         }
     }
 
-    private Player getNextPlayerIfTurn(char token) {
-        if (!status.isNextPlayer(token)) {
-            throw new NotPlayersTurnException(token);
-        }
-        return players.getPlayer(token);
-    }
-
-    private Location getLocationIfAvailable(Coordinates coordinates) {
-        return board.getLocationIfAvailable(coordinates)
-                .orElseThrow(() -> new LocationNotAvailableException(coordinates));
+    private void validateIsPlayerTurn(Turn turn) {
+        players.validateIsTurn(turn.getToken());
     }
 }

@@ -16,8 +16,6 @@ public class ApiStatusConverter {
     public ApiStatus toApiStatus(Status status) {
         return ApiStatus.builder()
                 .complete(status.isComplete())
-                .nextPlayer(
-                        status.getNextPlayer().map(playerConverter::toApiPlayer).orElse(null))
                 .winner(status.getWinner().map(playerConverter::toApiPlayer).orElse(null))
                 .build();
     }

@@ -11,7 +11,7 @@ import lombok.With;
 @Data
 public class Location {
 
-    private static final char AVAILABLE = '-';
+    private static final char AVAILABLE = ' ';
 
     private final Coordinates coordinates;
 
