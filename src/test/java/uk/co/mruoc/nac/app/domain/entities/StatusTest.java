@@ -55,4 +55,40 @@ class StatusTest {
 
         assertThat(updated.getCurrentPlayerToken()).isEqualTo(NAUGHTS);
     }
+
+    @Test
+    void shouldIncrementTurnOnWinningTurn() {
+        char token = 'O';
+
+        Status updated = status.winningTurnTaken(token);
+
+        assertThat(updated.getTurn()).isOne();
+    }
+
+    @Test
+    void shouldSetCompleteTrueOnWinningTurn() {
+        char token = 'X';
+
+        Status updated = status.winningTurnTaken(token);
+
+        assertThat(updated.isComplete()).isTrue();
+    }
+
+    @Test
+    void shouldSetWinningPlayerTokenOnWinningTurn() {
+        char token = 'O';
+
+        Status updated = status.winningTurnTaken(token);
+
+        assertThat(updated.getWinningPlayerToken()).isEqualTo(token);
+    }
+
+    @Test
+    void shouldNotChangeNextPlayersTurnOnWinningTurn() {
+        char token = 'X';
+
+        Status updated = status.winningTurnTaken(token);
+
+        assertThat(updated.getCurrentPlayerToken()).isEqualTo(CROSSES);
+    }
 }

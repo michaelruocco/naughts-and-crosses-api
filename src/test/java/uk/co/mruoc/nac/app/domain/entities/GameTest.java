@@ -42,9 +42,19 @@ class GameTest {
     }
 
     @Test
-    void shouldUpdateStatusWhenTurnTaken() {
+    void shouldUpdateBoardWhenTurnTaken() {
+        Board expectedBoard = givenUpdatedBoard();
+
+        Game updatedGame = game.take(turn);
+
+        assertThat(updatedGame.getBoard()).isEqualTo(expectedBoard);
+    }
+
+    @Test
+    void shouldUpdateStatusWhenNonWinningTurnTaken() {
         Status expectedStatus = mock(Status.class);
         when(status.turnTaken()).thenReturn(expectedStatus);
+        givenNonWinningTurnTaken();
 
         Game updatedGame = game.take(turn);
 
@@ -52,12 +62,29 @@ class GameTest {
     }
 
     @Test
-    void shouldUpdateBoardWhenTurnTaken() {
-        Board expectedBoard = mock(Board.class);
-        when(board.update(turn)).thenReturn(expectedBoard);
+    void shouldUpdateStatusWhenWinningTurnTaken() {
+        Status expectedStatus = mock(Status.class);
+        when(status.winningTurnTaken(turn.getToken())).thenReturn(expectedStatus);
+        givenWinningTurnTaken();
 
         Game updatedGame = game.take(turn);
 
-        assertThat(updatedGame.getBoard()).isEqualTo(expectedBoard);
+        assertThat(updatedGame.getStatus()).isEqualTo(expectedStatus);
+    }
+
+    private void givenNonWinningTurnTaken() {
+        Board updatedBoard = givenUpdatedBoard();
+        when(updatedBoard.hasWinner(turn.getToken())).thenReturn(false);
+    }
+
+    private void givenWinningTurnTaken() {
+        Board updatedBoard = givenUpdatedBoard();
+        when(updatedBoard.hasWinner(turn.getToken())).thenReturn(true);
+    }
+
+    private Board givenUpdatedBoard() {
+        Board updatedBoard = mock(Board.class);
+        when(board.update(turn)).thenReturn(updatedBoard);
+        return updatedBoard;
     }
 }

@@ -15,7 +15,11 @@ public class Game {
     public Game take(Turn turn) {
         validateGameNotComplete();
         validateIsPlayerTurn(turn);
-        return toBuilder().status(status.turnTaken()).board(board.update(turn)).build();
+        Board updatedBoard = board.update(turn);
+        return toBuilder()
+                .status(toUpdatedStatus(updatedBoard, turn))
+                .board(updatedBoard)
+                .build();
     }
 
     private void validateGameNotComplete() {
@@ -26,5 +30,12 @@ public class Game {
 
     private void validateIsPlayerTurn(Turn turn) {
         status.validateIsTurn(turn.getToken());
+    }
+
+    private Status toUpdatedStatus(Board updatedBoard, Turn turn) {
+        if (updatedBoard.hasWinner(turn.getToken())) {
+            return status.winningTurnTaken(turn.getToken());
+        }
+        return status.turnTaken();
     }
 }

@@ -12,17 +12,29 @@ public class Status {
     private final int turn;
     private final boolean complete;
     private final Players players;
+    private final Character winningPlayerToken;
 
     public Status() {
         this(new Players());
     }
 
     public Status(Players players) {
-        this(0, false, players);
+        this(0, false, players, null);
     }
 
     public Status turnTaken() {
-        return toBuilder().turn(turn + 1).players(players.updateCurrentPlayer()).build();
+        return toBuilder()
+                .turn(nextTurn())
+                .players(players.updateCurrentPlayer())
+                .build();
+    }
+
+    public Status winningTurnTaken(char token) {
+        return toBuilder()
+                .turn(nextTurn())
+                .complete(true)
+                .winningPlayerToken(token)
+                .build();
     }
 
     public char getCurrentPlayerToken() {
@@ -31,5 +43,9 @@ public class Status {
 
     public void validateIsTurn(char token) {
         players.validateIsTurn(token);
+    }
+
+    private int nextTurn() {
+        return turn + 1;
     }
 }

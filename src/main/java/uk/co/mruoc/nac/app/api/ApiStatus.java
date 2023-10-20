@@ -14,6 +14,7 @@ public class ApiStatus {
 
     private final int turn;
     private final boolean complete;
-    private final char nextPlayerToken;
+    private final Character nextPlayerToken;
+    private final Character winningPlayerToken;
     private final Collection<ApiPlayer> players;
 }

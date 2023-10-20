@@ -2,18 +2,21 @@ package uk.co.mruoc.nac.app.domain.usecases;
 
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.nac.app.domain.entities.Game;
 import uk.co.mruoc.nac.app.domain.entities.Turn;
 import uk.co.mruoc.nac.app.repository.GameRepository;
 
+@Slf4j
 @RequiredArgsConstructor
 public class GameService {
 
     private final GameFactory factory;
     private final GameRepository repository;
+    private final ConsoleBoardFormatter formatter;
 
     public GameService() {
-        this(new GameFactory(), new GameRepository());
+        this(new GameFactory(), new GameRepository(), new ConsoleBoardFormatter());
     }
 
     public Game createGame() {
@@ -26,6 +29,7 @@ public class GameService {
         Game game = findGame(id);
         Game updatedGame = game.take(turn);
         save(updatedGame);
+        System.out.println(formatter.format(updatedGame.getBoard()));
         return updatedGame;
     }
 
