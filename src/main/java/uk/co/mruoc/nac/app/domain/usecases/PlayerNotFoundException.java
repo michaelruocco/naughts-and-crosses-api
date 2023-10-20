@@ -1,4 +1,4 @@
-package uk.co.mruoc.nac.app.rest;
+package uk.co.mruoc.nac.app.domain.usecases;
 
 public class PlayerNotFoundException extends RuntimeException {
 
