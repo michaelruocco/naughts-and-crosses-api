@@ -1,24 +1,29 @@
 package uk.co.mruoc.nac.app.domain.entities;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.With;
-import uk.co.mruoc.nac.app.domain.usecases.LocationNotAvailableException;
 
 @RequiredArgsConstructor
-@Data
 public class Board {
 
+    private static final int DEFAULT_SIZE = 3;
+
+    @Getter
     private final long size;
 
     @With(value = AccessLevel.PRIVATE)
-    private final Collection<Location> locations;
+    private final Map<String, Location> locations;
+
+    public Board() {
+        this(DEFAULT_SIZE);
+    }
 
     public Board(long size) {
         this(size, buildLocations(size));
@@ -29,40 +34,38 @@ public class Board {
         return update(location.withToken(turn.getToken()));
     }
 
-    private Location getLocationIfAvailable(Coordinates coordinates) {
-        return findLocation(coordinates)
-                .filter(Location::isAvailable)
-                .orElseThrow(() -> new LocationNotAvailableException(coordinates));
+    public Collection<Location> getLocations() {
+        return locations.values();
     }
 
-    private Optional<Location> findLocation(Coordinates coordinates) {
-        return locations.stream().filter(location -> location.isAt(coordinates)).findFirst();
+    public Optional<Location> getLocation(Coordinates coordinates) {
+        return Optional.ofNullable(locations.get(coordinates.getKey()));
+    }
+
+    private Location getLocationIfAvailable(Coordinates coordinates) {
+        return getLocation(coordinates)
+                .filter(Location::isAvailable)
+                .orElseThrow(() -> new LocationNotAvailableException(coordinates));
     }
 
     private Board update(Location updatedLocation) {
         return withLocations(toUpdatedLocations(updatedLocation));
     }
 
-    private Collection<Location> toUpdatedLocations(Location updatedLocation) {
-        return locations.stream()
-                .map(location -> replaceIfRequired(location, updatedLocation))
-                .toList();
+    private Map<String, Location> toUpdatedLocations(Location updatedLocation) {
+        Map<String, Location> updatedLocations = new HashMap<>(locations);
+        updatedLocations.put(updatedLocation.getKey(), updatedLocation);
+        return Collections.unmodifiableMap(updatedLocations);
     }
 
-    private static Location replaceIfRequired(Location location, Location updatedLocation) {
-        if (location.hasSameCoordinatesAs(updatedLocation)) {
-            return updatedLocation;
-        }
-        return location;
-    }
-
-    private static Collection<Location> buildLocations(long size) {
-        List<Location> locations = new ArrayList<>();
+    private static Map<String, Location> buildLocations(long size) {
+        Map<String, Location> locations = new HashMap<>();
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
-                locations.add(new Location(x, y));
+                Location location = new Location(x, y);
+                locations.put(location.getKey(), location);
             }
         }
-        return Collections.unmodifiableList(locations);
+        return Collections.unmodifiableMap(locations);
     }
 }

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Stream;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
-import uk.co.mruoc.nac.app.domain.usecases.NotPlayersTurnException;
 
 @RequiredArgsConstructor
 @Builder(toBuilder = true)

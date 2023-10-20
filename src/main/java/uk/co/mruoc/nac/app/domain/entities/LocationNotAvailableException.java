@@ -1,6 +1,4 @@
-package uk.co.mruoc.nac.app.domain.usecases;
-
-import uk.co.mruoc.nac.app.domain.entities.Coordinates;
+package uk.co.mruoc.nac.app.domain.entities;
 
 public class LocationNotAvailableException extends RuntimeException {
 

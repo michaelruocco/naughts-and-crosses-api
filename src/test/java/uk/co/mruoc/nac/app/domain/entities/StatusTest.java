@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 
 import org.junit.jupiter.api.Test;
-import uk.co.mruoc.nac.app.domain.usecases.NotPlayersTurnException;
 
 class StatusTest {
 

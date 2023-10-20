@@ -1,4 +1,4 @@
-package uk.co.mruoc.nac.app.domain.usecases;
+package uk.co.mruoc.nac.app.domain.entities;
 
 public class NotPlayersTurnException extends RuntimeException {
 

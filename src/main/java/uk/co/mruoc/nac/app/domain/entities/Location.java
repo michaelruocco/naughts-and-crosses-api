@@ -32,4 +32,8 @@ public class Location {
     public boolean isAvailable() {
         return token == AVAILABLE;
     }
+
+    public String getKey() {
+        return coordinates.getKey();
+    }
 }

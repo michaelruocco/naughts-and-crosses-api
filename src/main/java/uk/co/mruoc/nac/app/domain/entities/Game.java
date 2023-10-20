@@ -3,7 +3,6 @@ package uk.co.mruoc.nac.app.domain.entities;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.Data;
-import uk.co.mruoc.nac.app.domain.usecases.GameAlreadyCompleteException;
 
 @Builder(toBuilder = true)
 @Data
