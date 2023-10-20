@@ -1,8 +1,5 @@
 package uk.co.mruoc.nac.app.rest;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,45 +10,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.co.mruoc.nac.app.api.ApiGame;
 import uk.co.mruoc.nac.app.api.ApiTurn;
-import uk.co.mruoc.nac.app.api.converter.ApiGameConverter;
-import uk.co.mruoc.nac.app.api.converter.ApiTurnConverter;
+import uk.co.mruoc.nac.app.api.converter.ApiConverter;
 import uk.co.mruoc.nac.app.domain.entities.Game;
 import uk.co.mruoc.nac.app.domain.entities.Turn;
-import uk.co.mruoc.nac.app.domain.usecases.GameFactory;
-import uk.co.mruoc.nac.app.domain.usecases.GameNotFoundException;
+import uk.co.mruoc.nac.app.domain.usecases.GameService;
 
 @RestController
 @RequestMapping("/v1/games")
 @RequiredArgsConstructor
 public class GameController {
 
-    private final GameFactory factory;
-    private final Map<UUID, Game> games;
-    private final ApiGameConverter gameConverter;
-    private final ApiTurnConverter turnConverter;
+    private final GameService service;
+    private final ApiConverter converter;
 
     public GameController() {
-        this(new GameFactory(), new HashMap<>(), new ApiGameConverter(), new ApiTurnConverter());
+        this(new GameService(), new ApiConverter());
     }
 
     @PostMapping
     public ApiGame createGame() {
-        Game game = factory.buildGame();
-        saveGame(game);
-        return gameConverter.toApiGame(game);
+        Game game = service.createGame();
+        return converter.toApiGame(game);
     }
 
     @PutMapping
     @RequestMapping("/{gameId}/turns")
     public ApiGame takeTurn(@PathVariable UUID gameId, @RequestBody ApiTurn apiTurn) {
-        Turn turn = turnConverter.toTurn(apiTurn);
-        Game game = Optional.ofNullable(games.get(gameId)).orElseThrow(() -> new GameNotFoundException(gameId));
-        Game updatedGame = game.take(turn);
-        saveGame(updatedGame);
-        return gameConverter.toApiGame(updatedGame);
-    }
-
-    private void saveGame(Game game) {
-        games.put(game.getId(), game);
+        Turn turn = converter.toTurn(apiTurn);
+        Game game = service.takeTurn(gameId, turn);
+        return converter.toApiGame(game);
     }
 }
