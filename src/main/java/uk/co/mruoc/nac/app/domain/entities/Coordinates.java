@@ -13,4 +13,8 @@ public class Coordinates {
     public String getKey() {
         return String.format("%d-%d", x, y);
     }
+
+    public boolean sameAs(Coordinates otherCoordinates) {
+        return x == otherCoordinates.getX() && y == otherCoordinates.getY();
+    }
 }

@@ -10,9 +10,12 @@ import lombok.RequiredArgsConstructor;
 public class Status {
 
     private final int turn;
-
     private final boolean complete;
     private final Players players;
+
+    public Status() {
+        this(new Players());
+    }
 
     public Status(Players players) {
         this(0, false, players);

@@ -29,6 +29,7 @@ ext {
 
     junitVersion = "5.10.0"
 }
+ext['junit-jupiter.version'] = "${junitVersion}"
 
 scmVersion {
     versionCreator "versionWithBranch"

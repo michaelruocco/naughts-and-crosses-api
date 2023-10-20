@@ -21,12 +21,12 @@ public class Location {
         this(new Coordinates(x, y), AVAILABLE);
     }
 
-    public boolean isAt(Location otherLocation) {
+    public boolean hasSameCoordinatesAs(Location otherLocation) {
         return isAt(otherLocation.getCoordinates());
     }
 
     public boolean isAt(Coordinates otherCoordinates) {
-        return coordinates.getX() == otherCoordinates.getX() && coordinates.getY() == otherCoordinates.getY();
+        return coordinates.sameAs(otherCoordinates);
     }
 
     public boolean isAvailable() {

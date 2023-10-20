@@ -13,6 +13,10 @@ public class Players {
     private final List<Player> values;
     private final int currentIndex;
 
+    public Players() {
+        this(player1(), player2());
+    }
+
     public Players(Player... values) {
         this(List.of(values), 0);
     }
@@ -46,5 +50,13 @@ public class Players {
             return 0;
         }
         return nextIndex;
+    }
+
+    private static Player player1() {
+        return Player.builder().name("Player 1").token('X').build();
+    }
+
+    private static Player player2() {
+        return Player.builder().name("Player 2").token('O').build();
     }
 }
