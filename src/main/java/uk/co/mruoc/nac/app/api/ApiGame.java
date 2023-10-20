@@ -14,6 +14,5 @@ public class ApiGame {
 
     private final UUID id;
     private final ApiStatus status;
-    private final ApiPlayers players;
     private final ApiBoard board;
 }

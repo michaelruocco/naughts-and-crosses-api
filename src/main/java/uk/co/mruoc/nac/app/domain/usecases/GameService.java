@@ -18,14 +18,14 @@ public class GameService {
 
     public Game createGame() {
         Game game = factory.buildGame();
-        saveGame(game);
+        save(game);
         return game;
     }
 
     public Game takeTurn(UUID id, Turn turn) {
         Game game = findGame(id);
         Game updatedGame = game.take(turn);
-        saveGame(updatedGame);
+        save(updatedGame);
         return updatedGame;
     }
 
@@ -33,7 +33,7 @@ public class GameService {
         return repository.find(id).orElseThrow(() -> new GameNotFoundException(id));
     }
 
-    private void saveGame(Game game) {
+    private void save(Game game) {
         repository.save(game);
     }
 }

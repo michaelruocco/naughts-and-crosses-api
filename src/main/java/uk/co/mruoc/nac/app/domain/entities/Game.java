@@ -11,16 +11,12 @@ public class Game {
 
     private final UUID id;
     private final Status status;
-    private final Players players;
     private final Board board;
 
     public Game take(Turn turn) {
         validateGameNotComplete();
         validateIsPlayerTurn(turn);
-        return toBuilder()
-                .players(players.updateCurrentPlayer())
-                .board(board.update(turn))
-                .build();
+        return toBuilder().status(status.turnTaken()).board(board.update(turn)).build();
     }
 
     private void validateGameNotComplete() {
@@ -30,6 +26,6 @@ public class Game {
     }
 
     private void validateIsPlayerTurn(Turn turn) {
-        players.validateIsTurn(turn.getToken());
+        status.validateIsTurn(turn.getToken());
     }
 }

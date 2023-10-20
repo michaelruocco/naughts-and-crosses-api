@@ -1,6 +1,5 @@
 package uk.co.mruoc.nac.app.domain.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +29,6 @@ public class Location {
         return coordinates.getX() == otherCoordinates.getX() && coordinates.getY() == otherCoordinates.getY();
     }
 
-    @JsonIgnore
     public boolean isAvailable() {
         return token == AVAILABLE;
     }
