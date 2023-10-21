@@ -13,10 +13,10 @@ public class GameService {
 
     private final GameFactory factory;
     private final GameRepository repository;
-    private final ConsoleBoardFormatter formatter;
+    private final BoardFormatter formatter;
 
     public GameService() {
-        this(new GameFactory(), new GameRepository(), new ConsoleBoardFormatter());
+        this(new GameFactory(), new GameRepository(), new BoardFormatter());
     }
 
     public Game createGame() {

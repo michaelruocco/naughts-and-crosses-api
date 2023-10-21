@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 import uk.co.mruoc.nac.app.domain.entities.Board;
 import uk.co.mruoc.nac.app.domain.entities.Turn;
 
-class ConsoleBoardFormatterTest {
+class BoardFormatterTest {
 
-    private final ConsoleBoardFormatter formatter = new ConsoleBoardFormatter();
+    private final BoardFormatter formatter = new BoardFormatter();
 
     @Test
     void shouldReturnBoardStateAsFormattedString() {

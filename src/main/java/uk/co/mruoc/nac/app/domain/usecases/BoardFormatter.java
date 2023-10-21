@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import uk.co.mruoc.nac.app.domain.entities.Board;
 
-public class ConsoleBoardFormatter {
+public class BoardFormatter {
 
     public String format(Board board) {
         int size = board.getSize();
