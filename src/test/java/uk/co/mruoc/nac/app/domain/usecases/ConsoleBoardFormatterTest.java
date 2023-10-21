@@ -1,10 +1,10 @@
 package uk.co.mruoc.nac.app.domain.usecases;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.Test;
 import uk.co.mruoc.nac.app.domain.entities.Board;
 import uk.co.mruoc.nac.app.domain.entities.Turn;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class ConsoleBoardFormatterTest {
 
@@ -25,12 +25,12 @@ class ConsoleBoardFormatterTest {
 
         String formatted = formatter.format(board);
 
-        assertThat(formatted).isEqualTo(
-                """
+        assertThat(formatted)
+                .isEqualTo(
+                        """
                             0 1 2
                           0 X O X
                           1 O X O
                           2 X O X""");
     }
-
 }
