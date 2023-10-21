@@ -33,8 +33,7 @@ public class GameController {
         return converter.toApiGame(game);
     }
 
-    @PutMapping
-    @RequestMapping("/{gameId}/turns")
+    @PutMapping("/{gameId}/turns")
     public ApiGame takeTurn(@PathVariable UUID gameId, @RequestBody ApiTurn apiTurn) {
         Turn turn = converter.toTurn(apiTurn);
         Game game = service.takeTurn(gameId, turn);

@@ -67,6 +67,8 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           file: ./build/reports/jacoco/report.xml
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Codacy Coverage
         uses: codacy/codacy-coverage-reporter-action@v1

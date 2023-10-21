@@ -29,7 +29,7 @@ public class GameService {
         Game game = findGame(id);
         Game updatedGame = game.take(turn);
         save(updatedGame);
-        System.out.println(formatter.format(updatedGame.getBoard()));
+        log.info("game {} board\n{}", id, formatter.format(updatedGame.getBoard()));
         return updatedGame;
     }
 
