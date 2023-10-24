@@ -1,6 +1,5 @@
-package uk.co.mruoc.nac.app.api;
+package uk.co.mruoc.nac.app.api.dto;
 
-import java.util.UUID;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,9 +9,8 @@ import lombok.RequiredArgsConstructor;
 @NoArgsConstructor(force = true)
 @Builder
 @Data
-public class ApiGame {
+public class ApiCoordinates {
 
-    private final UUID id;
-    private final ApiStatus status;
-    private final ApiBoard board;
+    private final long x;
+    private final long y;
 }

@@ -1,4 +1,4 @@
-package uk.co.mruoc.nac.app.api;
+package uk.co.mruoc.nac.app.api.dto;
 
 import lombok.Builder;
 import lombok.Data;
@@ -9,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 @NoArgsConstructor(force = true)
 @Builder
 @Data
-public class ApiPlayer {
+public class ApiLocation {
 
-    private final String name;
+    private final ApiCoordinates coordinates;
     private final char token;
 }

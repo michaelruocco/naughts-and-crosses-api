@@ -2,7 +2,7 @@ package uk.co.mruoc.nac.app.api.converter;
 
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
-import uk.co.mruoc.nac.app.api.ApiPlayer;
+import uk.co.mruoc.nac.app.api.dto.ApiPlayer;
 import uk.co.mruoc.nac.app.domain.entities.Player;
 import uk.co.mruoc.nac.app.domain.entities.Players;
 

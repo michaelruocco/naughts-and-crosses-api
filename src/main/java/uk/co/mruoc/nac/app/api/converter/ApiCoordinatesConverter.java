@@ -1,6 +1,6 @@
 package uk.co.mruoc.nac.app.api.converter;
 
-import uk.co.mruoc.nac.app.api.ApiCoordinates;
+import uk.co.mruoc.nac.app.api.dto.ApiCoordinates;
 import uk.co.mruoc.nac.app.domain.entities.Coordinates;
 
 public class ApiCoordinatesConverter {

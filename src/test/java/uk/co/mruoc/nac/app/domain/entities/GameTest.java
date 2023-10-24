@@ -72,6 +72,21 @@ class GameTest {
         assertThat(updatedGame.getStatus()).isEqualTo(expectedStatus);
     }
 
+    @Test
+    void shouldReturnIsCompleteFromStatus() {
+        when(status.isComplete()).thenReturn(true);
+
+        assertThat(game.isComplete()).isTrue();
+    }
+
+    @Test
+    void shouldReturnPlayersFromStatus() {
+        Players expectedPlayers = mock(Players.class);
+        when(status.getPlayers()).thenReturn(expectedPlayers);
+
+        assertThat(game.getPlayers()).isEqualTo(expectedPlayers);
+    }
+
     private void givenNonWinningTurnTaken() {
         Board updatedBoard = givenUpdatedBoard();
         when(updatedBoard.hasWinner(turn.getToken())).thenReturn(false);

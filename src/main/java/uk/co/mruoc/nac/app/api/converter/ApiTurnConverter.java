@@ -1,7 +1,7 @@
 package uk.co.mruoc.nac.app.api.converter;
 
 import lombok.RequiredArgsConstructor;
-import uk.co.mruoc.nac.app.api.ApiTurn;
+import uk.co.mruoc.nac.app.api.dto.ApiTurn;
 import uk.co.mruoc.nac.app.domain.entities.Turn;
 
 @RequiredArgsConstructor

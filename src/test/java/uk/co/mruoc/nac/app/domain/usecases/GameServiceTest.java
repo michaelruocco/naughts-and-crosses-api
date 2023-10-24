@@ -12,15 +12,21 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import uk.co.mruoc.nac.app.domain.entities.Game;
 import uk.co.mruoc.nac.app.domain.entities.Turn;
-import uk.co.mruoc.nac.app.repository.GameRepository;
+import uk.co.mruoc.nac.app.repository.InMemoryGameRepository;
 
 class GameServiceTest {
 
     private final GameFactory factory = mock(GameFactory.class);
-    private final GameRepository repository = mock(GameRepository.class);
+    private final InMemoryGameRepository repository = mock(InMemoryGameRepository.class);
     private final BoardFormatter formatter = mock(BoardFormatter.class);
+    private final GameEventPublisher eventPublisher = mock(GameEventPublisher.class);
 
-    private final GameService service = new GameService(factory, repository, formatter);
+    private final GameService service = GameService.builder()
+            .factory(factory)
+            .repository(repository)
+            .formatter(formatter)
+            .eventPublisher(eventPublisher)
+            .build();
 
     @Test
     void shouldReturnCreatedGame() {
@@ -39,6 +45,17 @@ class GameServiceTest {
 
         ArgumentCaptor<Game> captor = ArgumentCaptor.forClass(Game.class);
         verify(repository).save(captor.capture());
+        assertThat(captor.getValue()).isEqualTo(expectedGame);
+    }
+
+    @Test
+    void shouldPublishCreatedGame() {
+        Game expectedGame = givenGameCreated();
+
+        service.createGame();
+
+        ArgumentCaptor<Game> captor = ArgumentCaptor.forClass(Game.class);
+        verify(eventPublisher).created(captor.capture());
         assertThat(captor.getValue()).isEqualTo(expectedGame);
     }
 

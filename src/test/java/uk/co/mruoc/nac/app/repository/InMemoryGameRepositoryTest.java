@@ -6,10 +6,11 @@ import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import uk.co.mruoc.nac.app.domain.entities.Game;
+import uk.co.mruoc.nac.app.domain.usecases.GameRepository;
 
-class GameRepositoryTest {
+class InMemoryGameRepositoryTest {
 
-    private final GameRepository repository = new GameRepository();
+    private final GameRepository repository = new InMemoryGameRepository();
 
     @Test
     void shouldSaveGame() {

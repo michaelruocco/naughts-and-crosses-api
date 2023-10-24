@@ -1,4 +1,4 @@
-package uk.co.mruoc.nac.app.api;
+package uk.co.mruoc.nac.app.api.dto;
 
 import lombok.Builder;
 import lombok.Data;

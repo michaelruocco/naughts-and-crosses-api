@@ -22,6 +22,14 @@ public class Game {
                 .build();
     }
 
+    public boolean isComplete() {
+        return status.isComplete();
+    }
+
+    public Players getPlayers() {
+        return status.getPlayers();
+    }
+
     private void validateGameNotComplete() {
         if (status.isComplete()) {
             throw new GameAlreadyCompleteException(id);

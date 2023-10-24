@@ -1,6 +1,5 @@
-package uk.co.mruoc.nac.app.api;
+package uk.co.mruoc.nac.app.api.dto;
 
-import java.util.Collection;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,5 +15,4 @@ public class ApiStatus {
     private final boolean complete;
     private final Character nextPlayerToken;
     private final Character winningPlayerToken;
-    private final Collection<ApiPlayer> players;
 }

@@ -1,27 +1,25 @@
 package uk.co.mruoc.nac.app.domain.usecases;
 
 import java.util.UUID;
-import lombok.RequiredArgsConstructor;
+import java.util.stream.Stream;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.nac.app.domain.entities.Game;
 import uk.co.mruoc.nac.app.domain.entities.Turn;
-import uk.co.mruoc.nac.app.repository.GameRepository;
 
 @Slf4j
-@RequiredArgsConstructor
+@Builder
 public class GameService {
 
     private final GameFactory factory;
     private final GameRepository repository;
     private final BoardFormatter formatter;
-
-    public GameService() {
-        this(new GameFactory(), new GameRepository(), new BoardFormatter());
-    }
+    private final GameEventPublisher eventPublisher;
 
     public Game createGame() {
         Game game = factory.buildGame();
         save(game);
+        eventPublisher.created(game);
         return game;
     }
 
@@ -31,6 +29,10 @@ public class GameService {
         save(updatedGame);
         log.info("game {} board\n{}", id, formatter.format(updatedGame.getBoard()));
         return updatedGame;
+    }
+
+    public Stream<Game> getAll() {
+        return repository.getAll();
     }
 
     private Game findGame(UUID id) {
