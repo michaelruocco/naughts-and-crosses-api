@@ -1,6 +1,5 @@
 package uk.co.mruoc.nac.app.domain.entities;
 
-import java.util.UUID;
 import lombok.Builder;
 import lombok.Data;
 
@@ -8,7 +7,7 @@ import lombok.Data;
 @Data
 public class Game {
 
-    private final UUID id;
+    private final long id;
     private final Status status;
     private final Board board;
 

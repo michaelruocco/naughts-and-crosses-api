@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import uk.co.mruoc.nac.app.api.converter.ApiConverter;
 import uk.co.mruoc.nac.app.domain.usecases.BoardFormatter;
 import uk.co.mruoc.nac.app.domain.usecases.GameEventPublisher;
@@ -38,5 +40,15 @@ public class ApplicationConfig {
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer objectMapperCustomizer() {
         return builder -> builder.serializationInclusion(JsonInclude.Include.NON_NULL);
+    }
+
+    @Bean
+    public WebMvcConfigurer webMvcConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/v1/*").allowedOrigins("http://localhost:3001");
+            }
+        };
     }
 }

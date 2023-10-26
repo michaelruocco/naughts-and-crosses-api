@@ -96,7 +96,7 @@ curl -X POST http://localhost:8080/v1/games
 To take a turn you can run:
 
 ```bash
-curl -X PUT http://localhost:8080/v1/games/{game-id}/turns -H "Content-Type: application/json" -d '{"coordinates":{"x":1,"y":1},"token":"X"}'  
+curl -X PUT http://localhost:8080/v1/games/3/turns -H "Content-Type: application/json" -d '{"coordinates":{"x":1,"y":1},"token":"X"}'  
 ```
 
 To get all created games you can do either:

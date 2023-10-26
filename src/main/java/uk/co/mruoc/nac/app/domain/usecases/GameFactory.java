@@ -1,7 +1,6 @@
 package uk.co.mruoc.nac.app.domain.usecases;
 
-import java.util.UUID;
-import java.util.function.Supplier;
+import java.util.function.LongSupplier;
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.nac.app.domain.entities.Board;
 import uk.co.mruoc.nac.app.domain.entities.Game;
@@ -10,15 +9,15 @@ import uk.co.mruoc.nac.app.domain.entities.Status;
 @RequiredArgsConstructor
 public class GameFactory {
 
-    private final Supplier<UUID> idSupplier;
+    private final LongSupplier idSupplier;
 
     public GameFactory() {
-        this(UUID::randomUUID);
+        this(new GameIdSupplier());
     }
 
     public Game buildGame() {
         return Game.builder()
-                .id(idSupplier.get())
+                .id(idSupplier.getAsLong())
                 .status(new Status())
                 .board(new Board(3))
                 .build();

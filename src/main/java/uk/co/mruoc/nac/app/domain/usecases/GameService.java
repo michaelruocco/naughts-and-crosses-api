@@ -1,6 +1,5 @@
 package uk.co.mruoc.nac.app.domain.usecases;
 
-import java.util.UUID;
 import java.util.stream.Stream;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
@@ -19,11 +18,10 @@ public class GameService {
     public Game createGame() {
         Game game = factory.buildGame();
         save(game);
-        eventPublisher.created(game);
         return game;
     }
 
-    public Game takeTurn(UUID id, Turn turn) {
+    public Game takeTurn(long id, Turn turn) {
         Game game = findGame(id);
         Game updatedGame = game.take(turn);
         save(updatedGame);
@@ -35,11 +33,12 @@ public class GameService {
         return repository.getAll();
     }
 
-    private Game findGame(UUID id) {
+    private Game findGame(long id) {
         return repository.find(id).orElseThrow(() -> new GameNotFoundException(id));
     }
 
     private void save(Game game) {
         repository.save(game);
+        eventPublisher.created(game);
     }
 }

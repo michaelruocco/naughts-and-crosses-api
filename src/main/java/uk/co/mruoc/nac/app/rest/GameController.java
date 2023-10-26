@@ -1,7 +1,6 @@
 package uk.co.mruoc.nac.app.rest;
 
 import java.util.Collection;
-import java.util.UUID;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +39,7 @@ public class GameController {
     }
 
     @PutMapping("/{gameId}/turns")
-    public ApiGame takeTurn(@PathVariable UUID gameId, @RequestBody ApiTurn apiTurn) {
+    public ApiGame takeTurn(@PathVariable long gameId, @RequestBody ApiTurn apiTurn) {
         Turn turn = converter.toTurn(apiTurn);
         Game game = service.takeTurn(gameId, turn);
         return converter.toApiGame(game);

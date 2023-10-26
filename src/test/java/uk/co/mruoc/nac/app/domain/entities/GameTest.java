@@ -6,19 +6,17 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 class GameTest {
 
-    private final UUID id = UUID.fromString("c470a2d6-a1db-4f7b-8d2c-e76e2332680c");
     private final Status status = mock(Status.class);
     private final Board board = mock(Board.class);
 
     private final Turn turn =
             Turn.builder().coordinates(new Coordinates(0, 0)).token('X').build();
 
-    private final Game game = Game.builder().id(id).status(status).board(board).build();
+    private final Game game = Game.builder().id(1).status(status).board(board).build();
 
     @Test
     void shouldThrowErrorIfGameIsComplete() {
@@ -26,9 +24,7 @@ class GameTest {
 
         Throwable error = catchThrowable(() -> game.take(turn));
 
-        assertThat(error)
-                .isInstanceOf(GameAlreadyCompleteException.class)
-                .hasMessage("game c470a2d6-a1db-4f7b-8d2c-e76e2332680c is already complete");
+        assertThat(error).isInstanceOf(GameAlreadyCompleteException.class).hasMessage("game 1 is already complete");
     }
 
     @Test

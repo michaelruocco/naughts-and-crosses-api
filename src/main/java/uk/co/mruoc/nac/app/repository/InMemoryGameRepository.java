@@ -3,7 +3,6 @@ package uk.co.mruoc.nac.app.repository;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.nac.app.domain.entities.Game;
@@ -12,14 +11,14 @@ import uk.co.mruoc.nac.app.domain.usecases.GameRepository;
 @RequiredArgsConstructor
 public class InMemoryGameRepository implements GameRepository {
 
-    private final Map<UUID, Game> games;
+    private final Map<Long, Game> games;
 
     public InMemoryGameRepository() {
         this(new HashMap<>());
     }
 
     @Override
-    public Optional<Game> find(UUID id) {
+    public Optional<Game> find(long id) {
         return Optional.ofNullable(games.get(id));
     }
 

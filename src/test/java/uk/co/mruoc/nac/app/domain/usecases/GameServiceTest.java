@@ -7,7 +7,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import uk.co.mruoc.nac.app.domain.entities.Game;
@@ -61,19 +60,17 @@ class GameServiceTest {
 
     @Test
     void shouldThrowExceptionIfGameNotFoundTakingTurn() {
-        UUID id = UUID.fromString("ffe1e508-5679-46c1-92bb-43eaa11393f7");
+        long id = 1;
         Turn turn = mock(Turn.class);
 
         Throwable error = catchThrowable(() -> service.takeTurn(id, turn));
 
-        assertThat(error)
-                .isInstanceOf(GameNotFoundException.class)
-                .hasMessage("game with id ffe1e508-5679-46c1-92bb-43eaa11393f7 not found");
+        assertThat(error).isInstanceOf(GameNotFoundException.class).hasMessage("game with id 1 not found");
     }
 
     @Test
     void shouldReturnUpdatedGameAfterTakingTurn() {
-        UUID id = UUID.fromString("ffe1e508-5679-46c1-92bb-43eaa11393f7");
+        long id = 2;
         Turn turn = mock(Turn.class);
         Game game = givenGameFound(id);
         Game expectedGame = givenGameUpdated(game, turn);
@@ -85,7 +82,7 @@ class GameServiceTest {
 
     @Test
     void shouldSaveUpdatedGameAfterTakingTurn() {
-        UUID id = UUID.fromString("ffe1e508-5679-46c1-92bb-43eaa11393f7");
+        long id = 3;
         Turn turn = mock(Turn.class);
         Game game = givenGameFound(id);
         Game expectedGame = givenGameUpdated(game, turn);
@@ -103,7 +100,7 @@ class GameServiceTest {
         return game;
     }
 
-    private Game givenGameFound(UUID id) {
+    private Game givenGameFound(long id) {
         Game game = mock(Game.class);
         when(repository.find(id)).thenReturn(Optional.of(game));
         return game;

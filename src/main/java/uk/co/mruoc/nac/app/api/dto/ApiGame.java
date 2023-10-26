@@ -1,7 +1,6 @@
 package uk.co.mruoc.nac.app.api.dto;
 
 import java.util.Collection;
-import java.util.UUID;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 @Data
 public class ApiGame {
 
-    private final UUID id;
+    private final long id;
     private final ApiStatus status;
     private final ApiBoard board;
     private final Collection<ApiPlayer> players;
