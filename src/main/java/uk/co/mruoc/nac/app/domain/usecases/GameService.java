@@ -22,7 +22,7 @@ public class GameService {
     }
 
     public Game takeTurn(long id, Turn turn) {
-        Game game = findGame(id);
+        Game game = get(id);
         Game updatedGame = game.take(turn);
         save(updatedGame);
         log.info("game {} board\n{}", id, formatter.format(updatedGame.getBoard()));
@@ -33,7 +33,7 @@ public class GameService {
         return repository.getAll();
     }
 
-    private Game findGame(long id) {
+    public Game get(long id) {
         return repository.find(id).orElseThrow(() -> new GameNotFoundException(id));
     }
 

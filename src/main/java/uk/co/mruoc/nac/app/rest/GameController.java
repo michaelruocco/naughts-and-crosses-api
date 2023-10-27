@@ -32,6 +32,13 @@ public class GameController {
         return service.getAll().map(toGameConverter(minimal)).toList();
     }
 
+    @GetMapping("/{id}")
+    public ApiGame getGame(
+            @PathVariable long id,
+            @RequestParam(name = "minimal", required = false, defaultValue = "false") boolean minimal) {
+        return toGameConverter(minimal).apply(service.get(id));
+    }
+
     @PostMapping
     public ApiGame createGame() {
         Game game = service.createGame();
