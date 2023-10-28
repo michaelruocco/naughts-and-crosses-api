@@ -2,7 +2,7 @@ package uk.co.mruoc.nac.app.domain.entities;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import lombok.AccessLevel;
@@ -62,7 +62,7 @@ public class Board {
     }
 
     private Map<String, Location> toUpdatedLocations(Location updatedLocation) {
-        Map<String, Location> updatedLocations = new HashMap<>(locations);
+        Map<String, Location> updatedLocations = new LinkedHashMap<>(locations);
         updatedLocations.put(updatedLocation.getKey(), updatedLocation);
         return Collections.unmodifiableMap(updatedLocations);
     }
@@ -143,7 +143,7 @@ public class Board {
     }
 
     private static Map<String, Location> buildLocations(long size) {
-        Map<String, Location> locations = new HashMap<>();
+        Map<String, Location> locations = new LinkedHashMap<>();
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
                 Location location = new Location(x, y);
