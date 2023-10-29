@@ -39,6 +39,6 @@ public class GameService {
 
     private void save(Game game) {
         repository.save(game);
-        eventPublisher.created(game);
+        eventPublisher.updated(game);
     }
 }

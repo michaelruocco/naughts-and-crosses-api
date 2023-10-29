@@ -16,7 +16,7 @@ public class WebSocketGameEventPublisher implements GameEventPublisher {
     private final ApiConverter converter;
 
     @Override
-    public void created(Game game) {
+    public void updated(Game game) {
         ApiGame apiGame = converter.toApiGame(game);
         log.info("sending web socket game updated {}", game);
         template.convertAndSend("/topic/game-updated", apiGame);

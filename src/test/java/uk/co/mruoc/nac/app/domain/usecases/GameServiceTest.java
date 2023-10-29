@@ -48,13 +48,13 @@ class GameServiceTest {
     }
 
     @Test
-    void shouldPublishCreatedGame() {
+    void shouldPublishGameUpdateEventWhenGameCreated() {
         Game expectedGame = givenGameCreated();
 
         service.createGame();
 
         ArgumentCaptor<Game> captor = ArgumentCaptor.forClass(Game.class);
-        verify(eventPublisher).created(captor.capture());
+        verify(eventPublisher).updated(captor.capture());
         assertThat(captor.getValue()).isEqualTo(expectedGame);
     }
 
@@ -91,6 +91,20 @@ class GameServiceTest {
 
         ArgumentCaptor<Game> captor = ArgumentCaptor.forClass(Game.class);
         verify(repository).save(captor.capture());
+        assertThat(captor.getValue()).isEqualTo(expectedGame);
+    }
+
+    @Test
+    void shouldPublishGameUpdateEventWhenTurnTaken() {
+        long id = 4;
+        Turn turn = mock(Turn.class);
+        Game game = givenGameFound(id);
+        Game expectedGame = givenGameUpdated(game, turn);
+
+        service.takeTurn(id, turn);
+
+        ArgumentCaptor<Game> captor = ArgumentCaptor.forClass(Game.class);
+        verify(eventPublisher).updated(captor.capture());
         assertThat(captor.getValue()).isEqualTo(expectedGame);
     }
 

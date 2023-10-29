@@ -4,5 +4,5 @@ import uk.co.mruoc.nac.app.domain.entities.Game;
 
 public interface GameEventPublisher {
 
-    void created(Game game);
+    void updated(Game game);
 }
