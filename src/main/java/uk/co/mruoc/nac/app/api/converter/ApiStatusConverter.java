@@ -10,7 +10,6 @@ public class ApiStatusConverter {
                 .turn(status.getTurn())
                 .complete(status.isComplete())
                 .nextPlayerToken(status.getCurrentPlayerToken())
-                .winningPlayerToken(status.getWinningPlayerToken())
                 .build();
     }
 }

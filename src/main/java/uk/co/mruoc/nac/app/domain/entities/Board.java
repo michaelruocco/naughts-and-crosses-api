@@ -1,10 +1,12 @@
 package uk.co.mruoc.nac.app.domain.entities;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -67,79 +69,107 @@ public class Board {
         return Collections.unmodifiableMap(updatedLocations);
     }
 
-    public boolean hasWinner(char token) {
-        if (hasVerticalWinner(token)) {
-            return true;
-        }
-        if (hasHorizontalWinner(token)) {
-            return true;
-        }
-        if (hasForwardSlashWinner(token)) {
-            return true;
-        }
-        return hasBackSlashWinner(token);
+    public boolean isFull() {
+        return locations.values().stream().allMatch(Predicate.not(Location::isAvailable));
     }
 
-    private boolean hasVerticalWinner(char token) {
+    public Collection<Coordinates> findWinner(char token) {
+        Collection<Coordinates> winner = findVerticalWinner(token);
+        if (!winner.isEmpty()) {
+            return winner;
+        }
+
+        winner = findHorizontalWinner(token);
+        if (!winner.isEmpty()) {
+            return winner;
+        }
+
+        winner = findForwardSlashWinner(token);
+        if (!winner.isEmpty()) {
+            return winner;
+        }
+
+        winner = findBackSlashWinner(token);
+        if (!winner.isEmpty()) {
+            return winner;
+        }
+        return Collections.emptyList();
+    }
+
+    private Collection<Coordinates> findVerticalWinner(char token) {
         for (int x = 0; x < size; x++) {
-            if (winsColumn(x, token)) {
-                return true;
+            Collection<Coordinates> coordinates = findWinningColumn(x, token);
+            if (coordinates.size() == size) {
+                return coordinates;
             }
         }
-        return false;
+        return Collections.emptyList();
     }
 
-    private boolean winsColumn(int x, char token) {
+    private Collection<Coordinates> findWinningColumn(int x, char token) {
+        Collection<Coordinates> coordinates = new ArrayList<>();
         for (int y = 0; y < size; y++) {
-            if (!doesLocationContain(x, y, token)) {
-                return false;
+            if (doesLocationContain(x, y, token)) {
+                coordinates.add(new Coordinates(x, y));
+            } else {
+                return Collections.emptyList();
             }
         }
-        return true;
+        return coordinates;
     }
 
-    private boolean hasHorizontalWinner(char token) {
+    private Collection<Coordinates> findHorizontalWinner(char token) {
         for (int y = 0; y < size; y++) {
-            if (winsRow(y, token)) {
-                return true;
+            Collection<Coordinates> coordinates = findWinningRow(y, token);
+            if (coordinates.size() == size) {
+                return coordinates;
             }
         }
-        return false;
+        return Collections.emptyList();
     }
 
-    private boolean winsRow(int y, char token) {
+    private Collection<Coordinates> findWinningRow(int y, char token) {
+        Collection<Coordinates> coordinates = new ArrayList<>();
         for (int x = 0; x < size; x++) {
-            if (!doesLocationContain(x, y, token)) {
-                return false;
+            if (doesLocationContain(x, y, token)) {
+                coordinates.add(new Coordinates(x, y));
+            } else {
+                return Collections.emptyList();
             }
         }
-        return true;
+        return coordinates;
     }
 
-    private boolean hasForwardSlashWinner(char token) {
+    private Collection<Coordinates> findForwardSlashWinner(char token) {
+        Collection<Coordinates> coordinates = new ArrayList<>();
         int y = 0;
         int x = size - 1;
         do {
-            if (!doesLocationContain(x, y, token)) {
-                return false;
+            if (doesLocationContain(x, y, token)) {
+                coordinates.add(new Coordinates(x, y));
+            } else {
+                return Collections.emptyList();
             }
             y++;
             x--;
         } while (y <= size && x >= 0);
-        return true;
+        return coordinates;
     }
 
-    private boolean hasBackSlashWinner(char token) {
+    private Collection<Coordinates> findBackSlashWinner(char token) {
+        Collection<Coordinates> coordinates = new ArrayList<>();
         int y = 0;
         int x = 0;
         do {
-            if (!doesLocationContain(x, y, token)) {
-                return false;
+            if (doesLocationContain(x, y, token)) {
+                coordinates.add(new Coordinates(x, y));
+            } else {
+                return Collections.emptyList();
             }
             y++;
             x++;
         } while (y < size && x < size);
-        return true;
+        return coordinates;
     }
 
     private static Map<String, Location> buildLocations(long size) {

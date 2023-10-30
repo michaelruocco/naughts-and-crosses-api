@@ -58,36 +58,21 @@ class StatusTest {
 
     @Test
     void shouldIncrementTurnOnWinningTurn() {
-        char token = 'O';
-
-        Status updated = status.winningTurnTaken(token);
+        Status updated = status.winningTurnTaken();
 
         assertThat(updated.getTurn()).isOne();
     }
 
     @Test
     void shouldSetCompleteTrueOnWinningTurn() {
-        char token = 'X';
-
-        Status updated = status.winningTurnTaken(token);
+        Status updated = status.winningTurnTaken();
 
         assertThat(updated.isComplete()).isTrue();
     }
 
     @Test
-    void shouldSetWinningPlayerTokenOnWinningTurn() {
-        char token = 'O';
-
-        Status updated = status.winningTurnTaken(token);
-
-        assertThat(updated.getWinningPlayerToken()).isEqualTo(token);
-    }
-
-    @Test
     void shouldNotChangeNextPlayersTurnOnWinningTurn() {
-        char token = 'X';
-
-        Status updated = status.winningTurnTaken(token);
+        Status updated = status.winningTurnTaken();
 
         assertThat(updated.getCurrentPlayerToken()).isEqualTo(CROSSES);
     }

@@ -3,6 +3,7 @@ package uk.co.mruoc.nac.app.domain.entities;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
+import java.util.Collection;
 import org.junit.jupiter.api.Test;
 
 class BoardTest {
@@ -52,59 +53,60 @@ class BoardTest {
     }
 
     @Test
-    void shouldNotReturnWinnerIfNoWinner() {
+    void shouldEmptyCollectionIfNoWinner() {
         char token = 'O';
 
-        boolean winner = board.hasWinner(token);
+        Collection<Coordinates> winner = board.findWinner(token);
 
-        assertThat(winner).isFalse();
+        assertThat(winner).isEmpty();
     }
 
     @Test
-    void shouldReturnWinnerIfHorizontalWinner() {
+    void shouldWinningCoordinatesIfHorizontalWinner() {
         char token = 'X';
         Board updatedBoard = board.update(new Turn(0, 0, token))
                 .update(new Turn(1, 0, token))
                 .update(new Turn(2, 0, token));
 
-        boolean winner = updatedBoard.hasWinner(token);
+        Collection<Coordinates> winner = updatedBoard.findWinner(token);
 
-        assertThat(winner).isTrue();
+        assertThat(winner).containsExactly(new Coordinates(0, 0), new Coordinates(1, 0), new Coordinates(2, 0));
     }
 
     @Test
-    void shouldReturnWinnerIfVerticalWinner() {
+    void shouldReturnWinningCoordinatesIfVerticalWinner() {
         char token = 'O';
         Board updatedBoard = board.update(new Turn(0, 0, token))
                 .update(new Turn(0, 1, token))
                 .update(new Turn(0, 2, token));
 
-        boolean winner = updatedBoard.hasWinner(token);
+        Collection<Coordinates> winner = updatedBoard.findWinner(token);
 
-        assertThat(winner).isTrue();
+        assertThat(winner).containsExactly(new Coordinates(0, 0), new Coordinates(0, 1), new Coordinates(0, 2));
     }
 
     @Test
-    void shouldTrueIfForwardSlashWinner() {
+    void shouldCoordinatesIfForwardSlashWinner() {
         char token = 'X';
         Board updatedBoard = board.update(new Turn(0, 2, token))
                 .update(new Turn(1, 1, token))
                 .update(new Turn(2, 0, token));
 
-        boolean winner = updatedBoard.hasWinner(token);
+        Collection<Coordinates> winner = updatedBoard.findWinner(token);
 
-        assertThat(winner).isTrue();
+        assertThat(winner)
+                .containsExactlyInAnyOrder(new Coordinates(0, 2), new Coordinates(1, 1), new Coordinates(2, 0));
     }
 
     @Test
-    void shouldTrueIfBackSlashWinner() {
+    void shouldCoordinatesIfBackSlashWinner() {
         char token = 'X';
         Board updatedBoard = board.update(new Turn(0, 0, token))
                 .update(new Turn(1, 1, token))
                 .update(new Turn(2, 2, token));
 
-        boolean winner = updatedBoard.hasWinner(token);
+        Collection<Coordinates> winner = updatedBoard.findWinner(token);
 
-        assertThat(winner).isTrue();
+        assertThat(winner).containsExactly(new Coordinates(0, 0), new Coordinates(1, 1), new Coordinates(2, 2));
     }
 }
