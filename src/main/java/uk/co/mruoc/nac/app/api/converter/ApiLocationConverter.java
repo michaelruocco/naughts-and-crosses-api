@@ -22,6 +22,7 @@ public class ApiLocationConverter {
         return ApiLocation.builder()
                 .coordinates(coordinatesConverter.toApiCoordinates(location.getCoordinates()))
                 .token(location.getToken())
+                .winner(location.isWinner())
                 .build();
     }
 }

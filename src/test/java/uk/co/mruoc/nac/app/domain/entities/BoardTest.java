@@ -56,7 +56,7 @@ class BoardTest {
     void shouldEmptyCollectionIfNoWinner() {
         char token = 'O';
 
-        Collection<Coordinates> winner = board.findWinner(token);
+        Collection<Coordinates> winner = board.findWinningLine(token);
 
         assertThat(winner).isEmpty();
     }
@@ -68,7 +68,7 @@ class BoardTest {
                 .update(new Turn(1, 0, token))
                 .update(new Turn(2, 0, token));
 
-        Collection<Coordinates> winner = updatedBoard.findWinner(token);
+        Collection<Coordinates> winner = updatedBoard.findWinningLine(token);
 
         assertThat(winner).containsExactly(new Coordinates(0, 0), new Coordinates(1, 0), new Coordinates(2, 0));
     }
@@ -80,7 +80,7 @@ class BoardTest {
                 .update(new Turn(0, 1, token))
                 .update(new Turn(0, 2, token));
 
-        Collection<Coordinates> winner = updatedBoard.findWinner(token);
+        Collection<Coordinates> winner = updatedBoard.findWinningLine(token);
 
         assertThat(winner).containsExactly(new Coordinates(0, 0), new Coordinates(0, 1), new Coordinates(0, 2));
     }
@@ -92,7 +92,7 @@ class BoardTest {
                 .update(new Turn(1, 1, token))
                 .update(new Turn(2, 0, token));
 
-        Collection<Coordinates> winner = updatedBoard.findWinner(token);
+        Collection<Coordinates> winner = updatedBoard.findWinningLine(token);
 
         assertThat(winner)
                 .containsExactlyInAnyOrder(new Coordinates(0, 2), new Coordinates(1, 1), new Coordinates(2, 0));
@@ -105,7 +105,7 @@ class BoardTest {
                 .update(new Turn(1, 1, token))
                 .update(new Turn(2, 2, token));
 
-        Collection<Coordinates> winner = updatedBoard.findWinner(token);
+        Collection<Coordinates> winner = updatedBoard.findWinningLine(token);
 
         assertThat(winner).containsExactly(new Coordinates(0, 0), new Coordinates(1, 1), new Coordinates(2, 2));
     }

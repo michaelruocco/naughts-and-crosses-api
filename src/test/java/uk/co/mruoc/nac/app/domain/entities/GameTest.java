@@ -12,17 +12,11 @@ class GameTest {
 
     private final Status status = mock(Status.class);
     private final Board board = mock(Board.class);
-    private final ResultCalculator resultCalculator = mock(ResultCalculator.class);
 
     private final Turn turn =
             Turn.builder().coordinates(new Coordinates(0, 0)).token('X').build();
 
-    private final Game game = Game.builder()
-            .id(1)
-            .status(status)
-            .board(board)
-            .resultCalculator(resultCalculator)
-            .build();
+    private final Game game = Game.builder().id(1).status(status).board(board).build();
 
     @Test
     void shouldThrowErrorIfGameIsComplete() {
@@ -96,31 +90,17 @@ class GameTest {
     }
 
     private void givenNonWinningTurnTaken(Board board) {
-        Result result = givenNonWinningResult();
-        when(resultCalculator.calculate(board, turn.getToken())).thenReturn(result);
+        when(board.hasWinner(turn.getToken())).thenReturn(false);
     }
 
     private void givenWinningTurnTaken() {
         Board updatedBoard = givenUpdatedBoard();
-        Result result = givenWinningResult();
-        when(resultCalculator.calculate(updatedBoard, turn.getToken())).thenReturn(result);
+        when(updatedBoard.hasWinner(turn.getToken())).thenReturn(true);
     }
 
     private Board givenUpdatedBoard() {
         Board updatedBoard = mock(Board.class);
         when(board.update(turn)).thenReturn(updatedBoard);
         return updatedBoard;
-    }
-
-    private Result givenNonWinningResult() {
-        Result result = mock(Result.class);
-        when(result.hasWinner()).thenReturn(false);
-        return result;
-    }
-
-    private Result givenWinningResult() {
-        Result result = mock(Result.class);
-        when(result.hasWinner()).thenReturn(true);
-        return result;
     }
 }

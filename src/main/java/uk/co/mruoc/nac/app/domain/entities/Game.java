@@ -10,7 +10,6 @@ public class Game {
     private final long id;
     private final Status status;
     private final Board board;
-    private final ResultCalculator resultCalculator;
 
     public Game take(Turn turn) {
         validateGameNotComplete();
@@ -41,8 +40,7 @@ public class Game {
     }
 
     private Status toUpdatedStatus(Board board, char token) {
-        Result result = resultCalculator.calculate(board, token);
-        if (result.hasWinner()) {
+        if (board.hasWinner(token)) {
             return status.winningTurnTaken();
         }
         return status.turnTaken();

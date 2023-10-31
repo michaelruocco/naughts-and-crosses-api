@@ -4,15 +4,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Predicate;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.With;
+import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
+@Slf4j
 public class Board {
 
     private static final int DEFAULT_SIZE = 3;
@@ -33,7 +35,21 @@ public class Board {
 
     public Board update(Turn turn) {
         Location location = getLocationIfAvailable(turn.getCoordinates());
-        return update(location.withToken(turn.getToken()));
+        Board updated = update(location.withToken(turn.getToken()));
+        Collection<Coordinates> winningLine = updated.findWinningLine(turn.getToken());
+        if (winningLine.isEmpty()) {
+            return updated;
+        }
+        return updated.recordWinningLine(winningLine);
+    }
+
+    private Board recordWinningLine(Collection<Coordinates> winningLine) {
+        Collection<Location> winningLocations = winningLine.stream()
+                .map(this::getLocation)
+                .flatMap(Optional::stream)
+                .map(Location::toWinner)
+                .toList();
+        return update(winningLocations);
     }
 
     public Collection<Location> getLocations() {
@@ -59,21 +75,25 @@ public class Board {
                 .orElseThrow(() -> new LocationNotAvailableException(coordinates));
     }
 
-    private Board update(Location updatedLocation) {
-        return withLocations(toUpdatedLocations(updatedLocation));
+    private Board update(Location changedLocation) {
+        return update(List.of(changedLocation));
     }
 
-    private Map<String, Location> toUpdatedLocations(Location updatedLocation) {
+    private Board update(Collection<Location> changedLocations) {
+        return withLocations(toUpdatedLocations(changedLocations));
+    }
+
+    private Map<String, Location> toUpdatedLocations(Collection<Location> changedLocations) {
         Map<String, Location> updatedLocations = new LinkedHashMap<>(locations);
-        updatedLocations.put(updatedLocation.getKey(), updatedLocation);
+        changedLocations.forEach(l -> updatedLocations.put(l.getKey(), l));
         return Collections.unmodifiableMap(updatedLocations);
     }
 
-    public boolean isFull() {
-        return locations.values().stream().allMatch(Predicate.not(Location::isAvailable));
+    public boolean hasWinner(char token) {
+        return !findWinningLine(token).isEmpty();
     }
 
-    public Collection<Coordinates> findWinner(char token) {
+    public Collection<Coordinates> findWinningLine(char token) {
         Collection<Coordinates> winner = findVerticalWinner(token);
         if (!winner.isEmpty()) {
             return winner;
