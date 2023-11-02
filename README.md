@@ -1,4 +1,4 @@
-# Library Template
+# Naughts and Crosses API
 
 [![Build](https://github.com/michaelruocco/naughts-and-crosses-api/workflows/pipeline/badge.svg)](https://github.com/michaelruocco/naughts-and-crosses-api/actions)
 [![codecov](https://codecov.io/gh/michaelruocco/naughts-and-crosses-api/branch/master/graph/badge.svg?token=FWDNP534O7)](https://codecov.io/gh/michaelruocco/naughts-and-crosses-api)
@@ -102,7 +102,7 @@ curl -X POST http://localhost:8080/v1/games
 To take a turn you can run:
 
 ```bash
-curl -X PUT http://localhost:8080/v1/games/3/turns -H "Content-Type: application/json" -d '{"coordinates":{"x":1,"y":1},"token":"X"}'  
+curl -X PUT http://localhost:8080/v1/games/{game-id}/turns -H "Content-Type: application/json" -d '{"coordinates":{"x":1,"y":1},"token":"X"}'  
 ```
 
 To get all created games you can do either:
