@@ -87,6 +87,12 @@ To start up the API you can run:
 ./gradlew bootRun
 ```
 
+or to run the API on a port other than the default 8080:
+
+```gradle
+./gradlew bootRun --args='--server.port=3002'
+```
+
 And then to generate a game you can run:
 
 ```bash
