@@ -59,7 +59,7 @@ sonarqube {
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.organization", "michaelruocco"
         property "sonar.projectKey", "michaelruocco_${name}"
-        property "sonar.coverage.jacoco.xmlReportPaths", "./app/spring/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml"
+        property "sonar.coverage.jacoco.xmlReportPaths", "app/spring/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml"
     }
 }
 
