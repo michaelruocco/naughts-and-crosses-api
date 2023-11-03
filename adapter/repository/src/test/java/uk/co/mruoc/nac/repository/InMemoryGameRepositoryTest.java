@@ -1,8 +1,11 @@
 package uk.co.mruoc.nac.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import uk.co.mruoc.nac.entities.Game;
 import uk.co.mruoc.nac.usecases.GameRepository;
@@ -28,5 +31,25 @@ class InMemoryGameRepositoryTest {
         Optional<Game> game = repository.find(id);
 
         assertThat(game).isEmpty();
+    }
+
+    @Test
+    void shouldReturnAllGamesSortedById() {
+        Game game3 = givenGameWithId(3);
+        Game game2 = givenGameWithId(2);
+        Game game1 = givenGameWithId(1);
+        repository.save(game3);
+        repository.save(game2);
+        repository.save(game1);
+
+        Stream<Game> games = repository.getAll();
+
+        assertThat(games).containsExactly(game1, game2, game3);
+    }
+
+    private Game givenGameWithId(long id) {
+        Game game = mock(Game.class);
+        when(game.getId()).thenReturn(id);
+        return game;
     }
 }
