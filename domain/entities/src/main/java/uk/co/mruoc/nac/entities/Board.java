@@ -69,6 +69,10 @@ public class Board {
         return Optional.ofNullable(locations.get(coordinates.getKey()));
     }
 
+    public boolean isEmpty() {
+        return locations.values().stream().allMatch(Location::isAvailable);
+    }
+
     private Location getLocationIfAvailable(Coordinates coordinates) {
         return getLocation(coordinates)
                 .filter(Location::isAvailable)

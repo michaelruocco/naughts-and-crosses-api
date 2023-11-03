@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import uk.co.mruoc.nac.entities.Game;
@@ -105,6 +106,16 @@ class GameServiceTest {
         ArgumentCaptor<Game> captor = ArgumentCaptor.forClass(Game.class);
         verify(eventPublisher).updated(captor.capture());
         assertThat(captor.getValue()).isEqualTo(expectedGame);
+    }
+
+    @Test
+    void shouldReturnAllGames() {
+        Stream<Game> expectedGames = Stream.of(mock(Game.class), mock(Game.class));
+        when(repository.getAll()).thenReturn(expectedGames);
+
+        Stream<Game> games = service.getAll();
+
+        assertThat(games).isEqualTo(expectedGames);
     }
 
     private Game givenGameCreated() {

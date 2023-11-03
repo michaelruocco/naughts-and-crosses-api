@@ -62,6 +62,27 @@ class BoardTest {
     }
 
     @Test
+    void shouldReturnFalseIfNoWinner() {
+        char token = 'O';
+
+        boolean winner = board.hasWinner(token);
+
+        assertThat(winner).isFalse();
+    }
+
+    @Test
+    void shouldReturnTrueIfWinner() {
+        char token = 'X';
+        Board updatedBoard = board.update(new Turn(0, 0, token))
+                .update(new Turn(1, 0, token))
+                .update(new Turn(2, 0, token));
+
+        boolean winner = updatedBoard.hasWinner(token);
+
+        assertThat(winner).isTrue();
+    }
+
+    @Test
     void shouldWinningCoordinatesIfHorizontalWinner() {
         char token = 'X';
         Board updatedBoard = board.update(new Turn(0, 0, token))
