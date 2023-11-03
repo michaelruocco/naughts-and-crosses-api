@@ -56,8 +56,6 @@ gradleLint {
 
 sonarqube {
     properties {
-        property "sonar.gradle.skipCompile", true
-        property "sonar.skipCompile", true
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.organization", "michaelruocco"
         property "sonar.projectKey", "michaelruocco_${name}"
