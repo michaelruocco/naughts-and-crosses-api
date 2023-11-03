@@ -118,3 +118,12 @@ id and game status then you can do:
 ```bash
 curl "http://localhost:8080/v1/games?minimal=true"
 ```
+
+### Building docker image
+
+To build the docker image you can run the following commands:
+
+```bash
+./gradlew clean bootJar
+docker build -t naughts-and-crosses-api .
+```
