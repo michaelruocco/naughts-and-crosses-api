@@ -1,0 +1,10 @@
+plugins {
+    id "naughts-and-crosses-api.java-conventions"
+}
+
+dependencies {
+    implementation project(":use-cases")
+    implementation project(":entities")
+}
+
+apply from: rootProject.file("publish.gradle")

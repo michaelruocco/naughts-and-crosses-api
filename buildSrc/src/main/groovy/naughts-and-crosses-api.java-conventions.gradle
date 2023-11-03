@@ -1,0 +1,59 @@
+plugins {
+    id "java-library"
+    id "jacoco"
+    id "com.diffplug.spotless"
+    id "nebula.lint"
+    id "maven-publish"
+    id "signing"
+}
+
+version = rootProject.version
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+}
+
+testing {
+    suites {
+        test(JvmTestSuite) {
+            useJUnitJupiter(junitVersion)
+            dependencies {
+                runtimeOnly "org.slf4j:slf4j-simple:${slf4jVersion}"
+                runtimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+                compileOnly "org.projectlombok:lombok:${lombokVersion}"
+                annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+                implementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+                implementation "org.assertj:assertj-core:3.24.2"
+                implementation "org.mockito:mockito-core:5.7.0"
+            }
+            targets {
+                configureEach {
+                    testTask.configure {
+                        systemProperty "org.slf4j.simpleLogger.defaultLogLevel", "debug"
+                        testLogging {
+                            events = ["passed", "failed", "skipped"]
+                            showStandardStreams = true
+                            exceptionFormat = "full"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+spotless {
+    java {
+        palantirJavaFormat("2.38.0")
+    }
+}
+
+tasks.named("jacocoTestReport") {
+    enabled = false
+}

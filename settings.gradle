@@ -1,2 +1,16 @@
 rootProject.name = 'naughts-and-crosses-api'
 
+include "entities"
+project(":entities").projectDir = file("domain/entities")
+
+include "use-cases"
+project(":use-cases").projectDir = file("domain/use-cases")
+
+include "repository"
+project(":repository").projectDir = file("adapter/repository")
+
+include "api"
+project(":api").projectDir = file("adapter/api")
+
+include "naughts-and-crosses-api-spring-app"
+project(":naughts-and-crosses-api-spring-app").projectDir = file("app/spring")
