@@ -51,7 +51,9 @@ jobs:
         run: ./gradlew clean spotlessCheck criticalLintGradle assemble
 
       - name: Test
-        run: ./gradlew test testCodeCoverageReport
+        run: |
+          ./gradlew test testCodeCoverageReport
+          cat app/spring/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
@@ -62,7 +64,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonar
+        run: |
+          cat app/spring/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
+          ./gradlew sonar
 
       - name: Codecov Coverage
         uses: codecov/codecov-action@v3
