@@ -1,14 +1,13 @@
 package uk.co.mruoc.nac.app;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ConfigurableApplicationContext;
+import static org.awaitility.Awaitility.await;
 
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Objects;
-
-import static org.awaitility.Awaitility.await;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
 @Slf4j
 public class NaughtsAndCrossesAppRunner {
@@ -56,7 +55,7 @@ public class NaughtsAndCrossesAppRunner {
 
     private static String[] toArgs(int port) {
         return new String[] {
-                String.format("--server.port=%d", port),
+            String.format("--server.port=%d", port),
         };
     }
 }

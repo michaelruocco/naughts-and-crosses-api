@@ -1,11 +1,11 @@
 package uk.co.mruoc.nac.app;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.web.client.RestTemplate;
 import uk.co.mruoc.nac.api.dto.ApiGame;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class NaughtsAndCrossesAppIntegrationTest {
 
