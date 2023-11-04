@@ -14,6 +14,10 @@ plugins {
 
 ext['junit-jupiter.version'] = "${junitVersion}"
 
+configurations {
+    integrationTestRuntimeOnly.exclude module: "slf4j-simple"
+}
+
 dependencies {
     implementation project(":api")
     implementation project(":repository")
@@ -23,6 +27,9 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation "org.springframework.boot:spring-boot-starter-websocket"
+
+    testFixturesImplementation "org.springframework.boot:spring-boot:${springBootVersion}"
+    testFixturesImplementation "org.awaitility:awaitility:4.2.0"
 }
 
 apply from: rootProject.file("publish.gradle")

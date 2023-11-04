@@ -5,6 +5,7 @@ plugins {
     id "nebula.lint"
     id "maven-publish"
     id "signing"
+    id "java-test-fixtures"
 }
 
 version = rootProject.version
@@ -17,11 +18,16 @@ dependencies {
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+
+    testFixturesCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+    testFixturesAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    testFixturesImplementation "org.slf4j:slf4j-api:${slf4jVersion}"
+    testFixturesImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
 }
 
 testing {
     suites {
-        test(JvmTestSuite) {
+        withType(JvmTestSuite) {
             useJUnitJupiter(junitVersion)
             dependencies {
                 runtimeOnly "org.slf4j:slf4j-simple:${slf4jVersion}"
@@ -45,7 +51,17 @@ testing {
                 }
             }
         }
+        integrationTest(JvmTestSuite) {
+            testType = TestSuiteType.INTEGRATION_TEST
+            dependencies {
+                implementation project()
+            }
+        }
     }
+}
+
+configurations {
+    integrationTestImplementation.extendsFrom testImplementation
 }
 
 spotless {
