@@ -51,7 +51,7 @@ jobs:
         run: ./gradlew clean spotlessCheck criticalLintGradle assemble
 
       - name: Test
-        run: ./gradlew test integrationTest testCodeCoverageReport
+        run: ./gradlew test integrationTest unitCoverage integrationCoverage
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
