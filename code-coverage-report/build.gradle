@@ -1,0 +1,23 @@
+plugins {
+    id 'base'
+    id 'jacoco-report-aggregation'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    jacocoAggregation project(':naughts-and-crosses-api-spring-app')
+}
+
+reporting {
+    reports {
+        unitCoverage(JacocoCoverageReport) {
+            testType = TestSuiteType.UNIT_TEST
+        }
+        integrationCoverage(JacocoCoverageReport) {
+            testType = TestSuiteType.INTEGRATION_TEST
+        }
+    }
+}

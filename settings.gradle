@@ -14,3 +14,5 @@ project(":api").projectDir = file("adapter/api")
 
 include "naughts-and-crosses-api-spring-app"
 project(":naughts-and-crosses-api-spring-app").projectDir = file("app/spring")
+
+include "code-coverage-report"

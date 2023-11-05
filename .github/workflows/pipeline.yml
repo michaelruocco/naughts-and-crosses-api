@@ -67,7 +67,7 @@ jobs:
       - name: Codecov Coverage
         uses: codecov/codecov-action@v3
         with:
-          file: ./app/spring/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
+          files: ./code-coverage-report/build/reports/jacoco/unitCoverage/unitCoverage.xml,./code-coverage-report/build/reports/jacoco/integrationCoverage/integrationCoverage.xml
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
@@ -75,7 +75,7 @@ jobs:
         uses: codacy/codacy-coverage-reporter-action@v1
         with:
           project-token: ${{ secrets.CODACY_TOKEN }}
-          coverage-reports: ./app/spring/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
+          coverage-reports: ./code-coverage-report/build/reports/jacoco/unitCoverage/unitCoverage.xml,./code-coverage-report/build/reports/jacoco/integrationCoverage/integrationCoverage.xml
 
       - name: Publish snapshot
         if: github.ref != 'refs/heads/master'
