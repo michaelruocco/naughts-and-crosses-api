@@ -2,17 +2,24 @@ package uk.co.mruoc.nac.usecases;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.function.LongSupplier;
 import org.junit.jupiter.api.Test;
 
-class GameIdSupplierTest {
+class IdSupplierTest {
 
-    private final LongSupplier supplier = new GameIdSupplier();
+    private final IdSupplier supplier = new DefaultIdSupplier();
 
     @Test
     void shouldReturnIncrementingLongValues() {
         assertThat(supplier.getAsLong()).isEqualTo(1);
         assertThat(supplier.getAsLong()).isEqualTo(2);
         assertThat(supplier.getAsLong()).isEqualTo(3);
+    }
+
+    @Test
+    void shouldResetValues() {
+        assertThat(supplier.getAsLong()).isEqualTo(1);
+        assertThat(supplier.getAsLong()).isEqualTo(2);
+        supplier.reset();
+        assertThat(supplier.getAsLong()).isEqualTo(1);
     }
 }

@@ -12,6 +12,9 @@ project(":repository").projectDir = file("adapter/repository")
 include "api"
 project(":api").projectDir = file("adapter/api")
 
+include "rest-client"
+project(":rest-client").projectDir = file("adapter/rest-client")
+
 include "naughts-and-crosses-api-spring-app"
 project(":naughts-and-crosses-api-spring-app").projectDir = file("app/spring")
 

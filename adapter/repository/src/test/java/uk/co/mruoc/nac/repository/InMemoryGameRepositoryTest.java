@@ -17,7 +17,7 @@ class InMemoryGameRepositoryTest {
     @Test
     void shouldSaveGame() {
         long id = 1;
-        Game game = Game.builder().id(id).build();
+        Game game = givenGameWithId(id);
 
         repository.save(game);
 
@@ -47,7 +47,18 @@ class InMemoryGameRepositoryTest {
         assertThat(games).containsExactly(game1, game2, game3);
     }
 
-    private Game givenGameWithId(long id) {
+    @Test
+    void shouldDeleteAllGames() {
+        repository.save(givenGameWithId(1));
+        repository.save(givenGameWithId(2));
+        repository.save(givenGameWithId(3));
+
+        repository.deleteAll();
+
+        assertThat(repository.getAll()).isEmpty();
+    }
+
+    private static Game givenGameWithId(long id) {
         Game game = mock(Game.class);
         when(game.getId()).thenReturn(id);
         return game;

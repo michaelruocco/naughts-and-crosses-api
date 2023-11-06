@@ -9,13 +9,20 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import uk.co.mruoc.nac.api.converter.ApiConverter;
 import uk.co.mruoc.nac.repository.InMemoryGameRepository;
 import uk.co.mruoc.nac.usecases.BoardFormatter;
+import uk.co.mruoc.nac.usecases.DefaultIdSupplier;
 import uk.co.mruoc.nac.usecases.GameEventPublisher;
 import uk.co.mruoc.nac.usecases.GameFactory;
 import uk.co.mruoc.nac.usecases.GameRepository;
 import uk.co.mruoc.nac.usecases.GameService;
+import uk.co.mruoc.nac.usecases.IdSupplier;
 
 @Configuration
 public class ApplicationConfig {
+
+    @Bean
+    public IdSupplier idSupplier() {
+        return new DefaultIdSupplier();
+    }
 
     @Bean
     public GameRepository gameRepository() {
@@ -23,9 +30,9 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public GameService gameService(GameRepository repository, GameEventPublisher publisher) {
+    public GameService gameService(IdSupplier idSupplier, GameRepository repository, GameEventPublisher publisher) {
         return GameService.builder()
-                .factory(new GameFactory())
+                .factory(new GameFactory(idSupplier))
                 .formatter(new BoardFormatter())
                 .repository(repository)
                 .eventPublisher(publisher)

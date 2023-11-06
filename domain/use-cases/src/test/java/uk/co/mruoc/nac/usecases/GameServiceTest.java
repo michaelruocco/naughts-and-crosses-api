@@ -118,6 +118,13 @@ class GameServiceTest {
         assertThat(games).isEqualTo(expectedGames);
     }
 
+    @Test
+    void shouldDeleteAllGames() {
+        service.deleteAll();
+
+        verify(repository).deleteAll();
+    }
+
     private Game givenGameCreated() {
         Game game = mock(Game.class);
         when(factory.buildGame()).thenReturn(game);

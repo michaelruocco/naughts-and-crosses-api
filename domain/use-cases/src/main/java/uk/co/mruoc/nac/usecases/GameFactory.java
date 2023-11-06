@@ -11,10 +11,6 @@ public class GameFactory {
 
     private final LongSupplier idSupplier;
 
-    public GameFactory() {
-        this(new GameIdSupplier());
-    }
-
     public Game buildGame() {
         return Game.builder()
                 .id(idSupplier.getAsLong())

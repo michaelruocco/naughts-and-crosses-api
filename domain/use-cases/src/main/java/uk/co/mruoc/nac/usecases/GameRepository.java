@@ -11,4 +11,6 @@ public interface GameRepository {
     void save(Game game);
 
     Stream<Game> getAll();
+
+    void deleteAll();
 }

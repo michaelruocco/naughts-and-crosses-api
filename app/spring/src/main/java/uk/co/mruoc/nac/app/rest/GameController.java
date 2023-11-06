@@ -3,10 +3,10 @@ package uk.co.mruoc.nac.app.rest;
 import java.util.Collection;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,6 +32,11 @@ public class GameController {
         return service.getAll().map(toGameConverter(minimal)).toList();
     }
 
+    @DeleteMapping
+    public void deleteAllGames() {
+        service.deleteAll();
+    }
+
     @GetMapping("/{id}")
     public ApiGame getGame(
             @PathVariable long id,
@@ -45,7 +50,7 @@ public class GameController {
         return converter.toApiGame(game);
     }
 
-    @PutMapping("/{gameId}/turns")
+    @PostMapping("/{gameId}/turns")
     public ApiGame takeTurn(@PathVariable long gameId, @RequestBody ApiTurn apiTurn) {
         Turn turn = converter.toTurn(apiTurn);
         Game game = service.takeTurn(gameId, turn);

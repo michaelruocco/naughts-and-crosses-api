@@ -38,8 +38,8 @@ public class NaughtsAndCrossesAppRunner {
         context = null;
     }
 
-    public int getPort() {
-        return port;
+    public String getUrl() {
+        return String.format("http://localhost:%d", port);
     }
 
     private boolean isRunning() {

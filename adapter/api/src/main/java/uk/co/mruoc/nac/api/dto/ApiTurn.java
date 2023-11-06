@@ -13,4 +13,8 @@ public class ApiTurn {
 
     private final ApiCoordinates coordinates;
     private final char token;
+
+    public ApiTurn(int x, int y, char token) {
+        this(new ApiCoordinates(x, y), token);
+    }
 }

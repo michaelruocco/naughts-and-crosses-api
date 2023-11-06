@@ -18,6 +18,10 @@ project.version = scmVersion.version
 subprojects {
     group "com.github.michaelruocco"
 
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
+
     ext {
         slf4jVersion = "2.0.9"
         lombokVersion = "1.18.30"

@@ -31,4 +31,9 @@ public class InMemoryGameRepository implements GameRepository {
     public Stream<Game> getAll() {
         return games.values().stream().sorted(new GameComparator());
     }
+
+    @Override
+    public void deleteAll() {
+        games.clear();
+    }
 }

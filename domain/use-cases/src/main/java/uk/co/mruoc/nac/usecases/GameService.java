@@ -41,4 +41,8 @@ public class GameService {
         repository.save(game);
         eventPublisher.updated(game);
     }
+
+    public void deleteAll() {
+        repository.deleteAll();
+    }
 }
