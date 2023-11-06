@@ -35,6 +35,28 @@ class NaughtsAndCrossesAppIntegrationTest {
     }
 
     @Test
+    void shouldReturnGame() {
+        NaughtsAndCrossesApiClient client = EXTENSION.getAppClient();
+        ApiGame createdGame = client.createGame();
+
+        ApiGame game = client.getGame(createdGame.getId());
+
+        assertThatJson(game).isEqualTo(createdGame);
+    }
+
+    @Test
+    void shouldReturnMinimalGame() {
+        NaughtsAndCrossesApiClient client = EXTENSION.getAppClient();
+        ApiGame createdGame = client.createGame();
+
+        ApiGame game = client.getMinimalGame(createdGame.getId());
+
+        assertThatJson(game).whenIgnoringPaths("board", "players").isEqualTo(createdGame);
+        assertThat(game.getBoard()).isNull();
+        assertThat(game.getPlayers()).isNull();
+    }
+
+    @Test
     void gameShouldCompleteWithXWinner() {
         NaughtsAndCrossesApiClient client = EXTENSION.getAppClient();
         ApiGame game = client.createGame();

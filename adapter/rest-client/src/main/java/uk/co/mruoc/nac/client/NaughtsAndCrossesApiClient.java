@@ -12,43 +12,39 @@ import uk.co.mruoc.nac.api.dto.ApiTurn;
 @RequiredArgsConstructor
 public class NaughtsAndCrossesApiClient {
 
-    private final String baseUrl;
+    private final UriFactory uriFactory;
     private final RestTemplate template;
 
     public NaughtsAndCrossesApiClient(String baseUrl) {
-        this(baseUrl, new RestTemplate());
+        this(new UriFactory(baseUrl), new RestTemplate());
     }
 
     public Collection<ApiGame> getAllGames() {
-        ApiGame[] games = template.getForObject(buildGamesUri(), ApiGame[].class);
+        ApiGame[] games = template.getForObject(uriFactory.buildGamesUri(), ApiGame[].class);
         return Optional.ofNullable(games).map(List::of).orElse(Collections.emptyList());
     }
 
     public ApiGame createGame() {
-        return template.postForObject(buildGamesUri(), null, ApiGame.class);
+        return template.postForObject(uriFactory.buildGamesUri(), null, ApiGame.class);
     }
 
     public ApiGame takeTurn(long gameId, ApiTurn turn) {
-        return template.postForObject(buildTakeTurnUri(gameId), turn, ApiGame.class);
+        return template.postForObject(uriFactory.buildTakeTurnUri(gameId), turn, ApiGame.class);
+    }
+
+    public ApiGame getGame(long gameId) {
+        return template.getForObject(uriFactory.buildGetGameUri(gameId), ApiGame.class);
+    }
+
+    public ApiGame getMinimalGame(long gameId) {
+        return template.getForObject(uriFactory.buildGetMinimalGameUri(gameId), ApiGame.class);
     }
 
     public void deleteAllGames() {
-        template.delete(buildGamesUri());
+        template.delete(uriFactory.buildGamesUri());
     }
 
     public void resetIds() {
-        template.delete(buildIdsUri());
-    }
-
-    private String buildGamesUri() {
-        return String.format("%s/v1/games", baseUrl);
-    }
-
-    private String buildTakeTurnUri(long gameId) {
-        return String.format("%s/v1/games/%d/turns", baseUrl, gameId);
-    }
-
-    private String buildIdsUri() {
-        return String.format("%s/v1/ids", baseUrl);
+        template.delete(uriFactory.buildIdsUri());
     }
 }
