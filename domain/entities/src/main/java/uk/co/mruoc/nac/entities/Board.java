@@ -69,8 +69,16 @@ public class Board {
         return Optional.ofNullable(locations.get(coordinates.getKey()));
     }
 
+    public boolean isPlayable(char token) {
+        return !hasWinner(token) && !isFull();
+    }
+
     public boolean isEmpty() {
         return locations.values().stream().allMatch(Location::isAvailable);
+    }
+
+    public boolean isFull() {
+        return locations.values().stream().noneMatch(Location::isAvailable);
     }
 
     private Location getLocationIfAvailable(Coordinates coordinates) {

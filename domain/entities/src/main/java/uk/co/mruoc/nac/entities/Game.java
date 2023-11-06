@@ -40,9 +40,9 @@ public class Game {
     }
 
     private Status toUpdatedStatus(Board board, char token) {
-        if (board.hasWinner(token)) {
-            return status.winningTurnTaken();
+        if (board.isPlayable(token)) {
+            return status.turnTaken();
         }
-        return status.turnTaken();
+        return status.gameEndingTurnTaken();
     }
 }

@@ -8,9 +8,6 @@ import org.junit.jupiter.api.Test;
 
 class StatusTest {
 
-    private static final char CROSSES = 'X';
-    private static final char NAUGHTS = 'O';
-
     private final Status status = new Status();
 
     @Test
@@ -25,17 +22,17 @@ class StatusTest {
 
     @Test
     void shouldReturnInitialCurrentPlayerAsCrosses() {
-        assertThat(status.getCurrentPlayerToken()).isEqualTo(CROSSES);
+        assertThat(status.getCurrentPlayerToken()).contains('X');
     }
 
     @Test
     void shouldNotThrowExceptionIfIsPlayersTurn() {
-        assertThatCode(() -> status.validateIsTurn(CROSSES)).doesNotThrowAnyException();
+        assertThatCode(() -> status.validateIsTurn('X')).doesNotThrowAnyException();
     }
 
     @Test
     void shouldThrowExceptionIfNotPlayersTurn() {
-        Throwable error = catchThrowable(() -> status.validateIsTurn(NAUGHTS));
+        Throwable error = catchThrowable(() -> status.validateIsTurn('O'));
 
         assertThat(error)
                 .isInstanceOf(NotPlayersTurnException.class)
@@ -53,27 +50,27 @@ class StatusTest {
     void shouldChangeNextPlayersTurn() {
         Status updated = status.turnTaken();
 
-        assertThat(updated.getCurrentPlayerToken()).isEqualTo(NAUGHTS);
+        assertThat(updated.getCurrentPlayerToken()).contains('O');
     }
 
     @Test
-    void shouldIncrementTurnOnWinningTurn() {
-        Status updated = status.winningTurnTaken();
+    void shouldIncrementTurnOnGameEndingTurn() {
+        Status updated = status.gameEndingTurnTaken();
 
         assertThat(updated.getTurn()).isOne();
     }
 
     @Test
     void shouldSetCompleteTrueOnWinningTurn() {
-        Status updated = status.winningTurnTaken();
+        Status updated = status.gameEndingTurnTaken();
 
         assertThat(updated.isComplete()).isTrue();
     }
 
     @Test
-    void shouldNotChangeNextPlayersTurnOnWinningTurn() {
-        Status updated = status.winningTurnTaken();
+    void shouldReturnEmptyNextPlayerTurnAfterGameEndingTurn() {
+        Status updated = status.gameEndingTurnTaken();
 
-        assertThat(updated.getCurrentPlayerToken()).isEqualTo(CROSSES);
+        assertThat(updated.getCurrentPlayerToken()).isEmpty();
     }
 }

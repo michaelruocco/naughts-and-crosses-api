@@ -31,7 +31,7 @@ class NaughtsAndCrossesAppIntegrationTest {
 
         ApiGame game = client.createGame();
 
-        assertThatJson(game).isEqualTo(GameJsonMother.initialGame1());
+        assertThatJson(game).isEqualTo(GameJsonMother.initial());
     }
 
     @Test
@@ -46,6 +46,25 @@ class NaughtsAndCrossesAppIntegrationTest {
         client.takeTurn(id, new ApiTurn(1, 1, 'O'));
         ApiGame updatedGame = client.takeTurn(id, new ApiTurn(2, 0, 'X'));
 
-        assertThatJson(updatedGame).isEqualTo(GameJsonMother.xWinnerGame1());
+        assertThatJson(updatedGame).isEqualTo(GameJsonMother.xWinner());
+    }
+
+    @Test
+    void gameShouldCompleteWithDraw() {
+        NaughtsAndCrossesApiClient client = EXTENSION.getAppClient();
+        ApiGame game = client.createGame();
+        long id = game.getId();
+
+        client.takeTurn(id, new ApiTurn(0, 0, 'X'));
+        client.takeTurn(id, new ApiTurn(1, 1, 'O'));
+        client.takeTurn(id, new ApiTurn(0, 2, 'X'));
+        client.takeTurn(id, new ApiTurn(1, 0, 'O'));
+        client.takeTurn(id, new ApiTurn(1, 2, 'X'));
+        client.takeTurn(id, new ApiTurn(0, 1, 'O'));
+        client.takeTurn(id, new ApiTurn(2, 1, 'X'));
+        client.takeTurn(id, new ApiTurn(2, 2, 'O'));
+        ApiGame updatedGame = client.takeTurn(id, new ApiTurn(2, 0, 'X'));
+
+        assertThatJson(updatedGame).isEqualTo(GameJsonMother.draw());
     }
 }

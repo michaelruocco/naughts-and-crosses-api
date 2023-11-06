@@ -40,7 +40,7 @@ class GameTest {
     @Test
     void shouldUpdateBoardWhenTurnTaken() {
         Board expectedBoard = givenUpdatedBoard();
-        givenNonWinningTurnTaken(expectedBoard);
+        givenTurnTaken(expectedBoard);
 
         Game updatedGame = game.take(turn);
 
@@ -48,10 +48,10 @@ class GameTest {
     }
 
     @Test
-    void shouldUpdateStatusWhenNonWinningTurnTaken() {
+    void shouldUpdateStatusWhenTurnTaken() {
         Status expectedStatus = mock(Status.class);
         when(status.turnTaken()).thenReturn(expectedStatus);
-        givenNonWinningTurnTaken();
+        givenTurnTaken();
 
         Game updatedGame = game.take(turn);
 
@@ -59,10 +59,10 @@ class GameTest {
     }
 
     @Test
-    void shouldUpdateStatusWhenWinningTurnTaken() {
+    void shouldUpdateStatusWhenGameEndingTurnTaken() {
         Status expectedStatus = mock(Status.class);
-        when(status.winningTurnTaken()).thenReturn(expectedStatus);
-        givenWinningTurnTaken();
+        when(status.gameEndingTurnTaken()).thenReturn(expectedStatus);
+        givenGameEndingTurnTaken();
 
         Game updatedGame = game.take(turn);
 
@@ -84,18 +84,18 @@ class GameTest {
         assertThat(game.getPlayers()).isEqualTo(expectedPlayers);
     }
 
-    private void givenNonWinningTurnTaken() {
+    private void givenTurnTaken() {
         Board updatedBoard = givenUpdatedBoard();
-        givenNonWinningTurnTaken(updatedBoard);
+        givenTurnTaken(updatedBoard);
     }
 
-    private void givenNonWinningTurnTaken(Board board) {
-        when(board.hasWinner(turn.getToken())).thenReturn(false);
+    private void givenTurnTaken(Board board) {
+        when(board.isPlayable(turn.getToken())).thenReturn(true);
     }
 
-    private void givenWinningTurnTaken() {
+    private void givenGameEndingTurnTaken() {
         Board updatedBoard = givenUpdatedBoard();
-        when(updatedBoard.hasWinner(turn.getToken())).thenReturn(true);
+        when(updatedBoard.isPlayable(turn.getToken())).thenReturn(false);
     }
 
     private Board givenUpdatedBoard() {

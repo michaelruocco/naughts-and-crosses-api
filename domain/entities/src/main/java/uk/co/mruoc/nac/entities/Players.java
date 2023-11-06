@@ -1,6 +1,7 @@
 package uk.co.mruoc.nac.entities;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -31,12 +32,21 @@ public class Players {
     }
 
     public boolean isTurn(char token) {
-        return getCurrentPlayerToken() == token;
+        return getCurrentPlayerToken()
+                .map(currentToken -> currentToken == token)
+                .orElse(false);
     }
 
-    public char getCurrentPlayerToken() {
+    public Optional<Character> getCurrentPlayerToken() {
+        if (currentIndex < 0) {
+            return Optional.empty();
+        }
         Player player = values.get(currentIndex);
-        return player.getToken();
+        return Optional.of(player.getToken());
+    }
+
+    public Players clearCurrentPlayer() {
+        return toBuilder().currentIndex(-1).build();
     }
 
     public Players updateCurrentPlayer() {

@@ -9,7 +9,7 @@ public class ApiStatusConverter {
         return ApiStatus.builder()
                 .turn(status.getTurn())
                 .complete(status.isComplete())
-                .nextPlayerToken(status.getCurrentPlayerToken())
+                .nextPlayerToken(status.getCurrentPlayerToken().orElse(null))
                 .build();
     }
 }

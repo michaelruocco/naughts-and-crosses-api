@@ -1,5 +1,6 @@
 package uk.co.mruoc.nac.entities;
 
+import java.util.Optional;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -28,11 +29,15 @@ public class Status {
                 .build();
     }
 
-    public Status winningTurnTaken() {
-        return toBuilder().turn(nextTurn()).complete(true).build();
+    public Status gameEndingTurnTaken() {
+        return Status.builder()
+                .turn(nextTurn())
+                .players(players.clearCurrentPlayer())
+                .complete(true)
+                .build();
     }
 
-    public char getCurrentPlayerToken() {
+    public Optional<Character> getCurrentPlayerToken() {
         return players.getCurrentPlayerToken();
     }
 

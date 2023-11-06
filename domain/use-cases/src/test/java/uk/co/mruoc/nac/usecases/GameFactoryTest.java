@@ -47,7 +47,7 @@ class GameFactoryTest {
         Game game = factory.buildGame();
 
         Status status = game.getStatus();
-        assertThat(status.getCurrentPlayerToken()).isEqualTo('X');
+        assertThat(status.getCurrentPlayerToken()).contains('X');
     }
 
     @Test

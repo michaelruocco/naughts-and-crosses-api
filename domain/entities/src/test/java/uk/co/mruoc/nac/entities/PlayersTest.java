@@ -20,10 +20,16 @@ class PlayersTest {
 
     @Test
     void shouldAlternatePlayers() {
-        assertThat(players.getCurrentPlayerToken()).isEqualTo('X');
+        assertThat(players.getCurrentPlayerToken()).contains('X');
         Players updated1 = players.updateCurrentPlayer();
-        assertThat(updated1.getCurrentPlayerToken()).isEqualTo('O');
+        assertThat(updated1.getCurrentPlayerToken()).contains('O');
         Players updated2 = updated1.updateCurrentPlayer();
-        assertThat(updated2.getCurrentPlayerToken()).isEqualTo('X');
+        assertThat(updated2.getCurrentPlayerToken()).contains('X');
+    }
+
+    @Test
+    void shouldClearCurrentPlayers() {
+        Players cleared = players.clearCurrentPlayer();
+        assertThat(cleared.getCurrentPlayerToken()).isEmpty();
     }
 }
