@@ -11,41 +11,40 @@ import lombok.With;
 @Data
 public class Location {
 
-    private static final char AVAILABLE = ' ';
+  private static final char AVAILABLE = ' ';
 
-    private final Coordinates coordinates;
+  private final Coordinates coordinates;
 
-    @With
-    private final char token;
+  @With private final char token;
 
-    @With(value = AccessLevel.PRIVATE)
-    private final boolean winner;
+  @With(value = AccessLevel.PRIVATE)
+  private final boolean winner;
 
-    public Location(long x, long y) {
-        this(new Coordinates(x, y), AVAILABLE);
-    }
+  public Location(long x, long y) {
+    this(new Coordinates(x, y), AVAILABLE);
+  }
 
-    public Location(Coordinates coordinates, char token) {
-        this(coordinates, token, false);
-    }
+  public Location(Coordinates coordinates, char token) {
+    this(coordinates, token, false);
+  }
 
-    public boolean hasSameCoordinatesAs(Location otherLocation) {
-        return isAt(otherLocation.getCoordinates());
-    }
+  public boolean hasSameCoordinatesAs(Location otherLocation) {
+    return isAt(otherLocation.getCoordinates());
+  }
 
-    public Location toWinner() {
-        return withWinner(true);
-    }
+  public Location toWinner() {
+    return withWinner(true);
+  }
 
-    public boolean isAt(Coordinates otherCoordinates) {
-        return coordinates.sameAs(otherCoordinates);
-    }
+  public boolean isAt(Coordinates otherCoordinates) {
+    return coordinates.sameAs(otherCoordinates);
+  }
 
-    public boolean isAvailable() {
-        return token == AVAILABLE;
-    }
+  public boolean isAvailable() {
+    return token == AVAILABLE;
+  }
 
-    public String getKey() {
-        return coordinates.getKey();
-    }
+  public String getKey() {
+    return coordinates.getKey();
+  }
 }

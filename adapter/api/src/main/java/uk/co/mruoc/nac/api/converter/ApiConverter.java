@@ -9,22 +9,22 @@ import uk.co.mruoc.nac.entities.Turn;
 @RequiredArgsConstructor
 public class ApiConverter {
 
-    private final ApiGameConverter gameConverter;
-    private final ApiTurnConverter turnConverter;
+  private final ApiGameConverter gameConverter;
+  private final ApiTurnConverter turnConverter;
 
-    public ApiConverter() {
-        this(new ApiGameConverter(), new ApiTurnConverter());
-    }
+  public ApiConverter() {
+    this(new ApiGameConverter(), new ApiTurnConverter());
+  }
 
-    public ApiGame toMinimalApiGame(Game game) {
-        return gameConverter.toMinimalApiGame(game);
-    }
+  public ApiGame toMinimalApiGame(Game game) {
+    return gameConverter.toMinimalApiGame(game);
+  }
 
-    public ApiGame toApiGame(Game game) {
-        return gameConverter.toApiGame(game);
-    }
+  public ApiGame toApiGame(Game game) {
+    return gameConverter.toApiGame(game);
+  }
 
-    public Turn toTurn(ApiTurn apiTurn) {
-        return turnConverter.toTurn(apiTurn);
-    }
+  public Turn toTurn(ApiTurn apiTurn) {
+    return turnConverter.toTurn(apiTurn);
+  }
 }

@@ -8,37 +8,37 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClient;
 
 public class NaughtsAndCrossesAppExtension
-        implements BeforeAllCallback, BeforeEachCallback, AfterAllCallback, CloseableResource {
+    implements BeforeAllCallback, BeforeEachCallback, AfterAllCallback, CloseableResource {
 
-    private static final NaughtsAndCrossesAppRunner APP_RUNNER = new NaughtsAndCrossesAppRunner();
+  private static final NaughtsAndCrossesAppRunner APP_RUNNER = new NaughtsAndCrossesAppRunner();
 
-    @Override
-    public void beforeAll(ExtensionContext extensionContext) {
-        APP_RUNNER.startIfNotStarted();
-    }
+  @Override
+  public void beforeAll(ExtensionContext extensionContext) {
+    APP_RUNNER.startIfNotStarted();
+  }
 
-    @Override
-    public void beforeEach(ExtensionContext extensionContext) {
-        NaughtsAndCrossesApiClient client = getAppClient();
-        client.deleteAllGames();
-        client.resetIds();
-    }
+  @Override
+  public void beforeEach(ExtensionContext extensionContext) {
+    NaughtsAndCrossesApiClient client = getAppClient();
+    client.deleteAllGames();
+    client.resetIds();
+  }
 
-    @Override
-    public void afterAll(ExtensionContext extensionContext) {
-        shutdown();
-    }
+  @Override
+  public void afterAll(ExtensionContext extensionContext) {
+    shutdown();
+  }
 
-    @Override
-    public void close() {
-        shutdown();
-    }
+  @Override
+  public void close() {
+    shutdown();
+  }
 
-    public NaughtsAndCrossesApiClient getAppClient() {
-        return new NaughtsAndCrossesApiClient(APP_RUNNER.getUrl());
-    }
+  public NaughtsAndCrossesApiClient getAppClient() {
+    return new NaughtsAndCrossesApiClient(APP_RUNNER.getUrl());
+  }
 
-    private void shutdown() {
-        APP_RUNNER.shutdownIfRunning();
-    }
+  private void shutdown() {
+    APP_RUNNER.shutdownIfRunning();
+  }
 }

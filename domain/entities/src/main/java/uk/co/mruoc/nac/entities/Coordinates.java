@@ -7,14 +7,14 @@ import lombok.Data;
 @Data
 public class Coordinates {
 
-    private final long x;
-    private final long y;
+  private final long x;
+  private final long y;
 
-    public String getKey() {
-        return String.format("%d-%d", x, y);
-    }
+  public String getKey() {
+    return String.format("%d-%d", x, y);
+  }
 
-    public boolean sameAs(Coordinates otherCoordinates) {
-        return x == otherCoordinates.getX() && y == otherCoordinates.getY();
-    }
+  public boolean sameAs(Coordinates otherCoordinates) {
+    return x == otherCoordinates.getX() && y == otherCoordinates.getY();
+  }
 }

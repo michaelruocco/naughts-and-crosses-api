@@ -19,43 +19,44 @@ import uk.co.mruoc.nac.usecases.IdSupplier;
 @Configuration
 public class ApplicationConfig {
 
-    @Bean
-    public IdSupplier idSupplier() {
-        return new DefaultIdSupplier();
-    }
+  @Bean
+  public IdSupplier idSupplier() {
+    return new DefaultIdSupplier();
+  }
 
-    @Bean
-    public GameRepository gameRepository() {
-        return new InMemoryGameRepository();
-    }
+  @Bean
+  public GameRepository gameRepository() {
+    return new InMemoryGameRepository();
+  }
 
-    @Bean
-    public GameService gameService(IdSupplier idSupplier, GameRepository repository, GameEventPublisher publisher) {
-        return GameService.builder()
-                .factory(new GameFactory(idSupplier))
-                .formatter(new BoardFormatter())
-                .repository(repository)
-                .eventPublisher(publisher)
-                .build();
-    }
+  @Bean
+  public GameService gameService(
+      IdSupplier idSupplier, GameRepository repository, GameEventPublisher publisher) {
+    return GameService.builder()
+        .factory(new GameFactory(idSupplier))
+        .formatter(new BoardFormatter())
+        .repository(repository)
+        .eventPublisher(publisher)
+        .build();
+  }
 
-    @Bean
-    public ApiConverter apiConverter() {
-        return new ApiConverter();
-    }
+  @Bean
+  public ApiConverter apiConverter() {
+    return new ApiConverter();
+  }
 
-    @Bean
-    public Jackson2ObjectMapperBuilderCustomizer objectMapperCustomizer() {
-        return builder -> builder.serializationInclusion(JsonInclude.Include.NON_NULL);
-    }
+  @Bean
+  public Jackson2ObjectMapperBuilderCustomizer objectMapperCustomizer() {
+    return builder -> builder.serializationInclusion(JsonInclude.Include.NON_NULL);
+  }
 
-    @Bean
-    public WebMvcConfigurer webMvcConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedMethods("*").allowedOrigins("http://localhost:3001");
-            }
-        };
-    }
+  @Bean
+  public WebMvcConfigurer webMvcConfigurer() {
+    return new WebMvcConfigurer() {
+      @Override
+      public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**").allowedMethods("*").allowedOrigins("http://localhost:3001");
+      }
+    };
+  }
 }

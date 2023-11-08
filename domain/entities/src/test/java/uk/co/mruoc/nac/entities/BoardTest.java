@@ -8,126 +8,140 @@ import org.junit.jupiter.api.Test;
 
 class BoardTest {
 
-    private final Board board = new Board();
+  private final Board board = new Board();
 
-    @Test
-    void shouldReturnSize() {
-        assertThat(board.getSize()).isEqualTo(3);
-    }
+  @Test
+  void shouldReturnSize() {
+    assertThat(board.getSize()).isEqualTo(3);
+  }
 
-    @Test
-    void shouldContainSizeSquaredNumberOfLocations() {
-        assertThat(board.getLocations())
-                .hasSize(9)
-                .contains(new Location(0, 0))
-                .contains(new Location(1, 0))
-                .contains(new Location(2, 0))
-                .contains(new Location(0, 1))
-                .contains(new Location(1, 1))
-                .contains(new Location(2, 1))
-                .contains(new Location(0, 2))
-                .contains(new Location(1, 2))
-                .contains(new Location(2, 2));
-    }
+  @Test
+  void shouldContainSizeSquaredNumberOfLocations() {
+    assertThat(board.getLocations())
+        .hasSize(9)
+        .contains(new Location(0, 0))
+        .contains(new Location(1, 0))
+        .contains(new Location(2, 0))
+        .contains(new Location(0, 1))
+        .contains(new Location(1, 1))
+        .contains(new Location(2, 1))
+        .contains(new Location(0, 2))
+        .contains(new Location(1, 2))
+        .contains(new Location(2, 2));
+  }
 
-    @Test
-    void shouldUpdateBoardIfLocationAvailable() {
-        Coordinates coordinates = new Coordinates(0, 0);
-        Turn turn = Turn.builder().coordinates(coordinates).token('X').build();
+  @Test
+  void shouldUpdateBoardIfLocationAvailable() {
+    Coordinates coordinates = new Coordinates(0, 0);
+    Turn turn = Turn.builder().coordinates(coordinates).token('X').build();
 
-        Board updatedBoard = board.update(turn);
+    Board updatedBoard = board.update(turn);
 
-        assertThat(updatedBoard.getLocation(coordinates)).contains(new Location(coordinates, 'X'));
-    }
+    assertThat(updatedBoard.getLocation(coordinates)).contains(new Location(coordinates, 'X'));
+  }
 
-    @Test
-    void shouldThrowErrorOnUpdateBoardIfLocationIsNotAvailable() {
-        Turn turn = new Turn(0, 0, 'X');
-        Board updatedBoard = board.update(turn);
+  @Test
+  void shouldThrowErrorOnUpdateBoardIfLocationIsNotAvailable() {
+    Turn turn = new Turn(0, 0, 'X');
+    Board updatedBoard = board.update(turn);
 
-        Throwable error = catchThrowable(() -> updatedBoard.update(turn));
+    Throwable error = catchThrowable(() -> updatedBoard.update(turn));
 
-        assertThat(error)
-                .isInstanceOf(LocationNotAvailableException.class)
-                .hasMessage("board location at 0-0 is not available");
-    }
+    assertThat(error)
+        .isInstanceOf(LocationNotAvailableException.class)
+        .hasMessage("board location at 0-0 is not available");
+  }
 
-    @Test
-    void shouldEmptyCollectionIfNoWinner() {
-        char token = 'O';
+  @Test
+  void shouldEmptyCollectionIfNoWinner() {
+    char token = 'O';
 
-        Collection<Coordinates> winner = board.findWinningLine(token);
+    Collection<Coordinates> winner = board.findWinningLine(token);
 
-        assertThat(winner).isEmpty();
-    }
+    assertThat(winner).isEmpty();
+  }
 
-    @Test
-    void shouldReturnFalseIfNoWinner() {
-        char token = 'O';
+  @Test
+  void shouldReturnFalseIfNoWinner() {
+    char token = 'O';
 
-        boolean winner = board.hasWinner(token);
+    boolean winner = board.hasWinner(token);
 
-        assertThat(winner).isFalse();
-    }
+    assertThat(winner).isFalse();
+  }
 
-    @Test
-    void shouldReturnTrueIfWinner() {
-        char token = 'X';
-        Board updatedBoard = board.update(new Turn(0, 0, token))
-                .update(new Turn(1, 0, token))
-                .update(new Turn(2, 0, token));
+  @Test
+  void shouldReturnTrueIfWinner() {
+    char token = 'X';
+    Board updatedBoard =
+        board
+            .update(new Turn(0, 0, token))
+            .update(new Turn(1, 0, token))
+            .update(new Turn(2, 0, token));
 
-        boolean winner = updatedBoard.hasWinner(token);
+    boolean winner = updatedBoard.hasWinner(token);
 
-        assertThat(winner).isTrue();
-    }
+    assertThat(winner).isTrue();
+  }
 
-    @Test
-    void shouldWinningCoordinatesIfHorizontalWinner() {
-        char token = 'X';
-        Board updatedBoard = board.update(new Turn(0, 0, token))
-                .update(new Turn(1, 0, token))
-                .update(new Turn(2, 0, token));
+  @Test
+  void shouldWinningCoordinatesIfHorizontalWinner() {
+    char token = 'X';
+    Board updatedBoard =
+        board
+            .update(new Turn(0, 0, token))
+            .update(new Turn(1, 0, token))
+            .update(new Turn(2, 0, token));
 
-        Collection<Coordinates> winner = updatedBoard.findWinningLine(token);
+    Collection<Coordinates> winner = updatedBoard.findWinningLine(token);
 
-        assertThat(winner).containsExactly(new Coordinates(0, 0), new Coordinates(1, 0), new Coordinates(2, 0));
-    }
+    assertThat(winner)
+        .containsExactly(new Coordinates(0, 0), new Coordinates(1, 0), new Coordinates(2, 0));
+  }
 
-    @Test
-    void shouldReturnWinningCoordinatesIfVerticalWinner() {
-        char token = 'O';
-        Board updatedBoard = board.update(new Turn(0, 0, token))
-                .update(new Turn(0, 1, token))
-                .update(new Turn(0, 2, token));
+  @Test
+  void shouldReturnWinningCoordinatesIfVerticalWinner() {
+    char token = 'O';
+    Board updatedBoard =
+        board
+            .update(new Turn(0, 0, token))
+            .update(new Turn(0, 1, token))
+            .update(new Turn(0, 2, token));
 
-        Collection<Coordinates> winner = updatedBoard.findWinningLine(token);
+    Collection<Coordinates> winner = updatedBoard.findWinningLine(token);
 
-        assertThat(winner).containsExactly(new Coordinates(0, 0), new Coordinates(0, 1), new Coordinates(0, 2));
-    }
+    assertThat(winner)
+        .containsExactly(new Coordinates(0, 0), new Coordinates(0, 1), new Coordinates(0, 2));
+  }
 
-    @Test
-    void shouldCoordinatesIfForwardSlashWinner() {
-        char token = 'X';
-        Board updatedBoard = board.update(new Turn(0, 2, token))
-                .update(new Turn(1, 1, token))
-                .update(new Turn(2, 0, token));
+  @Test
+  void shouldCoordinatesIfForwardSlashWinner() {
+    char token = 'X';
+    Board updatedBoard =
+        board
+            .update(new Turn(0, 2, token))
+            .update(new Turn(1, 1, token))
+            .update(new Turn(2, 0, token));
 
-        Collection<Coordinates> winner = updatedBoard.findWinningLine(token);
+    Collection<Coordinates> winner = updatedBoard.findWinningLine(token);
 
-        assertThat(winner)
-                .containsExactlyInAnyOrder(new Coordinates(0, 2), new Coordinates(1, 1), new Coordinates(2, 0));
-    }
+    assertThat(winner)
+        .containsExactlyInAnyOrder(
+            new Coordinates(0, 2), new Coordinates(1, 1), new Coordinates(2, 0));
+  }
 
-    @Test
-    void shouldCoordinatesIfBackSlashWinner() {
-        char token = 'X';
-        Board updatedBoard = board.update(new Turn(0, 0, token))
-                .update(new Turn(1, 1, token))
-                .update(new Turn(2, 2, token));
+  @Test
+  void shouldCoordinatesIfBackSlashWinner() {
+    char token = 'X';
+    Board updatedBoard =
+        board
+            .update(new Turn(0, 0, token))
+            .update(new Turn(1, 1, token))
+            .update(new Turn(2, 2, token));
 
-        Collection<Coordinates> winner = updatedBoard.findWinningLine(token);
+    Collection<Coordinates> winner = updatedBoard.findWinningLine(token);
 
-        assertThat(winner).containsExactly(new Coordinates(0, 0), new Coordinates(1, 1), new Coordinates(2, 2));
-    }
+    assertThat(winner)
+        .containsExactly(new Coordinates(0, 0), new Coordinates(1, 1), new Coordinates(2, 2));
+  }
 }

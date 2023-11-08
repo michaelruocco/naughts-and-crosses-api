@@ -11,10 +11,10 @@ import lombok.RequiredArgsConstructor;
 @Data
 public class ApiTurn {
 
-    private final ApiCoordinates coordinates;
-    private final char token;
+  private final ApiCoordinates coordinates;
+  private final char token;
 
-    public ApiTurn(int x, int y, char token) {
-        this(new ApiCoordinates(x, y), token);
-    }
+  public ApiTurn(int x, int y, char token) {
+    this(new ApiCoordinates(x, y), token);
+  }
 }

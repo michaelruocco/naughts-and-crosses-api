@@ -12,8 +12,8 @@ import lombok.RequiredArgsConstructor;
 @Data
 public class ApiGame {
 
-    private final long id;
-    private final ApiStatus status;
-    private final ApiBoard board;
-    private final Collection<ApiPlayer> players;
+  private final long id;
+  private final ApiStatus status;
+  private final ApiBoard board;
+  private final Collection<ApiPlayer> players;
 }

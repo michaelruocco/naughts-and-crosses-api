@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @Data
 public class ApiLocation {
 
-    private final ApiCoordinates coordinates;
-    private final char token;
-    private final boolean winner;
+  private final ApiCoordinates coordinates;
+  private final char token;
+  private final boolean winner;
 }

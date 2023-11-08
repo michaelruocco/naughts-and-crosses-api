@@ -15,24 +15,20 @@ import uk.co.mruoc.nac.usecases.GameEventPublisher;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/v1/game-events")
-                .setAllowedOrigins("http://localhost:3001")
-                .withSockJS();
-    }
+  @Override
+  public void registerStompEndpoints(StompEndpointRegistry registry) {
+    registry.addEndpoint("/v1/game-events").setAllowedOrigins("http://localhost:3001").withSockJS();
+  }
 
-    @Override
-    public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.setApplicationDestinationPrefixes("/app");
-        registry.enableSimpleBroker("/topic");
-    }
+  @Override
+  public void configureMessageBroker(MessageBrokerRegistry registry) {
+    registry.setApplicationDestinationPrefixes("/app");
+    registry.enableSimpleBroker("/topic");
+  }
 
-    @Bean
-    public GameEventPublisher gameEventPublisher(SimpMessagingTemplate template, ApiConverter converter) {
-        return WebSocketGameEventPublisher.builder()
-                .template(template)
-                .converter(converter)
-                .build();
-    }
+  @Bean
+  public GameEventPublisher gameEventPublisher(
+      SimpMessagingTemplate template, ApiConverter converter) {
+    return WebSocketGameEventPublisher.builder().template(template).converter(converter).build();
+  }
 }

@@ -7,6 +7,6 @@ import lombok.Data;
 @Data
 public class Player {
 
-    private final String name;
-    private final char token;
+  private final String name;
+  private final char token;
 }

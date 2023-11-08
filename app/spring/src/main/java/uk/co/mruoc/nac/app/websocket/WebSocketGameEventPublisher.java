@@ -12,13 +12,13 @@ import uk.co.mruoc.nac.usecases.GameEventPublisher;
 @Slf4j
 public class WebSocketGameEventPublisher implements GameEventPublisher {
 
-    private final SimpMessagingTemplate template;
-    private final ApiConverter converter;
+  private final SimpMessagingTemplate template;
+  private final ApiConverter converter;
 
-    @Override
-    public void updated(Game game) {
-        ApiGame apiGame = converter.toApiGame(game);
-        log.info("sending web socket game updated {}", game);
-        template.convertAndSend("/topic/game-updated", apiGame);
-    }
+  @Override
+  public void updated(Game game) {
+    ApiGame apiGame = converter.toApiGame(game);
+    log.info("sending web socket game updated {}", game);
+    template.convertAndSend("/topic/game-updated", apiGame);
+  }
 }
