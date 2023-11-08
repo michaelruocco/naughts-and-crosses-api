@@ -1,9 +1,8 @@
 package uk.co.mruoc.nac.app.config;
 
+import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.function.Supplier;
 
 @RequiredArgsConstructor
 public class AllowedOriginsSupplier implements Supplier<String[]> {
