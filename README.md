@@ -39,7 +39,7 @@ To start up the API you can run:
 or to run the API on a port other than the default 8080:
 
 ```gradle
-./gradlew bootRun --args='--server.port=3002'
+./gradlew bootRun --args='--server.port=3002 --cors.allowed.origins=http://localhost:3001'
 ```
 
 ### Creating a game

@@ -1,10 +1,10 @@
 package uk.co.mruoc.nac.app.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import uk.co.mruoc.nac.api.converter.ApiConverter;
 import uk.co.mruoc.nac.repository.InMemoryGameRepository;
@@ -50,12 +50,12 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public WebMvcConfigurer webMvcConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedMethods("*").allowedOrigins("http://localhost:3001");
-            }
-        };
+    public AllowedOriginsSupplier corsAllowedOriginProvider(@Value("${cors.allowed.origins:}") String allowedOrigins) {
+        return new AllowedOriginsSupplier(allowedOrigins);
+    }
+
+    @Bean
+    public WebMvcConfigurer webMvcConfigurer(AllowedOriginsSupplier provider) {
+        return new CorsWebMvcConfigurer(provider);
     }
 }
