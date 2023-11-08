@@ -1,5 +1,8 @@
 package uk.co.mruoc.nac.app.config;
 
+import java.util.Arrays;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -13,11 +16,17 @@ import uk.co.mruoc.nac.usecases.GameEventPublisher;
 
 @Configuration
 @EnableWebSocketMessageBroker
+@RequiredArgsConstructor
+@Slf4j
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+
+  private final AllowedOriginsSupplier originsSupplier;
 
   @Override
   public void registerStompEndpoints(StompEndpointRegistry registry) {
-    registry.addEndpoint("/v1/game-events").setAllowedOrigins("http://localhost:3001").withSockJS();
+    String[] origins = originsSupplier.get();
+    log.info("web socket connections allowed from origins {}", Arrays.toString(origins));
+    registry.addEndpoint("/v1/game-events").setAllowedOrigins(origins).withSockJS();
   }
 
   @Override
