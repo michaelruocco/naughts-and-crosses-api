@@ -30,22 +30,25 @@ The accompanying UI that uses this API can be found [here](https://github.com/mi
 
 ### Running the API locally
 
-To start up the API you can run:
-
-```gradle
-./gradlew bootRun
-```
-
-or to run the API on a port other than the default 8080:
+To start up the API using an in memory repository so no database is required, 
+and on the default port 8080, you can run:
 
 ```gradle
 ./gradlew bootRun \
-      -Dserver.port=3002 \
-      -Dcors.allowed.origins=http://localhost:3001 \
-      -Ddatabase.url="jdbc:postgresql://localhost:5433/naughts-and-crosses-api" \
-      -Ddatabase.username=postgres \
-      -Ddatabase.password=postgres \
-      -Ddatabase.driver=org.postgresql.Driver
+    -Dcors.allowed.origins=http://localhost:3001 \
+    -Din.memory.repository.enabled=true
+```
+
+or to run the API using the postgres database, and on a port other than the default 8080:
+
+```gradle
+./gradlew bootRun \
+    -Dserver.port=3002 \
+    -Dcors.allowed.origins=http://localhost:3001 \
+    -Ddatabase.url="jdbc:postgresql://localhost:5433/naughts-and-crosses-api" \
+    -Ddatabase.username=postgres \
+    -Ddatabase.password=postgres \
+    -Ddatabase.driver=org.postgresql.Driver
 ```
 
 ### Creating a game

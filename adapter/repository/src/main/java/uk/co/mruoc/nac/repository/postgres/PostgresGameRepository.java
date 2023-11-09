@@ -6,7 +6,6 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.stream.Stream;
 import javax.sql.DataSource;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.json.JsonConverter;

@@ -54,8 +54,6 @@ public class NaughtsAndCrossesAppRunner {
     }
 
     private static String[] toArgs(int port) {
-        return new String[] {
-            String.format("--server.port=%d", port),
-        };
+        return new String[] {String.format("--server.port=%d", port), "--in.memory.repository.enabled=true"};
     }
 }
