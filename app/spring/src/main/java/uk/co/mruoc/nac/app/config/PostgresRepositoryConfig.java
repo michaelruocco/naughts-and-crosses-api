@@ -9,11 +9,14 @@ import uk.co.mruoc.json.jackson.JacksonJsonConverter;
 import uk.co.mruoc.nac.repository.postgres.PostgresGameRepository;
 
 @Configuration
-@ConditionalOnProperty(name = "in.memory.repository.enabled", havingValue = "false", matchIfMissing = true)
+@ConditionalOnProperty(
+    name = "in.memory.repository.enabled",
+    havingValue = "false",
+    matchIfMissing = true)
 public class PostgresRepositoryConfig {
 
-    @Bean
-    public PostgresGameRepository postgresGameRepository(DataSource dataSource, ObjectMapper mapper) {
-        return new PostgresGameRepository(dataSource, new JacksonJsonConverter(mapper));
-    }
+  @Bean
+  public PostgresGameRepository postgresGameRepository(DataSource dataSource, ObjectMapper mapper) {
+    return new PostgresGameRepository(dataSource, new JacksonJsonConverter(mapper));
+  }
 }

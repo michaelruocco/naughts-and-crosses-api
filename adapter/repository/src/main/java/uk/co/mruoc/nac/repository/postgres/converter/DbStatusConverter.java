@@ -7,25 +7,25 @@ import uk.co.mruoc.nac.repository.postgres.dto.DbStatus;
 @RequiredArgsConstructor
 public class DbStatusConverter {
 
-    private final DbPlayerConverter playerConverter;
+  private final DbPlayerConverter playerConverter;
 
-    public DbStatusConverter() {
-        this(new DbPlayerConverter());
-    }
+  public DbStatusConverter() {
+    this(new DbPlayerConverter());
+  }
 
-    public DbStatus toDbStatus(Status status) {
-        return DbStatus.builder()
-                .turn(status.getTurn())
-                .complete(status.isComplete())
-                .players(playerConverter.toDbPlayers(status.getPlayers()))
-                .build();
-    }
+  public DbStatus toDbStatus(Status status) {
+    return DbStatus.builder()
+        .turn(status.getTurn())
+        .complete(status.isComplete())
+        .players(playerConverter.toDbPlayers(status.getPlayers()))
+        .build();
+  }
 
-    public Status toStatus(DbStatus dbStatus) {
-        return Status.builder()
-                .turn(dbStatus.getTurn())
-                .complete(dbStatus.isComplete())
-                .players(playerConverter.toPlayers(dbStatus.getPlayers()))
-                .build();
-    }
+  public Status toStatus(DbStatus dbStatus) {
+    return Status.builder()
+        .turn(dbStatus.getTurn())
+        .complete(dbStatus.isComplete())
+        .players(playerConverter.toPlayers(dbStatus.getPlayers()))
+        .build();
+  }
 }

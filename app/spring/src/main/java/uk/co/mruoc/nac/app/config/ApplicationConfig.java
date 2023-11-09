@@ -18,38 +18,40 @@ import uk.co.mruoc.nac.usecases.IdSupplier;
 @Configuration
 public class ApplicationConfig {
 
-    @Bean
-    public IdSupplier idSupplier() {
-        return new DefaultIdSupplier();
-    }
+  @Bean
+  public IdSupplier idSupplier() {
+    return new DefaultIdSupplier();
+  }
 
-    @Bean
-    public GameService gameService(IdSupplier idSupplier, GameRepository repository, GameEventPublisher publisher) {
-        return GameService.builder()
-                .factory(new GameFactory(idSupplier))
-                .formatter(new BoardFormatter())
-                .repository(repository)
-                .eventPublisher(publisher)
-                .build();
-    }
+  @Bean
+  public GameService gameService(
+      IdSupplier idSupplier, GameRepository repository, GameEventPublisher publisher) {
+    return GameService.builder()
+        .factory(new GameFactory(idSupplier))
+        .formatter(new BoardFormatter())
+        .repository(repository)
+        .eventPublisher(publisher)
+        .build();
+  }
 
-    @Bean
-    public ApiConverter apiConverter() {
-        return new ApiConverter();
-    }
+  @Bean
+  public ApiConverter apiConverter() {
+    return new ApiConverter();
+  }
 
-    @Bean
-    public Jackson2ObjectMapperBuilderCustomizer objectMapperCustomizer() {
-        return builder -> builder.serializationInclusion(JsonInclude.Include.NON_NULL);
-    }
+  @Bean
+  public Jackson2ObjectMapperBuilderCustomizer objectMapperCustomizer() {
+    return builder -> builder.serializationInclusion(JsonInclude.Include.NON_NULL);
+  }
 
-    @Bean
-    public AllowedOriginsSupplier corsAllowedOriginProvider(@Value("${cors.allowed.origins:}") String allowedOrigins) {
-        return new AllowedOriginsSupplier(allowedOrigins);
-    }
+  @Bean
+  public AllowedOriginsSupplier corsAllowedOriginProvider(
+      @Value("${cors.allowed.origins:}") String allowedOrigins) {
+    return new AllowedOriginsSupplier(allowedOrigins);
+  }
 
-    @Bean
-    public WebMvcConfigurer webMvcConfigurer(AllowedOriginsSupplier provider) {
-        return new CorsWebMvcConfigurer(provider);
-    }
+  @Bean
+  public WebMvcConfigurer webMvcConfigurer(AllowedOriginsSupplier provider) {
+    return new CorsWebMvcConfigurer(provider);
+  }
 }

@@ -10,9 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DeleteGameDao {
 
-    public void deleteAll(Connection connection) throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement("delete from game;")) {
-            statement.execute();
-        }
+  public void deleteAll(Connection connection) throws SQLException {
+    try (PreparedStatement statement = connection.prepareStatement("delete from game;")) {
+      statement.execute();
     }
+  }
 }

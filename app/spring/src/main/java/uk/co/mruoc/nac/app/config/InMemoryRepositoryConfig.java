@@ -12,14 +12,17 @@ import uk.co.mruoc.nac.usecases.GameRepository;
 
 @Configuration
 @EnableAutoConfiguration(
-        exclude = {DataSourceAutoConfiguration.class, DataSourceTransactionManagerAutoConfiguration.class})
+    exclude = {
+      DataSourceAutoConfiguration.class,
+      DataSourceTransactionManagerAutoConfiguration.class
+    })
 @ConditionalOnProperty(name = "in.memory.repository.enabled", havingValue = "true")
 @Slf4j
 public class InMemoryRepositoryConfig {
 
-    @Bean
-    public GameRepository inMemoryGameRepository() {
-        log.info("in memory repository configured");
-        return new InMemoryGameRepository();
-    }
+  @Bean
+  public GameRepository inMemoryGameRepository() {
+    log.info("in memory repository configured");
+    return new InMemoryGameRepository();
+  }
 }

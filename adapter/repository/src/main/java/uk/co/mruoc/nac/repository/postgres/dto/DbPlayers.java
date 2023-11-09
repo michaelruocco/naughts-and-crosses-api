@@ -12,6 +12,6 @@ import lombok.RequiredArgsConstructor;
 @Data
 public class DbPlayers {
 
-    private final Collection<DbPlayer> values;
-    private final int currentIndex;
+  private final Collection<DbPlayer> values;
+  private final int currentIndex;
 }

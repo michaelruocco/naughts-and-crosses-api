@@ -9,10 +9,10 @@ import lombok.RequiredArgsConstructor;
 @Data
 public class Turn {
 
-    private final Coordinates coordinates;
-    private final char token;
+  private final Coordinates coordinates;
+  private final char token;
 
-    public Turn(int x, int y, char token) {
-        this(new Coordinates(x, y), token);
-    }
+  public Turn(int x, int y, char token) {
+    this(new Coordinates(x, y), token);
+  }
 }

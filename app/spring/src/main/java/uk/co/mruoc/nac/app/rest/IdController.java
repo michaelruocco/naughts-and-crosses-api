@@ -11,10 +11,10 @@ import uk.co.mruoc.nac.usecases.IdSupplier;
 @RequiredArgsConstructor
 public class IdController {
 
-    private final IdSupplier idSupplier;
+  private final IdSupplier idSupplier;
 
-    @DeleteMapping
-    public void resetIds() {
-        idSupplier.reset();
-    }
+  @DeleteMapping
+  public void resetIds() {
+    idSupplier.reset();
+  }
 }

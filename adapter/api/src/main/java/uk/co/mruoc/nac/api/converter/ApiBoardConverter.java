@@ -7,16 +7,16 @@ import uk.co.mruoc.nac.entities.Board;
 @RequiredArgsConstructor
 public class ApiBoardConverter {
 
-    private final ApiLocationConverter locationConverter;
+  private final ApiLocationConverter locationConverter;
 
-    public ApiBoardConverter() {
-        this(new ApiLocationConverter());
-    }
+  public ApiBoardConverter() {
+    this(new ApiLocationConverter());
+  }
 
-    public ApiBoard toApiBoard(Board board) {
-        return ApiBoard.builder()
-                .size(board.getSize())
-                .locations(locationConverter.toApiLocations(board.getLocations()))
-                .build();
-    }
+  public ApiBoard toApiBoard(Board board) {
+    return ApiBoard.builder()
+        .size(board.getSize())
+        .locations(locationConverter.toApiLocations(board.getLocations()))
+        .build();
+  }
 }

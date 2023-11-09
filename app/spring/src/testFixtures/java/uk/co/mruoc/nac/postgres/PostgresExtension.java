@@ -6,28 +6,29 @@ import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 @Slf4j
-public class PostgresExtension implements BeforeAllCallback, ExtensionContext.Store.CloseableResource {
+public class PostgresExtension
+    implements BeforeAllCallback, ExtensionContext.Store.CloseableResource {
 
-    private boolean started = false;
+  private boolean started = false;
 
-    private static final TestPostgresContainer DB_CONTAINER = new TestPostgresContainer();
+  private static final TestPostgresContainer DB_CONTAINER = new TestPostgresContainer();
 
-    @Override
-    public void beforeAll(ExtensionContext context) {
-        if (!started) {
-            log.info("starting postgres extension");
-            started = true;
+  @Override
+  public void beforeAll(ExtensionContext context) {
+    if (!started) {
+      log.info("starting postgres extension");
+      started = true;
 
-            DB_CONTAINER.start();
-        }
+      DB_CONTAINER.start();
     }
+  }
 
-    @Override
-    public void close() {
-        DB_CONTAINER.close();
-    }
+  @Override
+  public void close() {
+    DB_CONTAINER.close();
+  }
 
-    public static DataSource getDataSource() {
-        return DB_CONTAINER.getDataSource();
-    }
+  public static DataSource getDataSource() {
+    return DB_CONTAINER.getDataSource();
+  }
 }

@@ -12,26 +12,26 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class PortReady implements Callable<Boolean> {
 
-    private final String host;
-    private final int port;
+  private final String host;
+  private final int port;
 
-    public static PortReady local(int port) {
-        return new PortReady("localhost", port);
-    }
+  public static PortReady local(int port) {
+    return new PortReady("localhost", port);
+  }
 
-    @Override
-    public Boolean call() {
-        try {
-            SocketAddress address = new InetSocketAddress(host, port);
-            try (SocketChannel channel = SocketChannel.open()) {
-                channel.configureBlocking(true);
-                channel.connect(address);
-                log.info("successfully connect to {} on port {}", host, port);
-                return true;
-            }
-        } catch (IOException e) {
-            log.error("failed to connect to {} on port {}", host, port, e);
-            return false;
-        }
+  @Override
+  public Boolean call() {
+    try {
+      SocketAddress address = new InetSocketAddress(host, port);
+      try (SocketChannel channel = SocketChannel.open()) {
+        channel.configureBlocking(true);
+        channel.connect(address);
+        log.info("successfully connect to {} on port {}", host, port);
+        return true;
+      }
+    } catch (IOException e) {
+      log.error("failed to connect to {} on port {}", host, port, e);
+      return false;
     }
+  }
 }

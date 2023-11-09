@@ -12,6 +12,6 @@ import lombok.RequiredArgsConstructor;
 @Data
 public class DbBoard {
 
-    private final int size;
-    private final Collection<DbLocation> locations;
+  private final int size;
+  private final Collection<DbLocation> locations;
 }

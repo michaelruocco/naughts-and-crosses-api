@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @Data
 public class ApiStatus {
 
-    private final long turn;
-    private final boolean complete;
-    private final Character nextPlayerToken;
+  private final long turn;
+  private final boolean complete;
+  private final Character nextPlayerToken;
 }

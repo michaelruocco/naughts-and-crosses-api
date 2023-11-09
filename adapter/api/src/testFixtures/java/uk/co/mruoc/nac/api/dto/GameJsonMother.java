@@ -8,15 +8,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GameJsonMother {
 
-    public static String initial() {
-        return loadContentFromClasspath("game/initial.json");
-    }
+  public static String initial() {
+    return loadContentFromClasspath("game/initial.json");
+  }
 
-    public static String xWinner() {
-        return loadContentFromClasspath("game/x-winner.json");
-    }
+  public static String xWinner() {
+    return loadContentFromClasspath("game/x-winner.json");
+  }
 
-    public static String draw() {
-        return loadContentFromClasspath("game/draw.json");
-    }
+  public static String draw() {
+    return loadContentFromClasspath("game/draw.json");
+  }
 }

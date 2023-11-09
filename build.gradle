@@ -29,7 +29,7 @@ subprojects {
         flywayVersion = "9.22.3"
         jsonAdapterVersion = "1.0.4"
 
-        junitVersion = "5.10.0"
+        junitVersion = "5.10.1"
 
         gitUrl = "https://github.com/michaelruocco/naughts-and-crosses-api"
         pomConfig = {

@@ -9,14 +9,11 @@ import uk.co.mruoc.nac.entities.Players;
 @RequiredArgsConstructor
 public class ApiPlayerConverter {
 
-    public Collection<ApiPlayer> toApiPlayers(Players players) {
-        return players.stream().map(this::toApiPlayer).toList();
-    }
+  public Collection<ApiPlayer> toApiPlayers(Players players) {
+    return players.stream().map(this::toApiPlayer).toList();
+  }
 
-    public ApiPlayer toApiPlayer(Player player) {
-        return ApiPlayer.builder()
-                .name(player.getName())
-                .token(player.getToken())
-                .build();
-    }
+  public ApiPlayer toApiPlayer(Player player) {
+    return ApiPlayer.builder().name(player.getName()).token(player.getToken()).build();
+  }
 }

@@ -7,39 +7,40 @@ import org.junit.jupiter.api.Test;
 
 class AllowedOriginsSupplierTest {
 
-    @Test
-    void shouldReturnMultipleCommaSeparatedOriginsAsAnArray() {
-        Supplier<String[]> supplier = new AllowedOriginsSupplier("http://localhost:8081,http://localhost:8082");
+  @Test
+  void shouldReturnMultipleCommaSeparatedOriginsAsAnArray() {
+    Supplier<String[]> supplier =
+        new AllowedOriginsSupplier("http://localhost:8081,http://localhost:8082");
 
-        String[] origins = supplier.get();
+    String[] origins = supplier.get();
 
-        assertThat(origins).containsExactly("http://localhost:8081", "http://localhost:8082");
-    }
+    assertThat(origins).containsExactly("http://localhost:8081", "http://localhost:8082");
+  }
 
-    @Test
-    void shouldReturnSingleOriginAsAnArray() {
-        Supplier<String[]> supplier = new AllowedOriginsSupplier("http://localhost:8081");
+  @Test
+  void shouldReturnSingleOriginAsAnArray() {
+    Supplier<String[]> supplier = new AllowedOriginsSupplier("http://localhost:8081");
 
-        String[] origins = supplier.get();
+    String[] origins = supplier.get();
 
-        assertThat(origins).containsExactly("http://localhost:8081");
-    }
+    assertThat(origins).containsExactly("http://localhost:8081");
+  }
 
-    @Test
-    void shouldReturnEmptyArrayForEmptyStringInput() {
-        Supplier<String[]> supplier = new AllowedOriginsSupplier("");
+  @Test
+  void shouldReturnEmptyArrayForEmptyStringInput() {
+    Supplier<String[]> supplier = new AllowedOriginsSupplier("");
 
-        String[] origins = supplier.get();
+    String[] origins = supplier.get();
 
-        assertThat(origins).isEmpty();
-    }
+    assertThat(origins).isEmpty();
+  }
 
-    @Test
-    void shouldReturnEmptyArrayForNullInput() {
-        Supplier<String[]> supplier = new AllowedOriginsSupplier((String) null);
+  @Test
+  void shouldReturnEmptyArrayForNullInput() {
+    Supplier<String[]> supplier = new AllowedOriginsSupplier((String) null);
 
-        String[] origins = supplier.get();
+    String[] origins = supplier.get();
 
-        assertThat(origins).isEmpty();
-    }
+    assertThat(origins).isEmpty();
+  }
 }

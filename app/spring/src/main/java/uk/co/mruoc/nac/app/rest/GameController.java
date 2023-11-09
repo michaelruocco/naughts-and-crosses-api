@@ -23,44 +23,44 @@ import uk.co.mruoc.nac.usecases.GameService;
 @RequiredArgsConstructor
 public class GameController {
 
-    private final GameService service;
-    private final ApiConverter converter;
+  private final GameService service;
+  private final ApiConverter converter;
 
-    @GetMapping
-    public Collection<ApiGame> getAllGames(
-            @RequestParam(name = "minimal", required = false, defaultValue = "false") boolean minimal) {
-        return service.getAll().map(toGameConverter(minimal)).toList();
-    }
+  @GetMapping
+  public Collection<ApiGame> getAllGames(
+      @RequestParam(name = "minimal", required = false, defaultValue = "false") boolean minimal) {
+    return service.getAll().map(toGameConverter(minimal)).toList();
+  }
 
-    @DeleteMapping
-    public void deleteAllGames() {
-        service.deleteAll();
-    }
+  @DeleteMapping
+  public void deleteAllGames() {
+    service.deleteAll();
+  }
 
-    @GetMapping("/{id}")
-    public ApiGame getGame(
-            @PathVariable long id,
-            @RequestParam(name = "minimal", required = false, defaultValue = "false") boolean minimal) {
-        return toGameConverter(minimal).apply(service.get(id));
-    }
+  @GetMapping("/{id}")
+  public ApiGame getGame(
+      @PathVariable long id,
+      @RequestParam(name = "minimal", required = false, defaultValue = "false") boolean minimal) {
+    return toGameConverter(minimal).apply(service.get(id));
+  }
 
-    @PostMapping
-    public ApiGame createGame() {
-        Game game = service.createGame();
-        return converter.toApiGame(game);
-    }
+  @PostMapping
+  public ApiGame createGame() {
+    Game game = service.createGame();
+    return converter.toApiGame(game);
+  }
 
-    @PostMapping("/{gameId}/turns")
-    public ApiGame takeTurn(@PathVariable long gameId, @RequestBody ApiTurn apiTurn) {
-        Turn turn = converter.toTurn(apiTurn);
-        Game game = service.takeTurn(gameId, turn);
-        return converter.toApiGame(game);
-    }
+  @PostMapping("/{gameId}/turns")
+  public ApiGame takeTurn(@PathVariable long gameId, @RequestBody ApiTurn apiTurn) {
+    Turn turn = converter.toTurn(apiTurn);
+    Game game = service.takeTurn(gameId, turn);
+    return converter.toApiGame(game);
+  }
 
-    private Function<Game, ApiGame> toGameConverter(boolean minimal) {
-        if (minimal) {
-            return converter::toMinimalApiGame;
-        }
-        return converter::toApiGame;
+  private Function<Game, ApiGame> toGameConverter(boolean minimal) {
+    if (minimal) {
+      return converter::toMinimalApiGame;
     }
+    return converter::toApiGame;
+  }
 }

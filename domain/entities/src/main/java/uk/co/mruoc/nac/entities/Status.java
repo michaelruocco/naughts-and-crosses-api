@@ -10,42 +10,39 @@ import lombok.RequiredArgsConstructor;
 @Data
 public class Status {
 
-    private final long turn;
-    private final boolean complete;
-    private final Players players;
+  private final long turn;
+  private final boolean complete;
+  private final Players players;
 
-    public Status() {
-        this(new Players());
-    }
+  public Status() {
+    this(new Players());
+  }
 
-    public Status(Players players) {
-        this(0, false, players);
-    }
+  public Status(Players players) {
+    this(0, false, players);
+  }
 
-    public Status turnTaken() {
-        return toBuilder()
-                .turn(nextTurn())
-                .players(players.updateCurrentPlayer())
-                .build();
-    }
+  public Status turnTaken() {
+    return toBuilder().turn(nextTurn()).players(players.updateCurrentPlayer()).build();
+  }
 
-    public Status gameEndingTurnTaken() {
-        return Status.builder()
-                .turn(nextTurn())
-                .players(players.clearCurrentPlayer())
-                .complete(true)
-                .build();
-    }
+  public Status gameEndingTurnTaken() {
+    return Status.builder()
+        .turn(nextTurn())
+        .players(players.clearCurrentPlayer())
+        .complete(true)
+        .build();
+  }
 
-    public Optional<Character> getCurrentPlayerToken() {
-        return players.getCurrentPlayerToken();
-    }
+  public Optional<Character> getCurrentPlayerToken() {
+    return players.getCurrentPlayerToken();
+  }
 
-    public void validateIsTurn(char token) {
-        players.validateIsTurn(token);
-    }
+  public void validateIsTurn(char token) {
+    players.validateIsTurn(token);
+  }
 
-    private long nextTurn() {
-        return turn + 1;
-    }
+  private long nextTurn() {
+    return turn + 1;
+  }
 }

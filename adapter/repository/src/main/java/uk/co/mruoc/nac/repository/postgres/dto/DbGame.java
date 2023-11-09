@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @Data
 public class DbGame {
 
-    private final long id;
-    private final DbStatus status;
-    private final DbBoard board;
+  private final long id;
+  private final DbStatus status;
+  private final DbBoard board;
 }

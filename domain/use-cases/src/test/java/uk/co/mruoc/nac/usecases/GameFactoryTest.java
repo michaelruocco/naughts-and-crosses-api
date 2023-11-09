@@ -12,49 +12,49 @@ import uk.co.mruoc.nac.entities.Status;
 
 class GameFactoryTest {
 
-    private final LongSupplier idSupplier = mock(LongSupplier.class);
+  private final LongSupplier idSupplier = mock(LongSupplier.class);
 
-    private final GameFactory factory = new GameFactory(idSupplier);
+  private final GameFactory factory = new GameFactory(idSupplier);
 
-    @Test
-    void shouldPopulateIdFromSupplier() {
-        long expectedId = 5;
-        when(idSupplier.getAsLong()).thenReturn(expectedId);
+  @Test
+  void shouldPopulateIdFromSupplier() {
+    long expectedId = 5;
+    when(idSupplier.getAsLong()).thenReturn(expectedId);
 
-        Game game = factory.buildGame();
+    Game game = factory.buildGame();
 
-        assertThat(game.getId()).isEqualTo(expectedId);
-    }
+    assertThat(game.getId()).isEqualTo(expectedId);
+  }
 
-    @Test
-    void shouldCreateIncompleteGame() {
-        Game game = factory.buildGame();
+  @Test
+  void shouldCreateIncompleteGame() {
+    Game game = factory.buildGame();
 
-        Status status = game.getStatus();
-        assertThat(status.isComplete()).isFalse();
-    }
+    Status status = game.getStatus();
+    assertThat(status.isComplete()).isFalse();
+  }
 
-    @Test
-    void initialTurnShouldBeZero() {
-        Game game = factory.buildGame();
+  @Test
+  void initialTurnShouldBeZero() {
+    Game game = factory.buildGame();
 
-        Status status = game.getStatus();
-        assertThat(status.getTurn()).isZero();
-    }
+    Status status = game.getStatus();
+    assertThat(status.getTurn()).isZero();
+  }
 
-    @Test
-    void firstPlayerShouldBeCrosses() {
-        Game game = factory.buildGame();
+  @Test
+  void firstPlayerShouldBeCrosses() {
+    Game game = factory.buildGame();
 
-        Status status = game.getStatus();
-        assertThat(status.getCurrentPlayerToken()).contains('X');
-    }
+    Status status = game.getStatus();
+    assertThat(status.getCurrentPlayerToken()).contains('X');
+  }
 
-    @Test
-    void boardShouldBeEmpty() {
-        Game game = factory.buildGame();
+  @Test
+  void boardShouldBeEmpty() {
+    Game game = factory.buildGame();
 
-        Board board = game.getBoard();
-        assertThat(board.isEmpty()).isTrue();
-    }
+    Board board = game.getBoard();
+    assertThat(board.isEmpty()).isTrue();
+  }
 }

@@ -20,26 +20,24 @@ import uk.co.mruoc.nac.usecases.GameEventPublisher;
 @Slf4j
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    private final AllowedOriginsSupplier originsSupplier;
+  private final AllowedOriginsSupplier originsSupplier;
 
-    @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        String[] origins = originsSupplier.get();
-        log.info("web socket connections allowed from origins {}", Arrays.toString(origins));
-        registry.addEndpoint("/v1/game-events").setAllowedOrigins(origins).withSockJS();
-    }
+  @Override
+  public void registerStompEndpoints(StompEndpointRegistry registry) {
+    String[] origins = originsSupplier.get();
+    log.info("web socket connections allowed from origins {}", Arrays.toString(origins));
+    registry.addEndpoint("/v1/game-events").setAllowedOrigins(origins).withSockJS();
+  }
 
-    @Override
-    public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.setApplicationDestinationPrefixes("/app");
-        registry.enableSimpleBroker("/topic");
-    }
+  @Override
+  public void configureMessageBroker(MessageBrokerRegistry registry) {
+    registry.setApplicationDestinationPrefixes("/app");
+    registry.enableSimpleBroker("/topic");
+  }
 
-    @Bean
-    public GameEventPublisher gameEventPublisher(SimpMessagingTemplate template, ApiConverter converter) {
-        return WebSocketGameEventPublisher.builder()
-                .template(template)
-                .converter(converter)
-                .build();
-    }
+  @Bean
+  public GameEventPublisher gameEventPublisher(
+      SimpMessagingTemplate template, ApiConverter converter) {
+    return WebSocketGameEventPublisher.builder().template(template).converter(converter).build();
+  }
 }

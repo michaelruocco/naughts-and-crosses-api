@@ -4,5 +4,5 @@ import uk.co.mruoc.nac.entities.Game;
 
 public interface GameEventPublisher {
 
-    void updated(Game game);
+  void updated(Game game);
 }

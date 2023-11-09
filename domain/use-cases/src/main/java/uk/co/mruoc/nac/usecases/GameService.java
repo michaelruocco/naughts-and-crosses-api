@@ -10,40 +10,40 @@ import uk.co.mruoc.nac.entities.Turn;
 @Builder
 public class GameService {
 
-    private final GameFactory factory;
-    private final GameRepository repository;
-    private final BoardFormatter formatter;
-    private final GameEventPublisher eventPublisher;
+  private final GameFactory factory;
+  private final GameRepository repository;
+  private final BoardFormatter formatter;
+  private final GameEventPublisher eventPublisher;
 
-    public Game createGame() {
-        Game game = factory.buildGame();
-        save(game);
-        return game;
-    }
+  public Game createGame() {
+    Game game = factory.buildGame();
+    save(game);
+    return game;
+  }
 
-    public Game takeTurn(long id, Turn turn) {
-        log.info("taking turn for game with id {} {}", id, turn);
-        Game game = get(id);
-        Game updatedGame = game.take(turn);
-        save(updatedGame);
-        log.info("game {} board\n{}", id, formatter.format(updatedGame.getBoard()));
-        return updatedGame;
-    }
+  public Game takeTurn(long id, Turn turn) {
+    log.info("taking turn for game with id {} {}", id, turn);
+    Game game = get(id);
+    Game updatedGame = game.take(turn);
+    save(updatedGame);
+    log.info("game {} board\n{}", id, formatter.format(updatedGame.getBoard()));
+    return updatedGame;
+  }
 
-    public Stream<Game> getAll() {
-        return repository.getAll();
-    }
+  public Stream<Game> getAll() {
+    return repository.getAll();
+  }
 
-    public Game get(long id) {
-        return repository.find(id).orElseThrow(() -> new GameNotFoundException(id));
-    }
+  public Game get(long id) {
+    return repository.find(id).orElseThrow(() -> new GameNotFoundException(id));
+  }
 
-    private void save(Game game) {
-        repository.save(game);
-        eventPublisher.updated(game);
-    }
+  private void save(Game game) {
+    repository.save(game);
+    eventPublisher.updated(game);
+  }
 
-    public void deleteAll() {
-        repository.deleteAll();
-    }
+  public void deleteAll() {
+    repository.deleteAll();
+  }
 }

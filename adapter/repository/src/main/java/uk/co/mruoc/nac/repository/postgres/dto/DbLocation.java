@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @Data
 public class DbLocation {
 
-    private final DbCoordinates coordinates;
-    private final char token;
-    private final boolean winner;
+  private final DbCoordinates coordinates;
+  private final char token;
+  private final boolean winner;
 }

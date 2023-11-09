@@ -9,13 +9,13 @@ import uk.co.mruoc.nac.entities.Status;
 @RequiredArgsConstructor
 public class GameFactory {
 
-    private final LongSupplier idSupplier;
+  private final LongSupplier idSupplier;
 
-    public Game buildGame() {
-        return Game.builder()
-                .id(idSupplier.getAsLong())
-                .status(new Status())
-                .board(new Board())
-                .build();
-    }
+  public Game buildGame() {
+    return Game.builder()
+        .id(idSupplier.getAsLong())
+        .status(new Status())
+        .board(new Board())
+        .build();
+  }
 }

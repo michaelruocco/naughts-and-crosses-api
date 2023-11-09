@@ -8,21 +8,21 @@ import uk.co.mruoc.nac.entities.Location;
 @RequiredArgsConstructor
 public class ApiLocationConverter {
 
-    private final ApiCoordinatesConverter coordinatesConverter;
+  private final ApiCoordinatesConverter coordinatesConverter;
 
-    public ApiLocationConverter() {
-        this(new ApiCoordinatesConverter());
-    }
+  public ApiLocationConverter() {
+    this(new ApiCoordinatesConverter());
+  }
 
-    public Collection<ApiLocation> toApiLocations(Collection<Location> locations) {
-        return locations.stream().map(this::toApiLocation).toList();
-    }
+  public Collection<ApiLocation> toApiLocations(Collection<Location> locations) {
+    return locations.stream().map(this::toApiLocation).toList();
+  }
 
-    public ApiLocation toApiLocation(Location location) {
-        return ApiLocation.builder()
-                .coordinates(coordinatesConverter.toApiCoordinates(location.getCoordinates()))
-                .token(location.getToken())
-                .winner(location.isWinner())
-                .build();
-    }
+  public ApiLocation toApiLocation(Location location) {
+    return ApiLocation.builder()
+        .coordinates(coordinatesConverter.toApiCoordinates(location.getCoordinates()))
+        .token(location.getToken())
+        .winner(location.isWinner())
+        .build();
+  }
 }

@@ -10,97 +10,98 @@ import org.junit.jupiter.api.Test;
 
 class GameTest {
 
-    private final Status status = mock(Status.class);
-    private final Board board = mock(Board.class);
+  private final Status status = mock(Status.class);
+  private final Board board = mock(Board.class);
 
-    private final Turn turn =
-            Turn.builder().coordinates(new Coordinates(0, 0)).token('X').build();
+  private final Turn turn = Turn.builder().coordinates(new Coordinates(0, 0)).token('X').build();
 
-    private final Game game = Game.builder().id(1).status(status).board(board).build();
+  private final Game game = Game.builder().id(1).status(status).board(board).build();
 
-    @Test
-    void shouldThrowErrorIfGameIsComplete() {
-        when(status.isComplete()).thenReturn(true);
+  @Test
+  void shouldThrowErrorIfGameIsComplete() {
+    when(status.isComplete()).thenReturn(true);
 
-        Throwable error = catchThrowable(() -> game.take(turn));
+    Throwable error = catchThrowable(() -> game.take(turn));
 
-        assertThat(error).isInstanceOf(GameAlreadyCompleteException.class).hasMessage("game 1 is already complete");
-    }
+    assertThat(error)
+        .isInstanceOf(GameAlreadyCompleteException.class)
+        .hasMessage("game 1 is already complete");
+  }
 
-    @Test
-    void shouldThrowErrorIfNotPlayersTurn() {
-        Throwable expectedError = new NotPlayersTurnException(turn.getToken());
-        doThrow(expectedError).when(status).validateIsTurn(turn.getToken());
+  @Test
+  void shouldThrowErrorIfNotPlayersTurn() {
+    Throwable expectedError = new NotPlayersTurnException(turn.getToken());
+    doThrow(expectedError).when(status).validateIsTurn(turn.getToken());
 
-        Throwable error = catchThrowable(() -> game.take(turn));
+    Throwable error = catchThrowable(() -> game.take(turn));
 
-        assertThat(error).isEqualTo(expectedError);
-    }
+    assertThat(error).isEqualTo(expectedError);
+  }
 
-    @Test
-    void shouldUpdateBoardWhenTurnTaken() {
-        Board expectedBoard = givenUpdatedBoard();
-        givenTurnTaken(expectedBoard);
+  @Test
+  void shouldUpdateBoardWhenTurnTaken() {
+    Board expectedBoard = givenUpdatedBoard();
+    givenTurnTaken(expectedBoard);
 
-        Game updatedGame = game.take(turn);
+    Game updatedGame = game.take(turn);
 
-        assertThat(updatedGame.getBoard()).isEqualTo(expectedBoard);
-    }
+    assertThat(updatedGame.getBoard()).isEqualTo(expectedBoard);
+  }
 
-    @Test
-    void shouldUpdateStatusWhenTurnTaken() {
-        Status expectedStatus = mock(Status.class);
-        when(status.turnTaken()).thenReturn(expectedStatus);
-        givenTurnTaken();
+  @Test
+  void shouldUpdateStatusWhenTurnTaken() {
+    Status expectedStatus = mock(Status.class);
+    when(status.turnTaken()).thenReturn(expectedStatus);
+    givenTurnTaken();
 
-        Game updatedGame = game.take(turn);
+    Game updatedGame = game.take(turn);
 
-        assertThat(updatedGame.getStatus()).isEqualTo(expectedStatus);
-    }
+    assertThat(updatedGame.getStatus()).isEqualTo(expectedStatus);
+  }
 
-    @Test
-    void shouldUpdateStatusWhenGameEndingTurnTaken() {
-        Status expectedStatus = mock(Status.class);
-        when(status.gameEndingTurnTaken()).thenReturn(expectedStatus);
-        givenGameEndingTurnTaken();
+  @Test
+  void shouldUpdateStatusWhenGameEndingTurnTaken() {
+    Status expectedStatus = mock(Status.class);
+    when(status.gameEndingTurnTaken()).thenReturn(expectedStatus);
+    givenGameEndingTurnTaken();
 
-        Game updatedGame = game.take(turn);
+    Game updatedGame = game.take(turn);
 
-        assertThat(updatedGame.getStatus()).isEqualTo(expectedStatus);
-    }
+    assertThat(updatedGame.getStatus()).isEqualTo(expectedStatus);
+  }
 
-    @Test
-    void shouldReturnIsCompleteFromStatus() {
-        when(status.isComplete()).thenReturn(true);
+  @Test
+  void shouldReturnIsCompleteFromStatus() {
+    when(status.isComplete()).thenReturn(true);
 
-        assertThat(game.isComplete()).isTrue();
-    }
+    assertThat(game.isComplete()).isTrue();
+  }
 
-    @Test
-    void shouldReturnPlayersFromStatus() {
-        Players expectedPlayers = mock(Players.class);
-        when(status.getPlayers()).thenReturn(expectedPlayers);
+  @Test
+  void shouldReturnPlayersFromStatus() {
+    Players expectedPlayers = mock(Players.class);
+    when(status.getPlayers()).thenReturn(expectedPlayers);
 
-        assertThat(game.getPlayers()).isEqualTo(expectedPlayers);
-    }
+    assertThat(game.getPlayers()).isEqualTo(expectedPlayers);
+  }
 
-    private void givenTurnTaken() {
-        Board updatedBoard = givenUpdatedBoard();
-        givenTurnTaken(updatedBoard);
-    }
+  private void givenTurnTaken() {
+    Board updatedBoard = givenUpdatedBoard();
+    givenTurnTaken(updatedBoard);
+  }
 
-    private void givenTurnTaken(Board board) {
-        when(board.isPlayable(turn.getToken())).thenReturn(true);
-    }
+  private void givenTurnTaken(Board board) {
+    when(board.isPlayable(turn.getToken())).thenReturn(true);
+  }
 
-    private void givenGameEndingTurnTaken() {
-        Board updatedBoard = givenUpdatedBoard();
-        when(updatedBoard.isPlayable(turn.getToken())).thenReturn(false);
-    }
+  private void givenGameEndingTurnTaken() {
+    Board updatedBoard = givenUpdatedBoard();
+    when(updatedBoard.isPlayable(turn.getToken())).thenReturn(false);
+  }
 
-    private Board givenUpdatedBoard() {
-        Board updatedBoard = mock(Board.class);
-        when(board.update(turn)).thenReturn(updatedBoard);
-        return updatedBoard;
-    }
+  private Board givenUpdatedBoard() {
+    Board updatedBoard = mock(Board.class);
+    when(board.update(turn)).thenReturn(updatedBoard);
+    return updatedBoard;
+  }
 }

@@ -11,6 +11,6 @@ import lombok.RequiredArgsConstructor;
 @Data
 public class DbCoordinates {
 
-    private final long x;
-    private final long y;
+  private final long x;
+  private final long y;
 }
