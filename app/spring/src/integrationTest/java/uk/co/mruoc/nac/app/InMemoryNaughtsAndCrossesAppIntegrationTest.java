@@ -4,7 +4,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import uk.co.mruoc.nac.inmemory.InMemoryTestEnvironment;
 
 class InMemoryNaughtsAndCrossesAppIntegrationTest
-    implements AbstractNaughtsAndCrossesAppIntegrationTest {
+    implements NaughtsAndCrossesAppIntegrationTest {
 
   @RegisterExtension
   public static final NaughtsAndCrossesAppExtension EXTENSION =

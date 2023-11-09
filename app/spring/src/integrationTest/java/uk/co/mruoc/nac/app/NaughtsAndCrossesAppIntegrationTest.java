@@ -10,7 +10,7 @@ import uk.co.mruoc.nac.api.dto.ApiTurn;
 import uk.co.mruoc.nac.api.dto.GameJsonMother;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClient;
 
-interface AbstractNaughtsAndCrossesAppIntegrationTest {
+interface NaughtsAndCrossesAppIntegrationTest {
 
   NaughtsAndCrossesAppExtension getExtension();
 
