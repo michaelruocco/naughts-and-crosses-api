@@ -1,0 +1,1 @@
+create schema "cop-targeting-api-app"

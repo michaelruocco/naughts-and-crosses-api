@@ -28,7 +28,7 @@ The accompanying UI that uses this API can be found [here](https://github.com/mi
 ./gradlew clean dependencyUpdates lintGradle spotlessApply build integrationTest
 ```
 
-### Running the API locally
+### Running the API locally with an in memory repository
 
 To start up the API using an in memory repository so no database is required, 
 and on the default port 8080, you can run:
@@ -39,7 +39,18 @@ and on the default port 8080, you can run:
     -Din.memory.repository.enabled=true
 ```
 
-or to run the API using the postgres database, and on a port other than the default 8080:
+### Running the API locally with a postgres database repository
+
+To run the API using the postgres database, first you will need to start
+an instance of postgres by running:
+
+```bash
+docker-compose up -d
+```
+
+This will start an instance of postgres running on port 5433, then to start
+the app connecting to postgres and running on a port other than the default 8080
+you can run:
 
 ```gradle
 ./gradlew bootRun \

@@ -2,6 +2,7 @@ package uk.co.mruoc.nac.repository.postgres;
 
 import java.sql.SQLException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.postgresql.util.PGobject;
 import uk.co.mruoc.json.JsonConverter;
 import uk.co.mruoc.nac.entities.Game;
@@ -9,6 +10,7 @@ import uk.co.mruoc.nac.repository.postgres.converter.DbGameConverter;
 import uk.co.mruoc.nac.repository.postgres.dto.DbGame;
 
 @RequiredArgsConstructor
+@Slf4j
 public class PostgresGameConverter {
 
     private final JsonConverter jsonConverter;

@@ -12,20 +12,19 @@ import org.springframework.context.ConfigurableApplicationContext;
 @Slf4j
 public class NaughtsAndCrossesAppRunner {
 
-    private int port;
     private ConfigurableApplicationContext context;
 
-    public void startIfNotStarted() {
+    public void startIfNotStarted(AppConfig config) {
         if (isRunning()) {
             log.info("app already running so not starting");
             return;
         }
-        port = AvailablePortFinder.findAvailableTcpPort();
-        String[] args = toArgs(port);
+        ;
+        String[] args = config.asArgs();
         log.info("starting naughts and crosses application with args {}", Arrays.toString(args));
         context = SpringApplication.run(NaughtsAndCrossesApp.class, args);
         log.info("waiting for app startup to complete...");
-        waitForStartupToComplete();
+        waitForStartupToComplete(config.getAppPort());
     }
 
     public void shutdownIfRunning() {
@@ -38,22 +37,14 @@ public class NaughtsAndCrossesAppRunner {
         context = null;
     }
 
-    public String getUrl() {
-        return String.format("http://localhost:%d", port);
-    }
-
     private boolean isRunning() {
         return Objects.nonNull(context);
     }
 
-    private void waitForStartupToComplete() {
+    private void waitForStartupToComplete(int port) {
         await().dontCatchUncaughtExceptions()
                 .atMost(Duration.ofSeconds(5))
                 .pollInterval(Duration.ofMillis(250))
                 .until(PortReady.local(port));
-    }
-
-    private static String[] toArgs(int port) {
-        return new String[] {String.format("--server.port=%d", port), "--in.memory.repository.enabled=true"};
     }
 }

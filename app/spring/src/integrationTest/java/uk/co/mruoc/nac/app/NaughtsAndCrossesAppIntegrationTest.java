@@ -10,15 +10,19 @@ import uk.co.mruoc.nac.api.dto.ApiGame;
 import uk.co.mruoc.nac.api.dto.ApiTurn;
 import uk.co.mruoc.nac.api.dto.GameJsonMother;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClient;
+import uk.co.mruoc.nac.postgres.PostgresExtension;
 
 class NaughtsAndCrossesAppIntegrationTest {
 
     @RegisterExtension
-    public static final NaughtsAndCrossesAppExtension EXTENSION = new NaughtsAndCrossesAppExtension();
+    public static final PostgresExtension POSTGRES_EXTENSION = new PostgresExtension();
+
+    @RegisterExtension
+    public static final NaughtsAndCrossesAppExtension APP_EXTENSION = new NaughtsAndCrossesAppExtension();
 
     @Test
     void shouldReturnNoGamesInitially() {
-        NaughtsAndCrossesApiClient client = EXTENSION.getAppClient();
+        NaughtsAndCrossesApiClient client = APP_EXTENSION.getAppClient();
 
         Collection<ApiGame> games = client.getAllGames();
 
@@ -27,7 +31,7 @@ class NaughtsAndCrossesAppIntegrationTest {
 
     @Test
     void shouldCreateGame() {
-        NaughtsAndCrossesApiClient client = EXTENSION.getAppClient();
+        NaughtsAndCrossesApiClient client = APP_EXTENSION.getAppClient();
 
         ApiGame game = client.createGame();
 
@@ -36,7 +40,7 @@ class NaughtsAndCrossesAppIntegrationTest {
 
     @Test
     void shouldReturnGame() {
-        NaughtsAndCrossesApiClient client = EXTENSION.getAppClient();
+        NaughtsAndCrossesApiClient client = APP_EXTENSION.getAppClient();
         ApiGame createdGame = client.createGame();
 
         ApiGame game = client.getGame(createdGame.getId());
@@ -46,7 +50,7 @@ class NaughtsAndCrossesAppIntegrationTest {
 
     @Test
     void shouldReturnMinimalGame() {
-        NaughtsAndCrossesApiClient client = EXTENSION.getAppClient();
+        NaughtsAndCrossesApiClient client = APP_EXTENSION.getAppClient();
         ApiGame createdGame = client.createGame();
 
         ApiGame game = client.getMinimalGame(createdGame.getId());
@@ -58,7 +62,7 @@ class NaughtsAndCrossesAppIntegrationTest {
 
     @Test
     void gameShouldCompleteWithXWinner() {
-        NaughtsAndCrossesApiClient client = EXTENSION.getAppClient();
+        NaughtsAndCrossesApiClient client = APP_EXTENSION.getAppClient();
         ApiGame game = client.createGame();
         long id = game.getId();
 
@@ -73,7 +77,7 @@ class NaughtsAndCrossesAppIntegrationTest {
 
     @Test
     void gameShouldCompleteWithDraw() {
-        NaughtsAndCrossesApiClient client = EXTENSION.getAppClient();
+        NaughtsAndCrossesApiClient client = APP_EXTENSION.getAppClient();
         ApiGame game = client.createGame();
         long id = game.getId();
 

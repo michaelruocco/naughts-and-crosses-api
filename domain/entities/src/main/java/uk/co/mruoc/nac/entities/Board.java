@@ -13,12 +13,14 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.With;
 import lombok.extern.slf4j.Slf4j;
 
 @Builder
 @RequiredArgsConstructor
 @Slf4j
+@ToString
 public class Board {
 
     private static final int DEFAULT_SIZE = 3;
@@ -38,7 +40,7 @@ public class Board {
     }
 
     public Board(int size, Collection<Location> locations) {
-        this(size, toMap(buildLocations(size)));
+        this(size, toMap(locations));
     }
 
     public Board update(Turn turn) {
