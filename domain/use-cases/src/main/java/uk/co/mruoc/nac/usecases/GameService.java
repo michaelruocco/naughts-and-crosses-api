@@ -22,6 +22,7 @@ public class GameService {
   }
 
   public Game takeTurn(long id, Turn turn) {
+    log.info("taking turn for game with id {} {}", id, turn);
     Game game = get(id);
     Game updatedGame = game.take(turn);
     save(updatedGame);

@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 @Data
 public class Status {
 
-  private final int turn;
+  private final long turn;
   private final boolean complete;
   private final Players players;
 
@@ -42,7 +42,7 @@ public class Status {
     players.validateIsTurn(token);
   }
 
-  private int nextTurn() {
+  private long nextTurn() {
     return turn + 1;
   }
 }

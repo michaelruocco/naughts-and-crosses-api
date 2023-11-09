@@ -7,14 +7,20 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.With;
 import lombok.extern.slf4j.Slf4j;
 
+@Builder
 @RequiredArgsConstructor
 @Slf4j
+@ToString
 public class Board {
 
   private static final int DEFAULT_SIZE = 3;
@@ -32,6 +38,10 @@ public class Board {
     this(size, buildLocations(size));
   }
 
+  public Board(int size, Collection<Location> locations) {
+    this(size, toMap(locations));
+  }
+
   public Board update(Turn turn) {
     Location location = getLocationIfAvailable(turn.getCoordinates());
     Board updated = update(location.withToken(turn.getToken()));
@@ -40,16 +50,6 @@ public class Board {
       return updated;
     }
     return updated.recordWinningLine(winningLine);
-  }
-
-  private Board recordWinningLine(Collection<Coordinates> winningLine) {
-    Collection<Location> winningLocations =
-        winningLine.stream()
-            .map(this::getLocation)
-            .flatMap(Optional::stream)
-            .map(Location::toWinner)
-            .toList();
-    return update(winningLocations);
   }
 
   public Collection<Location> getLocations() {
@@ -79,6 +79,16 @@ public class Board {
 
   public boolean isFull() {
     return locations.values().stream().noneMatch(Location::isAvailable);
+  }
+
+  private Board recordWinningLine(Collection<Coordinates> winningLine) {
+    Collection<Location> winningLocations =
+        winningLine.stream()
+            .map(this::getLocation)
+            .flatMap(Optional::stream)
+            .map(Location::toWinner)
+            .toList();
+    return update(winningLocations);
   }
 
   private Location getLocationIfAvailable(Coordinates coordinates) {
@@ -204,14 +214,20 @@ public class Board {
     return coordinates;
   }
 
-  private static Map<String, Location> buildLocations(long size) {
-    Map<String, Location> locations = new LinkedHashMap<>();
+  private static Collection<Location> buildLocations(long size) {
+    Collection<Location> locations = new ArrayList<>();
     for (int y = 0; y < size; y++) {
       for (int x = 0; x < size; x++) {
-        Location location = new Location(x, y);
-        locations.put(location.getKey(), location);
+        locations.add(new Location(x, y));
       }
     }
-    return Collections.unmodifiableMap(locations);
+    return Collections.unmodifiableCollection(locations);
+  }
+
+  private static Map<String, Location> toMap(Collection<Location> locations) {
+    return locations.stream()
+        .collect(
+            Collectors.toMap(
+                Location::getKey, Function.identity(), (x, y) -> y, LinkedHashMap::new));
   }
 }
