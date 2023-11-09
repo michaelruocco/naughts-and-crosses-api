@@ -62,6 +62,22 @@ you can run:
     -Ddatabase.driver=org.postgresql.Driver
 ```
 
+### Running the API as a docker container with a postgres database repository
+
+To build the docker image you can run the following commands:
+
+```bash
+./gradlew clean bootJar
+docker build -t naughts-and-crosses-api .
+```
+
+Then to run the API linked up to postgres with both running as docker containers
+you can run:
+
+```bash
+docker-compose --profile docker-api up -d
+```
+
 ### Creating a game
 
 Once the API is running locally, to generate a game you can run:
@@ -88,13 +104,4 @@ id and game status then you can do:
 
 ```bash
 curl "http://localhost:3002/v1/games?minimal=true"
-```
-
-### Building docker image
-
-To build the docker image you can run the following commands:
-
-```bash
-./gradlew clean bootJar
-docker build -t naughts-and-crosses-api .
 ```
