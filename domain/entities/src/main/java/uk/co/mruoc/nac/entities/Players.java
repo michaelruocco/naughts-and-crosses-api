@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -11,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 public class Players {
 
     private final List<Player> values;
+
+    @Getter
     private final int currentIndex;
 
     public Players() {

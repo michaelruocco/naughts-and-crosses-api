@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: naughts-and-crosses-api
+  main:
+    banner-mode: OFF
+  datasource:
+    url: ${database.url}
+    username: ${database.username}
+    password: ${database.password}
+    driver-class-name: ${database.driver}

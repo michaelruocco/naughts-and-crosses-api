@@ -7,12 +7,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.With;
 import lombok.extern.slf4j.Slf4j;
 
+@Builder
 @RequiredArgsConstructor
 @Slf4j
 public class Board {
@@ -31,6 +35,10 @@ public class Board {
 
     public Board(int size) {
         this(size, buildLocations(size));
+    }
+
+    public Board(int size, Collection<Location> locations) {
+        this(size, toMap(buildLocations(size)));
     }
 
     public Board update(Turn turn) {
@@ -204,14 +212,18 @@ public class Board {
         return coordinates;
     }
 
-    private static Map<String, Location> buildLocations(long size) {
-        Map<String, Location> locations = new LinkedHashMap<>();
+    private static Collection<Location> buildLocations(long size) {
+        Collection<Location> locations = new ArrayList<>();
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
-                Location location = new Location(x, y);
-                locations.put(location.getKey(), location);
+                locations.add(new Location(x, y));
             }
         }
-        return Collections.unmodifiableMap(locations);
+        return Collections.unmodifiableCollection(locations);
+    }
+
+    private static Map<String, Location> toMap(Collection<Location> locations) {
+        return locations.stream()
+                .collect(Collectors.toMap(Location::getKey, Function.identity(), (x, y) -> y, LinkedHashMap::new));
     }
 }

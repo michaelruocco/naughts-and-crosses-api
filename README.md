@@ -39,7 +39,13 @@ To start up the API you can run:
 or to run the API on a port other than the default 8080:
 
 ```gradle
-./gradlew bootRun --args='--server.port=3002 --cors.allowed.origins=http://localhost:3001'
+./gradlew bootRun \
+      -Dserver.port=3002 \
+      -Dcors.allowed.origins=http://localhost:3001 \
+      -Ddatabase.url="jdbc:postgresql://localhost:5433/naughts-and-crosses-api" \
+      -Ddatabase.username=postgres \
+      -Ddatabase.password=postgres \
+      -Ddatabase.driver=org.postgresql.Driver
 ```
 
 ### Creating a game
@@ -47,19 +53,19 @@ or to run the API on a port other than the default 8080:
 Once the API is running locally, to generate a game you can run:
 
 ```bash
-curl -X POST http://localhost:8080/v1/games
+curl -X POST http://localhost:3002/v1/games
 ```
 
 To take a turn you can run:
 
 ```bash
-curl -X POST http://localhost:8080/v1/games/{game-id}/turns -H "Content-Type: application/json" -d '{"coordinates":{"x":1,"y":1},"token":"X"}'  
+curl -X POST http://localhost:3002/v1/games/{game-id}/turns -H "Content-Type: application/json" -d '{"coordinates":{"x":1,"y":1},"token":"X"}'  
 ```
 
 To get all created games you can do either:
 
 ```bash
-curl http://localhost:8080/v1/games
+curl http://localhost:3002/v1/games
 ```
 
 To get a full representation of all games including board state and all players.
@@ -67,7 +73,7 @@ Or if you want to get a minimal representation of all games that just includes
 id and game status then you can do:
 
 ```bash
-curl "http://localhost:8080/v1/games?minimal=true"
+curl "http://localhost:3002/v1/games?minimal=true"
 ```
 
 ### Building docker image

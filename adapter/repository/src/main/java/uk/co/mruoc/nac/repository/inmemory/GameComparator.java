@@ -1,4 +1,4 @@
-package uk.co.mruoc.nac.repository;
+package uk.co.mruoc.nac.repository.inmemory;
 
 import java.util.Comparator;
 import uk.co.mruoc.nac.entities.Game;

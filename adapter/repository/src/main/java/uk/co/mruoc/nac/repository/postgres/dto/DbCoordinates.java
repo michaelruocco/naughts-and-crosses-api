@@ -1,17 +1,16 @@
-package uk.co.mruoc.nac.api.dto;
+package uk.co.mruoc.nac.repository.postgres.dto;
 
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
+@Builder
 @RequiredArgsConstructor
 @NoArgsConstructor(force = true)
-@Builder
 @Data
-public class ApiStatus {
+public class DbCoordinates {
 
-    private final long turn;
-    private final boolean complete;
-    private final Character nextPlayerToken;
+    private final long x;
+    private final long y;
 }

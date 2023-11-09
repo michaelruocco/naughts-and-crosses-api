@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import uk.co.mruoc.nac.api.converter.ApiConverter;
-import uk.co.mruoc.nac.repository.InMemoryGameRepository;
+import uk.co.mruoc.nac.repository.inmemory.InMemoryGameRepository;
 import uk.co.mruoc.nac.usecases.BoardFormatter;
 import uk.co.mruoc.nac.usecases.DefaultIdSupplier;
 import uk.co.mruoc.nac.usecases.GameEventPublisher;
@@ -22,11 +22,6 @@ public class ApplicationConfig {
     @Bean
     public IdSupplier idSupplier() {
         return new DefaultIdSupplier();
-    }
-
-    @Bean
-    public GameRepository gameRepository() {
-        return new InMemoryGameRepository();
     }
 
     @Bean
