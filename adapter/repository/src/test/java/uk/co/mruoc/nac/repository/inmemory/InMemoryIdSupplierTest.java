@@ -1,12 +1,13 @@
-package uk.co.mruoc.nac.usecases;
+package uk.co.mruoc.nac.repository.inmemory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
+import uk.co.mruoc.nac.usecases.IdSupplier;
 
-class IdSupplierTest {
+class InMemoryIdSupplierTest {
 
-  private final IdSupplier supplier = new DefaultIdSupplier();
+  private final IdSupplier supplier = new InMemoryIdSupplier();
 
   @Test
   void shouldReturnIncrementingLongValues() {

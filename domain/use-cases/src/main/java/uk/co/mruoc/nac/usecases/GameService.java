@@ -17,7 +17,7 @@ public class GameService {
 
   public Game createGame() {
     Game game = factory.buildGame();
-    save(game);
+    create(game);
     return game;
   }
 
@@ -25,7 +25,7 @@ public class GameService {
     log.info("taking turn for game with id {} {}", id, turn);
     Game game = get(id);
     Game updatedGame = game.take(turn);
-    save(updatedGame);
+    update(updatedGame);
     log.info("game {} board\n{}", id, formatter.format(updatedGame.getBoard()));
     return updatedGame;
   }
@@ -38,8 +38,13 @@ public class GameService {
     return repository.find(id).orElseThrow(() -> new GameNotFoundException(id));
   }
 
-  private void save(Game game) {
-    repository.save(game);
+  private void create(Game game) {
+    repository.create(game);
+    eventPublisher.updated(game);
+  }
+
+  private void update(Game game) {
+    repository.update(game);
     eventPublisher.updated(game);
   }
 

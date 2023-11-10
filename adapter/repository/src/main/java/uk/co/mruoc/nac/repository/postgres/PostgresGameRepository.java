@@ -18,9 +18,10 @@ import uk.co.mruoc.nac.usecases.GameRepository;
 public class PostgresGameRepository implements GameRepository {
 
   private final DataSource dataSource;
-  private final ReadGameDao readGameDao;
-  private final DeleteGameDao deleteGameDao;
-  private final UpsertGameDao upsertGameDao;
+  private final CreateGameDao createDao;
+  private final ReadGameDao readDao;
+  private final UpdateGameDao updateDao;
+  private final DeleteGameDao deleteDao;
 
   public PostgresGameRepository(DataSource dataSource, JsonConverter jsonConverter) {
     this(dataSource, new PostgresGameConverter(jsonConverter));
@@ -29,16 +30,30 @@ public class PostgresGameRepository implements GameRepository {
   public PostgresGameRepository(DataSource dataSource, PostgresGameConverter gameConverter) {
     this(
         dataSource,
+        new CreateGameDao(gameConverter),
         new ReadGameDao(gameConverter),
-        new DeleteGameDao(),
-        new UpsertGameDao(gameConverter));
+        new UpdateGameDao(gameConverter),
+        new DeleteGameDao());
+  }
+
+  @Override
+  public void create(Game game) {
+    Instant start = Instant.now();
+    try (var connection = dataSource.getConnection()) {
+      createDao.create(connection, game);
+    } catch (SQLException e) {
+      throw new GameRepositoryException(e);
+    } finally {
+      var duration = Duration.between(start, Instant.now());
+      log.info("create game with id {} took {}ms", game.getId(), duration.toMillis());
+    }
   }
 
   @Override
   public Optional<Game> find(long id) {
     Instant start = Instant.now();
     try (var connection = dataSource.getConnection()) {
-      return readGameDao.findById(connection, id);
+      return readDao.findById(connection, id);
     } catch (SQLException e) {
       throw new GameRepositoryException(e);
     } finally {
@@ -48,15 +63,15 @@ public class PostgresGameRepository implements GameRepository {
   }
 
   @Override
-  public void save(Game game) {
+  public void update(Game game) {
     Instant start = Instant.now();
     try (var connection = dataSource.getConnection()) {
-      upsertGameDao.upsert(connection, game);
+      updateDao.update(connection, game);
     } catch (SQLException e) {
       throw new GameRepositoryException(e);
     } finally {
       var duration = Duration.between(start, Instant.now());
-      log.info("save game with id {} took {}ms", game.getId(), duration.toMillis());
+      log.info("update game with id {} took {}ms", game.getId(), duration.toMillis());
     }
   }
 
@@ -64,7 +79,7 @@ public class PostgresGameRepository implements GameRepository {
   public Stream<Game> getAll() {
     Instant start = Instant.now();
     try (var connection = dataSource.getConnection()) {
-      return readGameDao.getAll(connection);
+      return readDao.getAll(connection);
     } catch (SQLException e) {
       throw new GameRepositoryException(e);
     } finally {
@@ -77,7 +92,7 @@ public class PostgresGameRepository implements GameRepository {
   public void deleteAll() {
     Instant start = Instant.now();
     try (var connection = dataSource.getConnection()) {
-      deleteGameDao.deleteAll(connection);
+      deleteDao.deleteAll(connection);
     } catch (SQLException e) {
       throw new GameRepositoryException(e);
     } finally {

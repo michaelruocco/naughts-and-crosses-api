@@ -15,13 +15,25 @@ class InMemoryGameRepositoryTest {
   private final GameRepository repository = new InMemoryGameRepository();
 
   @Test
-  void shouldSaveGame() {
+  void shouldCreateGame() {
     long id = 1;
     Game game = givenGameWithId(id);
 
-    repository.save(game);
+    repository.create(game);
 
     assertThat(repository.find(id)).contains(game);
+  }
+
+  @Test
+  void shouldUpdateGame() {
+    long id = 1;
+    Game game = givenGameWithId(id);
+    repository.create(game);
+    Game updatedGame = givenGameWithId(id);
+
+    repository.update(updatedGame);
+
+    assertThat(repository.find(id)).contains(updatedGame);
   }
 
   @Test
@@ -38,9 +50,9 @@ class InMemoryGameRepositoryTest {
     Game game3 = givenGameWithId(3);
     Game game2 = givenGameWithId(2);
     Game game1 = givenGameWithId(1);
-    repository.save(game3);
-    repository.save(game2);
-    repository.save(game1);
+    repository.create(game3);
+    repository.create(game2);
+    repository.create(game1);
 
     Stream<Game> games = repository.getAll();
 
@@ -49,9 +61,9 @@ class InMemoryGameRepositoryTest {
 
   @Test
   void shouldDeleteAllGames() {
-    repository.save(givenGameWithId(1));
-    repository.save(givenGameWithId(2));
-    repository.save(givenGameWithId(3));
+    repository.create(givenGameWithId(1));
+    repository.create(givenGameWithId(2));
+    repository.create(givenGameWithId(3));
 
     repository.deleteAll();
 

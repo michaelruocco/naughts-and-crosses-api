@@ -6,9 +6,11 @@ import uk.co.mruoc.nac.entities.Game;
 
 public interface GameRepository {
 
+  void create(Game game);
+
   Optional<Game> find(long id);
 
-  void save(Game game);
+  void update(Game game);
 
   Stream<Game> getAll();
 
