@@ -1,1 +1,1 @@
-create schema "cop-targeting-api-app"
+create schema "cop-targeting-api-app";
