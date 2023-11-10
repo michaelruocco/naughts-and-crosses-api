@@ -23,8 +23,13 @@ public class InMemoryGameRepository implements GameRepository {
   }
 
   @Override
-  public void save(Game game) {
-    games.put(game.getId(), game);
+  public void create(Game game) {
+    save(game);
+  }
+
+  @Override
+  public void update(Game game) {
+    save(game);
   }
 
   @Override
@@ -35,5 +40,9 @@ public class InMemoryGameRepository implements GameRepository {
   @Override
   public void deleteAll() {
     games.clear();
+  }
+
+  private void save(Game game) {
+    games.put(game.getId(), game);
   }
 }

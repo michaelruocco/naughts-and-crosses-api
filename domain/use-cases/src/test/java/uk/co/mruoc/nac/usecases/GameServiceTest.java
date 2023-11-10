@@ -38,13 +38,13 @@ class GameServiceTest {
   }
 
   @Test
-  void shouldSaveCreatedGame() {
+  void shouldCreateGame() {
     Game expectedGame = givenGameCreated();
 
     service.createGame();
 
     ArgumentCaptor<Game> captor = ArgumentCaptor.forClass(Game.class);
-    verify(repository).save(captor.capture());
+    verify(repository).create(captor.capture());
     assertThat(captor.getValue()).isEqualTo(expectedGame);
   }
 
@@ -84,7 +84,7 @@ class GameServiceTest {
   }
 
   @Test
-  void shouldSaveUpdatedGameAfterTakingTurn() {
+  void shouldUpdatedGameAfterTakingTurn() {
     long id = 3;
     Turn turn = mock(Turn.class);
     Game game = givenGameFound(id);
@@ -93,7 +93,7 @@ class GameServiceTest {
     service.takeTurn(id, turn);
 
     ArgumentCaptor<Game> captor = ArgumentCaptor.forClass(Game.class);
-    verify(repository).save(captor.capture());
+    verify(repository).update(captor.capture());
     assertThat(captor.getValue()).isEqualTo(expectedGame);
   }
 

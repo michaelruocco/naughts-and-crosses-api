@@ -1,19 +1,20 @@
-package uk.co.mruoc.nac.usecases;
+package uk.co.mruoc.nac.repository.inmemory;
 
 import java.util.concurrent.atomic.AtomicLong;
 import lombok.RequiredArgsConstructor;
+import uk.co.mruoc.nac.usecases.IdSupplier;
 
 @RequiredArgsConstructor
-public class DefaultIdSupplier implements IdSupplier {
+public class InMemoryIdSupplier implements IdSupplier {
 
   private final long initialValue;
   private final AtomicLong nextId;
 
-  public DefaultIdSupplier() {
+  public InMemoryIdSupplier() {
     this(1);
   }
 
-  public DefaultIdSupplier(long initialValue) {
+  public InMemoryIdSupplier(long initialValue) {
     this(initialValue, new AtomicLong(initialValue));
   }
 

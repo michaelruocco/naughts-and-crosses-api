@@ -4,3 +4,5 @@ create table game(
 
 	primary key(id)
 );
+
+create sequence game_id as bigint;
