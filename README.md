@@ -1,8 +1,9 @@
 # Naughts and Crosses API
 
 [![Build](https://github.com/michaelruocco/naughts-and-crosses-api/workflows/pipeline/badge.svg)](https://github.com/michaelruocco/naughts-and-crosses-api/actions)
-[![codecov](https://codecov.io/gh/michaelruocco/naughts-and-crosses-api/branch/master/graph/badge.svg?token=FWDNP534O7)](https://codecov.io/gh/michaelruocco/naughts-and-crosses-api)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/272889cf707b4dcb90bf451392530794)](https://www.codacy.com/gh/michaelruocco/naughts-and-crosses-api/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=michaelruocco/naughts-and-crosses-api&amp;utm_campaign=Badge_Grade)
+[![codecov](https://codecov.io/gh/michaelruocco/naughts-and-crosses-api/graph/badge.svg?token=9yBPb1pvXr)](https://codecov.io/gh/michaelruocco/naughts-and-crosses-api)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/01a56ca6bd194fac92c786d0aed09c8c)](https://app.codacy.com/gh/michaelruocco/naughts-and-crosses-api/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/01a56ca6bd194fac92c786d0aed09c8c)](https://app.codacy.com/gh/michaelruocco/naughts-and-crosses-api/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=michaelruocco_naughts-and-crosses-api&metric=alert_status)](https://sonarcloud.io/dashboard?id=michaelruocco_naughts-and-crosses-api)
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=michaelruocco_naughts-and-crosses-api&metric=sqale_index)](https://sonarcloud.io/dashboard?id=michaelruocco_naughts-and-crosses-api)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=michaelruocco_naughts-and-crosses-api&metric=coverage)](https://sonarcloud.io/dashboard?id=michaelruocco_naughts-and-crosses-api)
