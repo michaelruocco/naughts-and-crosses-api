@@ -1,5 +1,6 @@
 package uk.co.mruoc.nac.app;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -7,34 +8,28 @@ import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClient;
-import uk.co.mruoc.nac.postgres.TestPostgresContainer;
 
 @Slf4j
+@RequiredArgsConstructor
 public class NaughtsAndCrossesAppExtension
     implements BeforeAllCallback, BeforeEachCallback, AfterAllCallback, CloseableResource {
 
   private boolean started = false;
+  private final TestEnvironment environment;
+  private final NaughtsAndCrossesAppRunner appRunner;
 
-  private static final TestPostgresContainer POSTGRES = new TestPostgresContainer();
+  private final TestAppConfig appConfig;
 
-  private static final NaughtsAndCrossesAppRunner APP_RUNNER = new NaughtsAndCrossesAppRunner();
-
-  private static final TestAppConfig APP_CONFIG =
-      TestAppConfig.builder()
-          .appPort(AvailablePortFinder.findAvailableTcpPort())
-          .dbHost(POSTGRES.getHost())
-          .dbName(POSTGRES.getDatabaseName())
-          .dbPort(POSTGRES::getFirstMappedPort)
-          .build();
+  public NaughtsAndCrossesAppExtension(TestEnvironment environment) {
+    this(environment, new NaughtsAndCrossesAppRunner(), toConfig(environment));
+  }
 
   @Override
   public void beforeAll(ExtensionContext extensionContext) {
     if (!started) {
       log.info("starting extension");
-      log.info("starting postgres");
-      POSTGRES.start();
-      log.info("starting kafka");
-      APP_RUNNER.startIfNotStarted(APP_CONFIG);
+      environment.startDependentServices();
+      appRunner.startIfNotStarted(appConfig);
       log.info("extension startup complete");
       started = true;
     }
@@ -58,13 +53,20 @@ public class NaughtsAndCrossesAppExtension
   }
 
   public NaughtsAndCrossesApiClient getAppClient() {
-    return new NaughtsAndCrossesApiClient(APP_CONFIG.getAppUrl());
+    return new NaughtsAndCrossesApiClient(appConfig.getAppUrl());
   }
 
   private void shutdown() {
     if (started) {
-      APP_RUNNER.shutdownIfRunning();
-      POSTGRES.close();
+      appRunner.shutdownIfRunning();
+      environment.startDependentServices();
     }
+  }
+
+  private static TestAppConfig toConfig(TestEnvironment environment) {
+    return TestAppConfig.builder()
+        .appPort(AvailablePortFinder.findAvailableTcpPort())
+        .argsDecorator(environment.getArgsDecorator())
+        .build();
   }
 }
