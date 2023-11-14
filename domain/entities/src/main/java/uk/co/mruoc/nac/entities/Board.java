@@ -7,8 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,7 +37,7 @@ public class Board {
   }
 
   public Board(int size, Collection<Location> locations) {
-    this(size, toMap(locations));
+    this(size, Locations.toMap(locations));
   }
 
   public Board update(Turn turn) {
@@ -222,12 +220,5 @@ public class Board {
       }
     }
     return Collections.unmodifiableCollection(locations);
-  }
-
-  private static Map<String, Location> toMap(Collection<Location> locations) {
-    return locations.stream()
-        .collect(
-            Collectors.toMap(
-                Location::getKey, Function.identity(), (x, y) -> y, LinkedHashMap::new));
   }
 }

@@ -28,6 +28,7 @@ subprojects {
         postgresqlVersion = "42.6.0"
         flywayVersion = "9.22.3"
         jsonAdapterVersion = "1.0.4"
+        springKafkaVersion = "3.0.12"
 
         junitVersion = "5.10.1"
 

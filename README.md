@@ -37,10 +37,12 @@ and on the default port 8080, you can run:
 ```gradle
 ./gradlew bootRun \
     -Dcors.allowed.origins=http://localhost:3001 \
-    -Din.memory.repository.enabled=true
+    -Din.memory.repository.enabled=true \
+    -Dkafka.listeners.enabled=false \
+    -Dkafka.producers.enabled=false
 ```
 
-### Running the API locally with a postgres database repository
+### Running the API locally with a postgres database repository, and kafka
 
 To run the API using the postgres database, first you will need to start
 an instance of postgres by running:
@@ -60,10 +62,17 @@ you can run:
     -Ddatabase.url="jdbc:postgresql://localhost:5433/naughts-and-crosses-api" \
     -Ddatabase.username=postgres \
     -Ddatabase.password=postgres \
-    -Ddatabase.driver=org.postgresql.Driver
+    -Ddatabase.driver=org.postgresql.Driver \
+    -Dkafka.listeners.enabled=true \
+    -Dkafka.producers.enabled=true \
+    -Dkafka.bootstrap.servers=http://localhost:9094 \
+    -Dkafka.consumer.group.id=naughts-and-crosses-api-group \
+    -Dkafka.client.id=naughts-and-crosses-api-client-id \
+    -Dkafka.game.event.topic=game-update \
+    -Dkafka.security.protocol=PLAINTEXT
 ```
 
-### Running the API as a docker container with a postgres database repository
+### Running the API as a docker container with a postgres database repository, and kafka
 
 To build the docker image you can run the following commands:
 

@@ -1,4 +1,4 @@
-package uk.co.mruoc.nac.app.config;
+package uk.co.mruoc.nac.app.config.websocket;
 
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +11,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import uk.co.mruoc.nac.api.converter.ApiConverter;
+import uk.co.mruoc.nac.app.config.cors.AllowedOriginsSupplier;
 import uk.co.mruoc.nac.app.websocket.WebSocketGameEventPublisher;
 import uk.co.mruoc.nac.usecases.GameEventPublisher;
 
@@ -36,7 +37,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
   }
 
   @Bean
-  public GameEventPublisher gameEventPublisher(
+  public GameEventPublisher webSocketGameEventPublisher(
       SimpMessagingTemplate template, ApiConverter converter) {
     return WebSocketGameEventPublisher.builder().template(template).converter(converter).build();
   }

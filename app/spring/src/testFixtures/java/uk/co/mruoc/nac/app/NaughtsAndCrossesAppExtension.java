@@ -15,13 +15,13 @@ public class NaughtsAndCrossesAppExtension
     implements BeforeAllCallback, BeforeEachCallback, AfterAllCallback, CloseableResource {
 
   private boolean started = false;
+  private TestAppConfig appConfig;
+
   private final TestEnvironment environment;
   private final NaughtsAndCrossesAppRunner appRunner;
 
-  private final TestAppConfig appConfig;
-
   public NaughtsAndCrossesAppExtension(TestEnvironment environment) {
-    this(environment, new NaughtsAndCrossesAppRunner(), toConfig(environment));
+    this(environment, new NaughtsAndCrossesAppRunner());
   }
 
   @Override
@@ -29,6 +29,7 @@ public class NaughtsAndCrossesAppExtension
     if (!started) {
       log.info("starting extension");
       environment.startDependentServices();
+      appConfig = toConfig(environment);
       appRunner.startIfNotStarted(appConfig);
       log.info("extension startup complete");
       started = true;
@@ -59,7 +60,7 @@ public class NaughtsAndCrossesAppExtension
   private void shutdown() {
     if (started) {
       appRunner.shutdownIfRunning();
-      environment.startDependentServices();
+      environment.stopDependentServices();
     }
   }
 
