@@ -18,11 +18,12 @@ services:
       KAFKA_BOOTSTRAP_SERVERS: http://kafka:9092
       KAFKA_CONSUMER_GROUP_ID: naughts-and-crosses-api-group
       KAFKA_CLIENT_ID: naughts-and-crosses-api-client-id
-      KAFKA_GAME_UPDATE_TOPIC: game-update
+      KAFKA_GAME_EVENT_TOPIC: game-update
       KAFKA_SECURITY_PROTOCOL: PLAINTEXT
     restart: on-failure
     depends_on:
       - naughts-and-crosses-db
+      - kafka
 
   naughts-and-crosses-db:
     image: postgres:16-alpine
