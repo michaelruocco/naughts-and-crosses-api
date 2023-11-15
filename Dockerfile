@@ -12,4 +12,14 @@ CMD java \
   -Dapp.database.username=${DATABASE_USERNAME} \
   -Dapp.database.password=${DATABASE_PASSWORD} \
   -Dapp.database.driver=${DATABASE_DRIVER} \
+  -Dkafka.listeners.enabled="${KAFKA_LISTENERS_ENABLED}" \
+  -Dkafka.producers.enabled="${KAFKA_PRODUCERS_ENABLED}" \
+  -Dkafka.bootstrap.servers="${KAFKA_BOOTSTRAP_SERVERS}" \
+  -Dkafka.consumer.group.id="${KAFKA_CONSUMER_GROUP_ID}" \
+  -Dkafka.client.id="${KAFKA_CLIENT_ID}" \
+  -Dkafka.game.event.topic="${KAFKA_GAME_EVENT_TOPIC}" \
+  -Dkafka.security.protocol="${KAFKA_SECURITY_PROTOCOL}" \
+  -Dkafka.ssl.keystore="${KAFKA_SSL_KEYSTORE}" \
+  -Dkafka.ssl.keystore.type="${KAFKA_SSL_KEYSTORE_TYPE}" \
+  -Dkafka.ssl.keystore.password="${KAFKA_SSL_KEYSTORE_PASSWORD}" \
   -jar /opt/app.jar

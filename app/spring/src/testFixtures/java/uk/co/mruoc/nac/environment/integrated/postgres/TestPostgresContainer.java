@@ -1,4 +1,4 @@
-package uk.co.mruoc.nac.postgres;
+package uk.co.mruoc.nac.environment.integrated.postgres;
 
 import javax.sql.DataSource;
 import org.postgresql.ds.PGSimpleDataSource;

@@ -12,6 +12,6 @@ import lombok.RequiredArgsConstructor;
 @Data
 public class ApiBoard {
 
-  private final long size;
+  private final int size;
   private final Collection<ApiLocation> locations;
 }

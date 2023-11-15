@@ -1,4 +1,4 @@
-package uk.co.mruoc.nac.inmemory;
+package uk.co.mruoc.nac.environment.minimal;
 
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
@@ -6,20 +6,20 @@ import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.nac.app.TestEnvironment;
 
 @Slf4j
-public class InMemoryTestEnvironment implements TestEnvironment {
+public class MinimalTestEnvironment implements TestEnvironment {
 
   @Override
   public void startDependentServices() {
-    // intentionally blank
+    log.info("no dependent services to start");
   }
 
   @Override
   public void stopDependentServices() {
-    // intentionally blank
+    log.info("no dependent services to stop");
   }
 
   @Override
   public UnaryOperator<Stream<String>> getArgsDecorator() {
-    return new InMemoryRepositoryArgsDecorator();
+    return new MinimalTestEnvironmentArgsDecorator();
   }
 }

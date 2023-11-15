@@ -30,4 +30,12 @@ public class ApiGameConverter {
         .players(playerConverter.toApiPlayers(game.getPlayers()))
         .build();
   }
+
+  public Game toGame(ApiGame apiGame) {
+    return Game.builder()
+        .id(apiGame.getId())
+        .status(statusConverter.toStatus(apiGame.getStatus(), apiGame.getPlayers()))
+        .board(boardConverter.toBoard(apiGame.getBoard()))
+        .build();
+  }
 }

@@ -9,4 +9,8 @@ public class Player {
 
   private final String name;
   private final char token;
+
+  public boolean hasToken(char otherToken) {
+    return token == otherToken;
+  }
 }

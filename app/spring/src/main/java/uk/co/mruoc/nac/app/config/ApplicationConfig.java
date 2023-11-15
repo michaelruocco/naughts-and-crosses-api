@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import uk.co.mruoc.nac.api.converter.ApiConverter;
+import uk.co.mruoc.nac.app.config.cors.AllowedOriginsSupplier;
+import uk.co.mruoc.nac.app.config.cors.CorsWebMvcConfigurer;
 import uk.co.mruoc.nac.usecases.BoardFormatter;
 import uk.co.mruoc.nac.usecases.GameEventPublisher;
 import uk.co.mruoc.nac.usecases.GameFactory;

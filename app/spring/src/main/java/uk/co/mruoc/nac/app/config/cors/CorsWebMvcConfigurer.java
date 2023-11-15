@@ -1,4 +1,4 @@
-package uk.co.mruoc.nac.app.config;
+package uk.co.mruoc.nac.app.config.cors;
 
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
