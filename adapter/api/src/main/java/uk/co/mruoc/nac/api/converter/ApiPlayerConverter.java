@@ -19,6 +19,13 @@ public class ApiPlayerConverter {
     return ApiPlayer.builder().name(player.getName()).token(player.getToken()).build();
   }
 
+  public Players toPlayers(Collection<ApiPlayer> apiPlayers) {
+    return Players.builder()
+        .values(apiPlayers.stream().map(this::toPlayer).toList())
+        .currentIndex(-1)
+        .build();
+  }
+
   public Players toPlayers(Collection<ApiPlayer> apiPlayers, char nextPlayerToken) {
     List<Player> players = apiPlayers.stream().map(this::toPlayer).toList();
     return Players.builder()

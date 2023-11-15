@@ -4,6 +4,7 @@ import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.nac.api.dto.ApiPlayer;
 import uk.co.mruoc.nac.api.dto.ApiStatus;
+import uk.co.mruoc.nac.entities.Players;
 import uk.co.mruoc.nac.entities.Status;
 
 @RequiredArgsConstructor
@@ -23,11 +24,18 @@ public class ApiStatusConverter {
         .build();
   }
 
-  public Status toStatus(ApiStatus status, Collection<ApiPlayer> players) {
+  public Status toStatus(ApiStatus apiStatus, Collection<ApiPlayer> apiPlayers) {
     return Status.builder()
-        .complete(status.isComplete())
-        .turn(status.getTurn())
-        .players(playerConverter.toPlayers(players, status.getNextPlayerToken()))
+        .complete(apiStatus.isComplete())
+        .turn(apiStatus.getTurn())
+        .players(toPlayers(apiStatus, apiPlayers))
         .build();
+  }
+
+  private Players toPlayers(ApiStatus apiStatus, Collection<ApiPlayer> apiPlayers) {
+    return apiStatus
+        .getNextPlayerToken()
+        .map(nextPlayerToken -> playerConverter.toPlayers(apiPlayers, nextPlayerToken))
+        .orElse(playerConverter.toPlayers(apiPlayers));
   }
 }
