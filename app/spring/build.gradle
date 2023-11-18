@@ -14,7 +14,7 @@ ext {
     testContainersVersion = "1.19.1"
     apacheKafkaVersion = "3.6.0"
 }
-ext['junit-jupiter.version'] = "${junitVersion}"
+ext["junit-jupiter.version"] = "${junitVersion}"
 
 configurations {
     integrationTestRuntimeOnly.exclude module: "slf4j-simple"
@@ -26,7 +26,8 @@ dependencies {
     implementation project(":use-cases")
     implementation project(":entities")
     implementation project(":kafka")
-    implementation project(":rest-client") // not required by code but added as not appearing in test coverage
+    implementation project(":rest-client") // not required by code but
+    implementation project(":websocket-client") // not required by code but added as not appearing in test coverage
     implementation platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
@@ -41,9 +42,12 @@ dependencies {
 
     integrationTestImplementation testFixtures(project(":api"))
     integrationTestImplementation project(":rest-client")
+    integrationTestImplementation project(":websocket-client")
     integrationTestImplementation "net.javacrumbs.json-unit:json-unit-assertj:3.2.2"
+    integrationTestImplementation "org.awaitility:awaitility:4.2.0"
 
     testFixturesImplementation project(":rest-client")
+    testFixturesImplementation project(":websocket-client")
     testFixturesImplementation "org.springframework.boot:spring-boot:${springBootVersion}"
     testFixturesImplementation "org.awaitility:awaitility:4.2.0"
     testFixturesImplementation "org.testcontainers:postgresql:${testContainersVersion}"

@@ -19,6 +19,6 @@ public class WebSocketGameEventPublisher implements GameEventPublisher {
   public void updated(Game game) {
     ApiGame apiGame = converter.toApiGame(game);
     log.info("sending web socket update for game with id {}", game.getId());
-    template.convertAndSend("/topic/game-updated", apiGame);
+    template.convertAndSend("/topic/game-update", apiGame);
   }
 }

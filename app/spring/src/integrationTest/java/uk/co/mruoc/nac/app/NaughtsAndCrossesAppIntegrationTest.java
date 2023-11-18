@@ -2,12 +2,16 @@ package uk.co.mruoc.nac.app;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 
+import java.time.Duration;
 import java.util.Collection;
+
 import org.junit.jupiter.api.Test;
 import uk.co.mruoc.nac.api.dto.ApiGame;
 import uk.co.mruoc.nac.api.dto.ApiTurn;
 import uk.co.mruoc.nac.api.dto.GameJsonMother;
+import uk.co.mruoc.nac.client.DefaultGameUpdateListener;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClient;
 
 interface NaughtsAndCrossesAppIntegrationTest {
@@ -15,7 +19,7 @@ interface NaughtsAndCrossesAppIntegrationTest {
   NaughtsAndCrossesAppExtension getExtension();
 
   default NaughtsAndCrossesApiClient getAppClient() {
-    return getExtension().getAppClient();
+    return getExtension().getRestClient();
   }
 
   @Test
@@ -34,6 +38,20 @@ interface NaughtsAndCrossesAppIntegrationTest {
     ApiGame game = client.createGame();
 
     assertThatJson(game).isEqualTo(GameJsonMother.initial());
+  }
+
+  @Test
+  default void shouldSendWebsocketGameEventWhenGameCreated() {
+    DefaultGameUpdateListener listener = new DefaultGameUpdateListener();
+    getExtension().add(listener);
+    NaughtsAndCrossesApiClient client = getAppClient();
+
+    client.createGame();
+
+    await().atMost(Duration.ofSeconds(5))
+            .pollInterval(Duration.ofMillis(250))
+            .until(() -> listener.getMostRecentUpdate().isPresent());
+    assertThatJson(listener.forceGetMostRecentUpdate()).isEqualTo(GameJsonMother.initial());
   }
 
   @Test
