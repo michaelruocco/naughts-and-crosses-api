@@ -62,10 +62,8 @@ public class GameUpdateStompSessionHandler extends StompSessionHandlerAdapter {
   }
 
   public void unsubscribe() {
-    if (subscription != null) {
-      log.debug("unsubscribing from subscription {}", subscription.getSubscriptionId());
-      subscription.unsubscribe();
-    }
+    log.debug("unsubscribing from subscription {}", subscription.getSubscriptionId());
+    subscription.unsubscribe();
   }
 
   public void add(GameUpdateListener listener) {

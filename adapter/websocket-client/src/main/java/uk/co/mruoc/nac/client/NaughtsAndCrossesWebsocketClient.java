@@ -47,10 +47,8 @@ public class NaughtsAndCrossesWebsocketClient implements AutoCloseable {
 
   public void close() {
     sessionHandler.unsubscribe();
-    if (session != null) {
-      log.debug("disconnecting session {}", session.getSessionId());
-      session.disconnect();
-    }
+    log.debug("disconnecting session {}", session.getSessionId());
+    session.disconnect();
   }
 
   private static String toGameEventUrl(String baseUrl) {

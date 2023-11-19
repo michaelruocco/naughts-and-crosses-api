@@ -21,10 +21,6 @@ public class DefaultGameUpdateListener implements GameUpdateListener {
     updates.add(game);
   }
 
-  public void reset() {
-    updates.clear();
-  }
-
   public ApiGame forceGetMostRecentUpdate() {
     return getMostRecentUpdate().orElseThrow();
   }
