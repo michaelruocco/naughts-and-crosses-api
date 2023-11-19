@@ -13,6 +13,7 @@ public class IntegratedTestEnvironmentArgsDecorator implements UnaryOperator<Str
   private final String dbName;
 
   private final String kafkaBootstrapServers;
+  private final String kafkaGameEventTopicName;
 
   @Override
   public Stream<String> apply(Stream<String> args) {
@@ -30,7 +31,7 @@ public class IntegratedTestEnvironmentArgsDecorator implements UnaryOperator<Str
         "--kafka.consumer.group.id=naughts-and-crosses-api-group",
         "--kafka.client.id=naughts-and-crosses-api-client-id",
         "--kafka.security.protocol=PLAINTEXT",
-        "--kafka.game.event.topic=game-event",
+        String.format("--kafka.game.event.topic=%s", kafkaGameEventTopicName),
         String.format("--kafka.bootstrap.servers=%s", kafkaBootstrapServers));
   }
 

@@ -23,10 +23,7 @@ public class NaughtsAndCrossesWebsocketClient implements AutoCloseable {
   private StompSession session;
 
   public NaughtsAndCrossesWebsocketClient(String baseUrl) {
-    this(
-        toGameEventUrl(baseUrl),
-        buildStompWebsocketClient(),
-        new GameUpdateStompSessionHandler());
+    this(toGameEventUrl(baseUrl), buildStompWebsocketClient(), new GameUpdateStompSessionHandler());
   }
 
   public void connect() {

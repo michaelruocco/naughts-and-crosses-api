@@ -12,6 +12,10 @@ public class GameJsonMother {
     return loadContentFromClasspath("game/initial.json");
   }
 
+  public static String xTurn() {
+    return loadContentFromClasspath("game/x-turn.json");
+  }
+
   public static String xWinner() {
     return loadContentFromClasspath("game/x-winner.json");
   }

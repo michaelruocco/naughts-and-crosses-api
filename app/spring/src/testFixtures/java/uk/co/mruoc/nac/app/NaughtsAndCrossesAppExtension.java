@@ -35,6 +35,7 @@ public class NaughtsAndCrossesAppExtension
       appConfig = toConfig(environment);
       appRunner.startIfNotStarted(appConfig);
       websocketClient = new NaughtsAndCrossesWebsocketClient(appConfig.getAppUrl());
+      websocketClient.connect();
       log.info("extension startup complete");
       started = true;
     }

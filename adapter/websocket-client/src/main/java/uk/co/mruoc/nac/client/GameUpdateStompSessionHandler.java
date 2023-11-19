@@ -3,7 +3,6 @@ package uk.co.mruoc.nac.client;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.stomp.StompCommand;
