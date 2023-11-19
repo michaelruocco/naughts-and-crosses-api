@@ -9,6 +9,8 @@ dependencies {
     implementation "org.springframework:spring-websocket:6.0.13"
     implementation "org.springframework:spring-messaging:6.0.13"
     implementation "com.fasterxml.jackson.core:jackson-databind:2.16.0"
+
+    testImplementation "com.github.stefanbirkner:system-lambda:1.2.1"
 }
 
 apply from: rootProject.file("publish.gradle")

@@ -9,8 +9,8 @@ import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import uk.co.mruoc.nac.api.dto.ApiGame;
+import uk.co.mruoc.nac.api.dto.ApiGameJsonMother;
 import uk.co.mruoc.nac.api.dto.ApiTurn;
-import uk.co.mruoc.nac.api.dto.GameJsonMother;
 import uk.co.mruoc.nac.client.DefaultGameUpdateListener;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClient;
 
@@ -38,7 +38,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
     ApiGame game = client.createGame();
 
-    assertThatJson(game).isEqualTo(GameJsonMother.initial());
+    assertThatJson(game).isEqualTo(ApiGameJsonMother.initial());
   }
 
   @Test
@@ -49,7 +49,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
     client.createGame();
 
-    String expectedJson = GameJsonMother.initial();
+    String expectedJson = ApiGameJsonMother.initial();
     awaitMostRecentGameUpdateEquals(listener, expectedJson);
     assertThatJson(listener.forceGetMostRecentUpdate()).isEqualTo(expectedJson);
   }
@@ -85,7 +85,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
     client.takeTurn(game.getId(), new ApiTurn(0, 0, 'X'));
 
-    String expectedJson = GameJsonMother.xTurn();
+    String expectedJson = ApiGameJsonMother.xTurn();
     awaitMostRecentGameUpdateEquals(listener, expectedJson);
     assertThatJson(listener.forceGetMostRecentUpdate()).isEqualTo(expectedJson);
   }
@@ -102,7 +102,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     client.takeTurn(id, new ApiTurn(1, 1, 'O'));
     ApiGame updatedGame = client.takeTurn(id, new ApiTurn(2, 0, 'X'));
 
-    assertThatJson(updatedGame).isEqualTo(GameJsonMother.xWinner());
+    assertThatJson(updatedGame).isEqualTo(ApiGameJsonMother.xWinner());
   }
 
   @Test
@@ -121,7 +121,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     client.takeTurn(id, new ApiTurn(2, 2, 'O'));
     ApiGame updatedGame = client.takeTurn(id, new ApiTurn(2, 0, 'X'));
 
-    assertThatJson(updatedGame).isEqualTo(GameJsonMother.draw());
+    assertThatJson(updatedGame).isEqualTo(ApiGameJsonMother.draw());
   }
 
   private void awaitMostRecentGameUpdateEquals(DefaultGameUpdateListener listener, String json) {

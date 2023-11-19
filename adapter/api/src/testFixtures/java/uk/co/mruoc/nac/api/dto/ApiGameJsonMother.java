@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class GameJsonMother {
+public class ApiGameJsonMother {
 
   public static String initial() {
     return loadContentFromClasspath("game/initial.json");
