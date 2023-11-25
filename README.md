@@ -32,10 +32,11 @@ The accompanying UI that uses this API can be found [here](https://github.com/mi
 ### Running the API locally with an in memory repository
 
 To start up the API using an in memory repository so no database is required, 
-and on the default port 8080, you can run:
+you can run:
 
 ```gradle
 ./gradlew bootRun \
+    -Dserver.port=3002 \
     -Dcors.allowed.origins=http://localhost:3001 \
     -Din.memory.repository.enabled=true \
     -Dkafka.listeners.enabled=false \

@@ -3,7 +3,7 @@ package uk.co.mruoc.nac.app;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import uk.co.mruoc.nac.environment.integrated.IntegratedTestEnvironment;
 
-class PostgresNaughtsAndCrossesAppIntegrationTest implements NaughtsAndCrossesAppIntegrationTest {
+class IntegratedNaughtsAndCrossesAppIntegrationTest extends NaughtsAndCrossesAppIntegrationTest {
 
   @RegisterExtension
   public static final NaughtsAndCrossesAppExtension EXTENSION =

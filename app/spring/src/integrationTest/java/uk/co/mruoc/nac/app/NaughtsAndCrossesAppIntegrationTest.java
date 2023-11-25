@@ -2,24 +2,29 @@ package uk.co.mruoc.nac.app;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 
+import java.time.Duration;
 import java.util.Collection;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import uk.co.mruoc.nac.api.dto.ApiGame;
+import uk.co.mruoc.nac.api.dto.ApiGameJsonMother;
 import uk.co.mruoc.nac.api.dto.ApiTurn;
-import uk.co.mruoc.nac.api.dto.GameJsonMother;
+import uk.co.mruoc.nac.client.DefaultGameUpdateListener;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClient;
 
-interface NaughtsAndCrossesAppIntegrationTest {
+@Slf4j
+abstract class NaughtsAndCrossesAppIntegrationTest {
 
-  NaughtsAndCrossesAppExtension getExtension();
+  public abstract NaughtsAndCrossesAppExtension getExtension();
 
-  default NaughtsAndCrossesApiClient getAppClient() {
-    return getExtension().getAppClient();
+  public NaughtsAndCrossesApiClient getAppClient() {
+    return getExtension().getRestClient();
   }
 
   @Test
-  default void shouldReturnNoGamesInitially() {
+  public void shouldReturnNoGamesInitially() {
     NaughtsAndCrossesApiClient client = getAppClient();
 
     Collection<ApiGame> games = client.getAllGames();
@@ -28,16 +33,29 @@ interface NaughtsAndCrossesAppIntegrationTest {
   }
 
   @Test
-  default void shouldCreateGame() {
+  public void shouldCreateGame() {
     NaughtsAndCrossesApiClient client = getAppClient();
 
     ApiGame game = client.createGame();
 
-    assertThatJson(game).isEqualTo(GameJsonMother.initial());
+    assertThatJson(game).isEqualTo(ApiGameJsonMother.initial());
   }
 
   @Test
-  default void shouldReturnGame() {
+  public void shouldSendWebsocketGameEventWhenGameCreated() {
+    DefaultGameUpdateListener listener = new DefaultGameUpdateListener();
+    getExtension().add(listener);
+    NaughtsAndCrossesApiClient client = getAppClient();
+
+    client.createGame();
+
+    String expectedJson = ApiGameJsonMother.initial();
+    awaitMostRecentGameUpdateEquals(listener, expectedJson);
+    assertThatJson(listener.forceGetMostRecentUpdate()).isEqualTo(expectedJson);
+  }
+
+  @Test
+  public void shouldReturnGame() {
     NaughtsAndCrossesApiClient client = getAppClient();
     ApiGame createdGame = client.createGame();
 
@@ -47,7 +65,7 @@ interface NaughtsAndCrossesAppIntegrationTest {
   }
 
   @Test
-  default void shouldReturnMinimalGame() {
+  public void shouldReturnMinimalGame() {
     NaughtsAndCrossesApiClient client = getAppClient();
     ApiGame createdGame = client.createGame();
 
@@ -59,7 +77,21 @@ interface NaughtsAndCrossesAppIntegrationTest {
   }
 
   @Test
-  default void gameShouldCompleteWithXWinner() {
+  public void shouldSendWebsocketGameEventWhenTurnTaken() {
+    DefaultGameUpdateListener listener = new DefaultGameUpdateListener();
+    getExtension().add(listener);
+    NaughtsAndCrossesApiClient client = getAppClient();
+    ApiGame game = client.createGame();
+
+    client.takeTurn(game.getId(), new ApiTurn(0, 0, 'X'));
+
+    String expectedJson = ApiGameJsonMother.xTurn();
+    awaitMostRecentGameUpdateEquals(listener, expectedJson);
+    assertThatJson(listener.forceGetMostRecentUpdate()).isEqualTo(expectedJson);
+  }
+
+  @Test
+  public void gameShouldCompleteWithXWinner() {
     NaughtsAndCrossesApiClient client = getAppClient();
     ApiGame game = client.createGame();
     long id = game.getId();
@@ -70,11 +102,11 @@ interface NaughtsAndCrossesAppIntegrationTest {
     client.takeTurn(id, new ApiTurn(1, 1, 'O'));
     ApiGame updatedGame = client.takeTurn(id, new ApiTurn(2, 0, 'X'));
 
-    assertThatJson(updatedGame).isEqualTo(GameJsonMother.xWinner());
+    assertThatJson(updatedGame).isEqualTo(ApiGameJsonMother.xWinner());
   }
 
   @Test
-  default void gameShouldCompleteWithDraw() {
+  public void gameShouldCompleteWithDraw() {
     NaughtsAndCrossesApiClient client = getAppClient();
     ApiGame game = client.createGame();
     long id = game.getId();
@@ -89,6 +121,23 @@ interface NaughtsAndCrossesAppIntegrationTest {
     client.takeTurn(id, new ApiTurn(2, 2, 'O'));
     ApiGame updatedGame = client.takeTurn(id, new ApiTurn(2, 0, 'X'));
 
-    assertThatJson(updatedGame).isEqualTo(GameJsonMother.draw());
+    assertThatJson(updatedGame).isEqualTo(ApiGameJsonMother.draw());
+  }
+
+  private void awaitMostRecentGameUpdateEquals(DefaultGameUpdateListener listener, String json) {
+    await()
+        .atMost(Duration.ofSeconds(5))
+        .pollInterval(Duration.ofMillis(250))
+        .until(() -> mostRecentUpdateEquals(listener, json));
+  }
+
+  private boolean mostRecentUpdateEquals(DefaultGameUpdateListener listener, String json) {
+    try {
+      assertThatJson(listener.forceGetMostRecentUpdate()).isEqualTo(json);
+      return true;
+    } catch (AssertionError error) {
+      log.debug(error.getMessage(), error);
+      return false;
+    }
   }
 }

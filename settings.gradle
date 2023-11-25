@@ -12,11 +12,14 @@ project(":repository").projectDir = file("adapter/repository")
 include "api"
 project(":api").projectDir = file("adapter/api")
 
+include "kafka"
+project(":kafka").projectDir = file("adapter/kafka")
+
 include "rest-client"
 project(":rest-client").projectDir = file("adapter/rest-client")
 
-include "kafka"
-project(":kafka").projectDir = file("adapter/kafka")
+include "websocket-client"
+project(":websocket-client").projectDir = file("adapter/websocket-client")
 
 include "naughts-and-crosses-api-spring-app"
 project(":naughts-and-crosses-api-spring-app").projectDir = file("app/spring")
