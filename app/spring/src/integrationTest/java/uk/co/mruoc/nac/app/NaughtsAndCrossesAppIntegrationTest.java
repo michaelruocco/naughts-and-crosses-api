@@ -6,6 +6,7 @@ import static org.awaitility.Awaitility.await;
 
 import java.time.Duration;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import uk.co.mruoc.nac.api.dto.ApiGame;
@@ -128,6 +129,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     await()
         .atMost(Duration.ofSeconds(5))
         .pollInterval(Duration.ofMillis(250))
+        .ignoreExceptionsInstanceOf(NoSuchElementException.class)
         .until(() -> mostRecentUpdateEquals(listener, json));
   }
 

@@ -20,14 +20,17 @@ public class ApiStatusConverter {
     return ApiStatus.builder()
         .turn(status.getTurn())
         .complete(status.isComplete())
+        .draw(status.isDraw())
+        .winner(status.getWinner().orElse(null))
         .nextPlayerToken(status.getCurrentPlayerToken().orElse(null))
         .build();
   }
 
   public Status toStatus(ApiStatus apiStatus, Collection<ApiPlayer> apiPlayers) {
     return Status.builder()
-        .complete(apiStatus.isComplete())
         .turn(apiStatus.getTurn())
+        .complete(apiStatus.isComplete())
+        .winner(apiStatus.getWinner().orElse(null))
         .players(toPlayers(apiStatus, apiPlayers))
         .build();
   }
@@ -35,7 +38,7 @@ public class ApiStatusConverter {
   private Players toPlayers(ApiStatus apiStatus, Collection<ApiPlayer> apiPlayers) {
     return apiStatus
         .getNextPlayerToken()
-        .map(nextPlayerToken -> playerConverter.toPlayers(apiPlayers, nextPlayerToken))
+        .map(token -> playerConverter.toPlayers(apiPlayers, token))
         .orElse(playerConverter.toPlayers(apiPlayers));
   }
 }

@@ -14,9 +14,15 @@ public class ApiStatus {
 
   private final long turn;
   private final boolean complete;
+  private final boolean draw;
   private final Character nextPlayerToken;
+  private final Character winner;
 
   public Optional<Character> getNextPlayerToken() {
     return Optional.ofNullable(nextPlayerToken);
+  }
+
+  public Optional<Character> getWinner() {
+    return Optional.ofNullable(winner);
   }
 }

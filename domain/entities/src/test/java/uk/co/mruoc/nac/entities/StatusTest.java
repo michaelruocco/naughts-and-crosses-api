@@ -54,23 +54,78 @@ class StatusTest {
   }
 
   @Test
-  void shouldIncrementTurnOnGameEndingTurn() {
-    Status updated = status.gameEndingTurnTaken();
+  void shouldIncrementTurnOnDrawGameTurn() {
+    Status updated = status.drawGameTurnTaken();
+
+    assertThat(updated.getTurn()).isOne();
+  }
+
+  @Test
+  void shouldSetCompleteTrueOnDrawGameTurn() {
+    Status updated = status.drawGameTurnTaken();
+
+    assertThat(updated.isComplete()).isTrue();
+  }
+
+  @Test
+  void shouldReturnEmptyNextPlayerTurnAfterDrawGameTurn() {
+    Status updated = status.drawGameTurnTaken();
+
+    assertThat(updated.getCurrentPlayerToken()).isEmpty();
+  }
+
+  @Test
+  void shouldIncrementTurnOnWinningTurn() {
+    char winner = 'X';
+
+    Status updated = status.winningTurnTaken(winner);
 
     assertThat(updated.getTurn()).isOne();
   }
 
   @Test
   void shouldSetCompleteTrueOnWinningTurn() {
-    Status updated = status.gameEndingTurnTaken();
+    char winner = 'X';
+
+    Status updated = status.winningTurnTaken(winner);
 
     assertThat(updated.isComplete()).isTrue();
   }
 
   @Test
-  void shouldReturnEmptyNextPlayerTurnAfterGameEndingTurn() {
-    Status updated = status.gameEndingTurnTaken();
+  void shouldReturnEmptyNextPlayerTurnAfterWinningTurn() {
+    char winner = 'X';
+
+    Status updated = status.winningTurnTaken(winner);
 
     assertThat(updated.getCurrentPlayerToken()).isEmpty();
+  }
+
+  @Test
+  void shouldSetWinnerAfterWinningTurn() {
+    char winner = 'X';
+
+    Status updated = status.winningTurnTaken(winner);
+
+    assertThat(updated.getWinner()).contains(winner);
+  }
+
+  @Test
+  void shouldReturnIsDrawFalseIfGameNotComplete() {
+    assertThat(status.isDraw()).isFalse();
+  }
+
+  @Test
+  void shouldReturnIsDrawTrueIfGameCompleteWithWinner() {
+    Status winnerStatus = status.winningTurnTaken('X');
+
+    assertThat(winnerStatus.isDraw()).isFalse();
+  }
+
+  @Test
+  void shouldReturnIsDrawTrueIfGameCompleteWithNoWinner() {
+    Status drawStatus = status.drawGameTurnTaken();
+
+    assertThat(drawStatus.isDraw()).isTrue();
   }
 }
