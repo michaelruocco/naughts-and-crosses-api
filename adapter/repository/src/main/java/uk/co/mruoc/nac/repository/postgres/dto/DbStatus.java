@@ -14,4 +14,5 @@ public class DbStatus {
   private final long turn;
   private final boolean complete;
   private final DbPlayers players;
+  private final Character winner;
 }
