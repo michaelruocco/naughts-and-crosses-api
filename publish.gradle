@@ -10,6 +10,8 @@ publishing {
     publications {
         lib(MavenPublication) {
             from components.java
+            suppressPomMetadataWarningsFor("testFixturesApiElements")
+            suppressPomMetadataWarningsFor("testFixturesRuntimeElements")
             pom.withXml {
                 def root = asNode()
                 root.appendNode("description", project.name)
