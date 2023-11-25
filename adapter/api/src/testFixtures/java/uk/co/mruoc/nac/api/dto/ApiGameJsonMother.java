@@ -1,10 +1,9 @@
 package uk.co.mruoc.nac.api.dto;
 
+import static uk.co.mruoc.file.FileLoader.loadContentFromClasspath;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-
-import static uk.co.mruoc.file.FileLoader.loadContentFromClasspath;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ApiGameJsonMother {
