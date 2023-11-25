@@ -17,6 +17,7 @@ ext {
 ext["junit-jupiter.version"] = "${junitVersion}"
 
 configurations {
+    runtimeOnly.exclude module: "slf4j-simple"
     integrationTestRuntimeOnly.exclude module: "slf4j-simple"
 }
 
