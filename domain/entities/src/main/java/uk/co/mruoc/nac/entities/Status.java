@@ -11,22 +11,32 @@ import lombok.RequiredArgsConstructor;
 public class Status {
 
   private final long turn;
-  private final boolean complete;
   private final Players players;
+  private final boolean complete;
+  private final Character winner;
 
   public Status() {
     this(new Players());
   }
 
   public Status(Players players) {
-    this(0, false, players);
+    this(0, players, false, null);
   }
 
   public Status turnTaken() {
     return toBuilder().turn(nextTurn()).players(players.updateCurrentPlayer()).build();
   }
 
-  public Status gameEndingTurnTaken() {
+  public Status winningTurnTaken(char token) {
+    return Status.builder()
+        .turn(nextTurn())
+        .players(players.clearCurrentPlayer())
+        .complete(true)
+        .winner(token)
+        .build();
+  }
+
+  public Status drawGameTurnTaken() {
     return Status.builder()
         .turn(nextTurn())
         .players(players.clearCurrentPlayer())
@@ -38,8 +48,16 @@ public class Status {
     return players.getCurrentPlayerToken();
   }
 
+  public Optional<Character> getWinner() {
+    return Optional.ofNullable(winner);
+  }
+
   public void validateIsTurn(char token) {
     players.validateIsTurn(token);
+  }
+
+  public boolean isDraw() {
+    return complete && getWinner().isEmpty();
   }
 
   private long nextTurn() {

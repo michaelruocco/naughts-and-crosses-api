@@ -89,7 +89,9 @@
   ],
   "status": {
     "complete": false,
+    "draw": false,
     "nextPlayerToken": "X",
-    "turn": 0
+    "turn": 0,
+    "winner": null
   }
 }

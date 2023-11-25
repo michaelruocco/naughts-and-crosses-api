@@ -43,6 +43,9 @@ public class Game {
     if (board.isPlayable(token)) {
       return status.turnTaken();
     }
-    return status.gameEndingTurnTaken();
+    if (board.hasWinner(token)) {
+      return status.winningTurnTaken(token);
+    }
+    return status.drawGameTurnTaken();
   }
 }
