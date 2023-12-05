@@ -34,6 +34,23 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: naughts-and-crosses-api
 
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0
+    container_name: keycloak
+    command: [ "start-dev", "--http-port=4021", "--import-realm" ]
+    ports:
+      - 4021:4021
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    volumes:
+      - .app/spring/src/testFixtures/resources/keycloak:/opt/keycloak/data/import
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://keycloak:8080/auth/realms/naughts-and-crosses-local/.well-known/openid-configuration" ]
+      interval: 10s
+      timeout: 10s
+      retries: 15
+
   zookeeper:
     image: wurstmeister/zookeeper:latest
     ports:

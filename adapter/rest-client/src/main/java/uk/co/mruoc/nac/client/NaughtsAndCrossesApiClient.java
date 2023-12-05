@@ -5,46 +5,84 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import uk.co.mruoc.nac.api.dto.ApiGame;
 import uk.co.mruoc.nac.api.dto.ApiTurn;
 
 @RequiredArgsConstructor
+@Slf4j
 public class NaughtsAndCrossesApiClient {
 
   private final UriFactory uriFactory;
+  private final HttpEntityFactory entityFactory;
   private final RestTemplate template;
 
   public NaughtsAndCrossesApiClient(String baseUrl) {
-    this(new UriFactory(baseUrl), new RestTemplate());
+    this(baseUrl, null);
+  }
+
+  public NaughtsAndCrossesApiClient(String baseUrl, String token) {
+    this(new UriFactory(baseUrl), new HttpEntityFactory(token), new RestTemplate());
   }
 
   public Collection<ApiGame> getAllGames() {
-    ApiGame[] games = template.getForObject(uriFactory.buildGamesUri(), ApiGame[].class);
+    ApiGame[] games = performGet(uriFactory.buildGamesUri(), ApiGame[].class);
     return Optional.ofNullable(games).map(List::of).orElse(Collections.emptyList());
   }
 
   public ApiGame createGame() {
-    return template.postForObject(uriFactory.buildGamesUri(), null, ApiGame.class);
+    return performPost(uriFactory.buildGamesUri(), entityFactory.buildRequest());
   }
 
   public ApiGame takeTurn(long gameId, ApiTurn turn) {
-    return template.postForObject(uriFactory.buildTakeTurnUri(gameId), turn, ApiGame.class);
+    HttpEntity<ApiTurn> request = entityFactory.buildRequest(turn);
+    return performPost(uriFactory.buildTakeTurnUri(gameId), request);
   }
 
   public ApiGame getGame(long gameId) {
-    return template.getForObject(uriFactory.buildGetGameUri(gameId), ApiGame.class);
+    return performGetGame(uriFactory.buildGetGameUri(gameId));
   }
 
   public ApiGame getMinimalGame(long gameId) {
-    return template.getForObject(uriFactory.buildGetMinimalGameUri(gameId), ApiGame.class);
+    return performGetGame(uriFactory.buildGetMinimalGameUri(gameId));
   }
 
   public void deleteAllGames() {
-    template.delete(uriFactory.buildGamesUri());
+    performDelete(uriFactory.buildGamesUri());
   }
 
   public void resetIds() {
-    template.delete(uriFactory.buildIdsUri());
+    performDelete(uriFactory.buildIdsUri());
+  }
+
+  private ApiGame performGetGame(String uri) {
+    return performGet(uri, ApiGame.class);
+  }
+
+  private <T> T performGet(String uri, Class<T> responseType) {
+    ResponseEntity<T> response =
+        template.exchange(uri, HttpMethod.GET, entityFactory.buildRequest(), responseType);
+    return toBodyIfNotNull(response);
+  }
+
+  private ApiGame performPost(String uri, HttpEntity<?> request) {
+    ResponseEntity<ApiGame> response =
+        template.exchange(uri, HttpMethod.POST, request, ApiGame.class);
+    return toBodyIfNotNull(response);
+  }
+
+  private void performDelete(String uri) {
+    template.exchange(uri, HttpMethod.DELETE, entityFactory.buildRequest(), Void.class);
+  }
+
+  private <T> T toBodyIfNotNull(HttpEntity<T> response) {
+    return Optional.ofNullable(response)
+        .map(HttpEntity::getBody)
+        .orElseThrow(
+            () -> new NaughtsAndCrossesApiClientException("null response body returned from api"));
   }
 }

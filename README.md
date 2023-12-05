@@ -40,7 +40,8 @@ you can run:
     -Dcors.allowed.origins=http://localhost:3001 \
     -Din.memory.repository.enabled=true \
     -Dkafka.listeners.enabled=false \
-    -Dkafka.producers.enabled=false
+    -Dkafka.producers.enabled=false \
+    -Dauth.security.enabled=false
 ```
 
 ### Running the API locally with a postgres database repository, and kafka

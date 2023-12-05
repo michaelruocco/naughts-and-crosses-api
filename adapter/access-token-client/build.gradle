@@ -3,8 +3,8 @@ plugins {
 }
 
 dependencies {
-    implementation project(":api")
     implementation "org.springframework:spring-web:6.1.1"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:2.16.0"
 }
 
 apply from: rootProject.file("publish.gradle")

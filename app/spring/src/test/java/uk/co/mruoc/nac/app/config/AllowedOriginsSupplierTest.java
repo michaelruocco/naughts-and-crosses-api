@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.function.Supplier;
 import org.junit.jupiter.api.Test;
-import uk.co.mruoc.nac.app.config.cors.AllowedOriginsSupplier;
 
 class AllowedOriginsSupplierTest {
 

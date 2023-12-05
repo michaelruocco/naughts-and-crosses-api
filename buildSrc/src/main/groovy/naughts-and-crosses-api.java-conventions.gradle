@@ -36,7 +36,7 @@ testing {
                 annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
                 implementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
                 implementation "org.assertj:assertj-core:3.24.2"
-                implementation "org.mockito:mockito-core:5.7.0"
+                implementation "org.mockito:mockito-core:5.8.0"
             }
             targets {
                 configureEach {

@@ -6,8 +6,8 @@ dependencies {
     runtimeOnly "org.glassfish.tyrus.bundles:tyrus-standalone-client:2.1.4"
     runtimeOnly "org.slf4j:slf4j-simple:${slf4jVersion}"
     implementation project(":api")
-    implementation "org.springframework:spring-websocket:6.0.13"
-    implementation "org.springframework:spring-messaging:6.0.13"
+    implementation "org.springframework:spring-websocket:6.1.1"
+    implementation "org.springframework:spring-messaging:6.1.1"
     implementation "com.fasterxml.jackson.core:jackson-databind:2.16.0"
 
     testImplementation "com.github.stefanbirkner:system-lambda:1.2.1"

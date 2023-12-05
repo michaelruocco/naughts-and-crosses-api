@@ -17,7 +17,6 @@ public class NaughtsAndCrossesAppExtension
     implements BeforeAllCallback, BeforeEachCallback, AfterAllCallback, CloseableResource {
 
   private boolean started = false;
-  private TestAppConfig appConfig;
   private NaughtsAndCrossesWebsocketClient websocketClient;
 
   private final TestEnvironment environment;
@@ -32,9 +31,8 @@ public class NaughtsAndCrossesAppExtension
     if (!started) {
       log.info("starting extension");
       environment.startDependentServices();
-      appConfig = toConfig(environment);
-      appRunner.startIfNotStarted(appConfig);
-      websocketClient = new NaughtsAndCrossesWebsocketClient(appConfig.getAppUrl());
+      appRunner.startIfNotStarted(environment);
+      websocketClient = environment.buildWebsocketClient();
       websocketClient.connect();
       log.info("extension startup complete");
       started = true;
@@ -60,7 +58,7 @@ public class NaughtsAndCrossesAppExtension
   }
 
   public NaughtsAndCrossesApiClient getRestClient() {
-    return new NaughtsAndCrossesApiClient(appConfig.getAppUrl());
+    return environment.buildApiClient();
   }
 
   public void add(GameUpdateListener listener) {
@@ -73,12 +71,5 @@ public class NaughtsAndCrossesAppExtension
       appRunner.shutdownIfRunning();
       environment.stopDependentServices();
     }
-  }
-
-  private static TestAppConfig toConfig(TestEnvironment environment) {
-    return TestAppConfig.builder()
-        .appPort(AvailablePortFinder.findAvailableTcpPort())
-        .argsDecorator(environment.getArgsDecorator())
-        .build();
   }
 }
