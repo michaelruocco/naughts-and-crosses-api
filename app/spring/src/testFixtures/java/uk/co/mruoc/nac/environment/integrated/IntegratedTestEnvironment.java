@@ -11,9 +11,6 @@ import uk.co.mruoc.nac.environment.LocalApp;
 import uk.co.mruoc.nac.environment.integrated.kafka.TestKafkaContainer;
 import uk.co.mruoc.nac.environment.integrated.keycloak.TestKeycloakContainer;
 import uk.co.mruoc.nac.environment.integrated.postgres.TestPostgresContainer;
-import uk.mruoc.nac.access.AccessTokenClient;
-import uk.mruoc.nac.access.RestAccessTokenClient;
-import uk.mruoc.nac.access.RestAccessTokenConfig;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -79,25 +76,11 @@ public class IntegratedTestEnvironment implements TestEnvironment {
 
   @Override
   public NaughtsAndCrossesApiClient buildApiClient() {
-    String token = generateAuthToken();
-    System.out.println("mruoc creating api client with auth token " + token);
-    return new NaughtsAndCrossesApiClient(localApp.getUrl(), token);
+    return new NaughtsAndCrossesApiClient(localApp.getUrl(), KEYCLOAK.getAuthTokenValue());
   }
 
   @Override
   public NaughtsAndCrossesWebsocketClient buildWebsocketClient() {
     return new NaughtsAndCrossesWebsocketClient(localApp.getUrl());
-  }
-
-  private String generateAuthToken() {
-    RestAccessTokenConfig config =
-        RestAccessTokenConfig.builder()
-            .clientId("naughts-and-crosses-api")
-            .clientSecret("naughts-and-crosses-api-secret")
-            .grantType("client_credentials")
-            .tokenUrl(KEYCLOAK.getTokenUrl())
-            .build();
-    AccessTokenClient client = new RestAccessTokenClient(config);
-    return client.generateToken().getValue();
   }
 }
