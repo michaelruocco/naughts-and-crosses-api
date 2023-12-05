@@ -81,6 +81,6 @@ public class IntegratedTestEnvironment implements TestEnvironment {
 
   @Override
   public NaughtsAndCrossesWebsocketClient buildWebsocketClient() {
-    return new NaughtsAndCrossesWebsocketClient(localApp.getUrl());
+    return new NaughtsAndCrossesWebsocketClient(localApp.getUrl(), KEYCLOAK.getAuthTokenValue());
   }
 }

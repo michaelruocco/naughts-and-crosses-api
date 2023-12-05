@@ -1,13 +1,12 @@
 package uk.co.mruoc.nac.environment.integrated.keycloak;
 
 import dasniko.testcontainers.keycloak.ExtendableKeycloakContainer;
+import java.util.Objects;
 import uk.mruoc.nac.access.AccessToken;
 import uk.mruoc.nac.access.AccessTokenClient;
 import uk.mruoc.nac.access.CacheAccessTokenClientDecorator;
 import uk.mruoc.nac.access.RestAccessTokenClient;
 import uk.mruoc.nac.access.RestAccessTokenConfig;
-
-import java.util.Objects;
 
 public class TestKeycloakContainer extends ExtendableKeycloakContainer<TestKeycloakContainer> {
 
@@ -34,12 +33,12 @@ public class TestKeycloakContainer extends ExtendableKeycloakContainer<TestKeycl
 
   private AccessTokenClient buildClient() {
     RestAccessTokenConfig config =
-            RestAccessTokenConfig.builder()
-                    .clientId("naughts-and-crosses-api")
-                    .clientSecret("naughts-and-crosses-api-secret")
-                    .grantType("client_credentials")
-                    .tokenUrl(getTokenUrl())
-                    .build();
+        RestAccessTokenConfig.builder()
+            .clientId("naughts-and-crosses-api")
+            .clientSecret("naughts-and-crosses-api-secret")
+            .grantType("client_credentials")
+            .tokenUrl(getTokenUrl())
+            .build();
     return new CacheAccessTokenClientDecorator(new RestAccessTokenClient(config));
   }
 

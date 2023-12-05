@@ -4,7 +4,10 @@ import org.springframework.boot.actuate.autoconfigure.security.servlet.Managemen
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import uk.co.mruoc.nac.app.config.websocket.AuthChannelInterceptor;
+import uk.co.mruoc.nac.app.config.websocket.NoOpAuthChannelInterceptor;
 
 @ConditionalOnProperty(value = "auth.security.enabled", havingValue = "false")
 @Configuration
@@ -12,5 +15,8 @@ import org.springframework.context.annotation.Configuration;
     exclude = {SecurityAutoConfiguration.class, ManagementWebSecurityAutoConfiguration.class})
 public class DisableSecurityAutoConfig {
 
-  // intentionally blank
+  @Bean
+  public AuthChannelInterceptor noOpAuthChannelInterceptor() {
+    return new NoOpAuthChannelInterceptor();
+  }
 }

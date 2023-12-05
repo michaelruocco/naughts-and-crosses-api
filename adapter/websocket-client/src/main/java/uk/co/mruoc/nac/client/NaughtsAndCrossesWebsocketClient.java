@@ -22,18 +22,30 @@ public class NaughtsAndCrossesWebsocketClient implements AutoCloseable {
   private final URI uri;
   private final WebSocketStompClient stompClient;
   private final GameUpdateStompSessionHandler sessionHandler;
+  private final StompHeaders connectHeaders;
 
   private StompSession session;
 
   public NaughtsAndCrossesWebsocketClient(String baseUrl) {
-    this(toGameEventUri(baseUrl), buildStompWebsocketClient(), new GameUpdateStompSessionHandler());
+    this(baseUrl, new StompHeaders());
+  }
+
+  public NaughtsAndCrossesWebsocketClient(String baseUrl, String token) {
+    this(baseUrl, new AuthorizationStompHeaders(token));
+  }
+
+  public NaughtsAndCrossesWebsocketClient(String baseUrl, StompHeaders connectHeaders) {
+    this(
+        toGameEventUri(baseUrl),
+        buildStompWebsocketClient(),
+        new GameUpdateStompSessionHandler(),
+        connectHeaders);
   }
 
   public void connect() {
     try {
-      StompHeaders headers = new StompHeaders();
-      headers.add("Authorization", "blah");
-      CompletableFuture<StompSession> future = stompClient.connectAsync(uri, null, headers, sessionHandler);
+      CompletableFuture<StompSession> future =
+          stompClient.connectAsync(uri, null, connectHeaders, sessionHandler);
       session = future.get();
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
@@ -70,5 +82,9 @@ public class NaughtsAndCrossesWebsocketClient implements AutoCloseable {
   private static SockJsClient buildWebsocketClient() {
     List<Transport> transports = List.of(new WebSocketTransport(new StandardWebSocketClient()));
     return new SockJsClient(transports);
+  }
+
+  private static StompHeaders toStompHeaders(String token) {
+    return new AuthorizationStompHeaders(token);
   }
 }
