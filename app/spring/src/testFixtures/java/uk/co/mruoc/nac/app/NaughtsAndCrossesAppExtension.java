@@ -1,5 +1,6 @@
 package uk.co.mruoc.nac.app;
 
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.AfterAllCallback;
@@ -7,7 +8,7 @@ import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
-import uk.co.mruoc.nac.client.GameUpdateListener;
+import uk.co.mruoc.nac.client.DefaultGameUpdateListener;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClient;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesWebsocketClient;
 
@@ -32,8 +33,6 @@ public class NaughtsAndCrossesAppExtension
       log.info("starting extension");
       environment.startDependentServices();
       appRunner.startIfNotStarted(environment);
-      websocketClient = environment.buildWebsocketClient();
-      websocketClient.connect();
       log.info("extension startup complete");
       started = true;
     }
@@ -44,7 +43,6 @@ public class NaughtsAndCrossesAppExtension
     NaughtsAndCrossesApiClient client = getRestClient();
     client.deleteAllGames();
     client.resetIds();
-    websocketClient.removeAllListeners();
   }
 
   @Override
@@ -61,13 +59,26 @@ public class NaughtsAndCrossesAppExtension
     return environment.buildApiClient();
   }
 
-  public void add(GameUpdateListener listener) {
+  public DefaultGameUpdateListener connectAndListenToWebsocket() {
+    if (Objects.isNull(websocketClient)) {
+      websocketClient = environment.buildWebsocketClient();
+      websocketClient.connect();
+    }
+    DefaultGameUpdateListener listener = new DefaultGameUpdateListener();
     websocketClient.add(listener);
+    return listener;
+  }
+
+  public void disconnectWebsocket() {
+    if (Objects.isNull(websocketClient)) {
+      return;
+    }
+    websocketClient.close();
+    websocketClient = null;
   }
 
   private void shutdown() {
     if (started) {
-      websocketClient.close();
       appRunner.shutdownIfRunning();
       environment.stopDependentServices();
     }

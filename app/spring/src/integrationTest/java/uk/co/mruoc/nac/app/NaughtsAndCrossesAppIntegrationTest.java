@@ -44,15 +44,19 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
   @Test
   public void shouldSendWebsocketGameEventWhenGameCreated() {
-    DefaultGameUpdateListener listener = new DefaultGameUpdateListener();
-    getExtension().add(listener);
-    NaughtsAndCrossesApiClient client = getAppClient();
+    NaughtsAndCrossesAppExtension extension = getExtension();
+    DefaultGameUpdateListener listener = extension.connectAndListenToWebsocket();
+    try {
+      NaughtsAndCrossesApiClient client = getAppClient();
 
-    client.createGame();
+      client.createGame();
 
-    String expectedJson = ApiGameJsonMother.initial();
-    awaitMostRecentGameUpdateEquals(listener, expectedJson);
-    assertThatJson(listener.forceGetMostRecentUpdate()).isEqualTo(expectedJson);
+      String expectedJson = ApiGameJsonMother.initial();
+      awaitMostRecentGameUpdateEquals(listener, expectedJson);
+      assertThatJson(listener.forceGetMostRecentUpdate()).isEqualTo(expectedJson);
+    } finally {
+      extension.disconnectWebsocket();
+    }
   }
 
   @Test
@@ -79,16 +83,20 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
   @Test
   public void shouldSendWebsocketGameEventWhenTurnTaken() {
-    DefaultGameUpdateListener listener = new DefaultGameUpdateListener();
-    getExtension().add(listener);
-    NaughtsAndCrossesApiClient client = getAppClient();
-    ApiGame game = client.createGame();
+    NaughtsAndCrossesAppExtension extension = getExtension();
+    DefaultGameUpdateListener listener = extension.connectAndListenToWebsocket();
+    try {
+      NaughtsAndCrossesApiClient client = getAppClient();
+      ApiGame game = client.createGame();
 
-    client.takeTurn(game.getId(), new ApiTurn(0, 0, 'X'));
+      client.takeTurn(game.getId(), new ApiTurn(0, 0, 'X'));
 
-    String expectedJson = ApiGameJsonMother.xTurn();
-    awaitMostRecentGameUpdateEquals(listener, expectedJson);
-    assertThatJson(listener.forceGetMostRecentUpdate()).isEqualTo(expectedJson);
+      String expectedJson = ApiGameJsonMother.xTurn();
+      awaitMostRecentGameUpdateEquals(listener, expectedJson);
+      assertThatJson(listener.forceGetMostRecentUpdate()).isEqualTo(expectedJson);
+    } finally {
+      extension.disconnectWebsocket();
+    }
   }
 
   @Test
