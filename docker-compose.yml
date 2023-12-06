@@ -25,6 +25,7 @@ services:
     depends_on:
       - naughts-and-crosses-db
       - kafka
+      - keycloak
 
   naughts-and-crosses-db:
     image: postgres:16-alpine
