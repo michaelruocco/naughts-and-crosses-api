@@ -22,4 +22,5 @@ CMD java \
   -Dkafka.ssl.keystore="${KAFKA_SSL_KEYSTORE}" \
   -Dkafka.ssl.keystore.type="${KAFKA_SSL_KEYSTORE_TYPE}" \
   -Dkafka.ssl.keystore.password="${KAFKA_SSL_KEYSTORE_PASSWORD}" \
+  -Dauth.issuer.url="${AUTH_ISSUER_URL}" \
   -jar /opt/app.jar

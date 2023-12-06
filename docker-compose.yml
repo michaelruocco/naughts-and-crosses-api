@@ -20,6 +20,7 @@ services:
       KAFKA_CLIENT_ID: naughts-and-crosses-api-client-id
       KAFKA_GAME_EVENT_TOPIC: game-update
       KAFKA_SECURITY_PROTOCOL: PLAINTEXT
+      AUTH_ISSUER_URL: http://keycloak:4021/realms/naughts-and-crosses-local
     restart: on-failure
     depends_on:
       - naughts-and-crosses-db
@@ -44,7 +45,7 @@ services:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
     volumes:
-      - .app/spring/src/testFixtures/resources/keycloak:/opt/keycloak/data/import
+      - ./app/spring/src/testFixtures/resources/keycloak:/opt/keycloak/data/import
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://keycloak:8080/auth/realms/naughts-and-crosses-local/.well-known/openid-configuration" ]
       interval: 10s
