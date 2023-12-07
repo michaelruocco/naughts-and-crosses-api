@@ -46,6 +46,14 @@ you can run:
 
 ### Running the API locally with a postgres database repository, kafka and keycloak
 
+Note - for keycloak to work correctly you will also need to update your hosts file,
+on a mac this can be found at `/etc/hosts` and you will need to map the domain name
+`keycloak` to the local machine by adding the following line to the file:
+
+```
+127.0.0.1	keycloak
+```
+
 To run the API using the postgres database, kafka and keycloak, you will need to start
 an instance of each of those systems running in docker by running
 
@@ -55,14 +63,6 @@ docker-compose up -d
 
 This will start an instance of postgres running on port 5433, kafka running on 9094
 and keycloak running on 4012.
-
-Note - for keycloak to work correctly you will also need to update your hosts file,
-on a mac this can be found at `/etc/hosts` and you will need to map the domain name
-`keycloak` to the local machine by adding the following line to the file:
-
-```
-127.0.0.1	keycloak
-```
 
 To start the app running on a port 3002 and connecting to postgres, kafka and keycloak
 you can run:
