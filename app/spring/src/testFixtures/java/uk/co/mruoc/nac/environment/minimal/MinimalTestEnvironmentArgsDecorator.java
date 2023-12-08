@@ -14,6 +14,7 @@ public class MinimalTestEnvironmentArgsDecorator implements UnaryOperator<Stream
     return Stream.of(
         "--in.memory.repository.enabled=true",
         "--kafka.listeners.enabled=false",
-        "--kafka.producers.enabled=false");
+        "--kafka.producers.enabled=false",
+        "--auth.security.enabled=false");
   }
 }

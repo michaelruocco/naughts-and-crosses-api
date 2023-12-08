@@ -15,6 +15,8 @@ public class IntegratedTestEnvironmentArgsDecorator implements UnaryOperator<Str
   private final String kafkaBootstrapServers;
   private final String kafkaGameEventTopicName;
 
+  private final String authIssuerUrl;
+
   @Override
   public Stream<String> apply(Stream<String> args) {
     return Stream.concat(args, args());
@@ -32,7 +34,8 @@ public class IntegratedTestEnvironmentArgsDecorator implements UnaryOperator<Str
         "--kafka.client.id=naughts-and-crosses-api-client-id",
         "--kafka.security.protocol=PLAINTEXT",
         String.format("--kafka.game.event.topic=%s", kafkaGameEventTopicName),
-        String.format("--kafka.bootstrap.servers=%s", kafkaBootstrapServers));
+        String.format("--kafka.bootstrap.servers=%s", kafkaBootstrapServers),
+        String.format("--auth.issuer.url=%s", authIssuerUrl));
   }
 
   private String buildJdbcUrl() {

@@ -1,7 +1,8 @@
 package uk.co.mruoc.nac.app;
 
-import java.util.function.UnaryOperator;
-import java.util.stream.Stream;
+import java.net.SocketAddress;
+import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClient;
+import uk.co.mruoc.nac.client.NaughtsAndCrossesWebsocketClient;
 
 public interface TestEnvironment {
 
@@ -9,5 +10,13 @@ public interface TestEnvironment {
 
   void stopDependentServices();
 
-  UnaryOperator<Stream<String>> getArgsDecorator();
+  int getAppPort();
+
+  SocketAddress getAppSocketAddress();
+
+  String[] getAppArgs();
+
+  NaughtsAndCrossesApiClient buildApiClient();
+
+  NaughtsAndCrossesWebsocketClient buildWebsocketClient();
 }

@@ -1,10 +1,11 @@
-package uk.co.mruoc.nac.app.config.cors;
+package uk.co.mruoc.nac.app.config.security;
 
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import uk.co.mruoc.nac.app.config.AllowedOriginsSupplier;
 
 @RequiredArgsConstructor
 @Slf4j

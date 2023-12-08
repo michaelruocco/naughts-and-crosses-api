@@ -27,7 +27,8 @@ public class ReadGameDao {
   }
 
   public Stream<Game> getAll(Connection connection) throws SQLException {
-    try (PreparedStatement statement = connection.prepareStatement("select * from game;")) {
+    try (PreparedStatement statement =
+        connection.prepareStatement("select * from game order by id asc;")) {
       return toGames(statement);
     }
   }

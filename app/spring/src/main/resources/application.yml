@@ -1,6 +1,7 @@
 spring:
   application:
     name: naughts-and-crosses-api
+  security.oauth2.resourceserver.jwt.issuer-uri: ${auth.issuer.url:}
   main:
     banner-mode: OFF
   datasource:

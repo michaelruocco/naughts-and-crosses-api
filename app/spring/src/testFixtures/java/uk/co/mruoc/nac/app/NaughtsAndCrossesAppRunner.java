@@ -14,16 +14,16 @@ public class NaughtsAndCrossesAppRunner {
 
   private ConfigurableApplicationContext context;
 
-  public void startIfNotStarted(TestAppConfig config) {
+  public void startIfNotStarted(TestEnvironment environment) {
     if (isRunning()) {
       log.info("app already running so not starting");
       return;
     }
-    String[] args = config.asArgs();
+    String[] args = environment.getAppArgs();
     log.info("starting naughts and crosses application with args {}", Arrays.toString(args));
     context = SpringApplication.run(NaughtsAndCrossesApp.class, args);
     log.info("waiting for app startup to complete...");
-    waitForStartupToComplete(config.getAppPort());
+    waitForStartupToComplete(environment.getAppPort());
   }
 
   public void shutdownIfRunning() {

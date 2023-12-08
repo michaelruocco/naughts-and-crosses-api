@@ -40,20 +40,31 @@ you can run:
     -Dcors.allowed.origins=http://localhost:3001 \
     -Din.memory.repository.enabled=true \
     -Dkafka.listeners.enabled=false \
-    -Dkafka.producers.enabled=false
+    -Dkafka.producers.enabled=false \
+    -Dauth.security.enabled=false
 ```
 
-### Running the API locally with a postgres database repository, and kafka
+### Running the API locally with a postgres database repository, kafka and keycloak
 
-To run the API using the postgres database, first you will need to start
-an instance of postgres by running:
+Note - for keycloak to work correctly you will also need to update your hosts file,
+on a mac this can be found at `/etc/hosts` and you will need to map the domain name
+`keycloak` to the local machine by adding the following line to the file:
+
+```
+127.0.0.1	keycloak
+```
+
+To run the API using the postgres database, kafka and keycloak, you will need to start
+an instance of each of those systems running in docker by running
 
 ```bash
 docker-compose up -d
 ```
 
-This will start an instance of postgres running on port 5433, then to start
-the app connecting to postgres and running on a port other than the default 8080
+This will start an instance of postgres running on port 5433, kafka running on 9094
+and keycloak running on 4012.
+
+To start the app running on a port 3002 and connecting to postgres, kafka and keycloak
 you can run:
 
 ```gradle
@@ -70,7 +81,8 @@ you can run:
     -Dkafka.consumer.group.id=naughts-and-crosses-api-group \
     -Dkafka.client.id=naughts-and-crosses-api-client-id \
     -Dkafka.game.event.topic=game-update \
-    -Dkafka.security.protocol=PLAINTEXT
+    -Dkafka.security.protocol=PLAINTEXT \
+    -Dauth.issuer.url=http://keycloak:4021/realms/naughts-and-crosses-local
 ```
 
 ### Running the API as a docker container with a postgres database repository, and kafka
@@ -89,18 +101,39 @@ you can run:
 docker-compose --profile docker-api up -d
 ```
 
+### Generating a bearer token from Keycloak
+
+If you are running the API with oauth security enabled you will need to generate a
+bearer token that you can provide when calling the API. To do this you can run the
+following command:
+
+```bash
+curl "http://keycloak:4021/realms/naughts-and-crosses-local/protocol/openid-connect/token" \
+        -d "client_id=naughts-and-crosses-api" \
+        -d "client_secret=naughts-and-crosses-api-secret" \
+        -d "grant_type=client_credentials"
+```
+
 ### Creating a game
 
-Once the API is running locally, to generate a game you can run:
+Once the API is running locally, to generate a game you can run, note - for this command
+and any of the subsequent ones listed, if authentication is enabled on the API then the
+bearer token needs to be supplied in an authorization header on the request
 
 ```bash
 curl -X POST http://localhost:3002/v1/games
 ```
 
+or with a bearer token:
+
+```bash
+curl -H 'Authorization:Bearer <token-value>' -X POST http://localhost:3002/v1/games
+```
+
 To take a turn you can run:
 
 ```bash
-curl -X POST http://localhost:3002/v1/games/{game-id}/turns -H "Content-Type: application/json" -d '{"coordinates":{"x":1,"y":1},"token":"X"}'  
+curl -X POST http://localhost:3002/v1/games/{game-id}/turns -H "Content-Type: application/json" -d '{"coordinates":{"x":1,"y":1},"token":"X"}'
 ```
 
 To get all created games you can do either:

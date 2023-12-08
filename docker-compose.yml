@@ -20,10 +20,12 @@ services:
       KAFKA_CLIENT_ID: naughts-and-crosses-api-client-id
       KAFKA_GAME_EVENT_TOPIC: game-update
       KAFKA_SECURITY_PROTOCOL: PLAINTEXT
+      AUTH_ISSUER_URL: http://keycloak:4021/realms/naughts-and-crosses-local
     restart: on-failure
     depends_on:
       - naughts-and-crosses-db
       - kafka
+      - keycloak
 
   naughts-and-crosses-db:
     image: postgres:16-alpine
@@ -33,6 +35,23 @@ services:
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: naughts-and-crosses-api
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0
+    container_name: keycloak
+    command: [ "start-dev", "--http-port=4021", "--import-realm" ]
+    ports:
+      - 4021:4021
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    volumes:
+      - ./app/spring/src/testFixtures/resources/keycloak:/opt/keycloak/data/import
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://keycloak:8080/auth/realms/naughts-and-crosses-local/.well-known/openid-configuration" ]
+      interval: 10s
+      timeout: 10s
+      retries: 15
 
   zookeeper:
     image: wurstmeister/zookeeper:latest
