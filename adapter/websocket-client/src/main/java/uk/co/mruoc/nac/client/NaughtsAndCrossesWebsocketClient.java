@@ -59,10 +59,6 @@ public class NaughtsAndCrossesWebsocketClient implements AutoCloseable {
     sessionHandler.add(listener);
   }
 
-  public void removeAllListeners() {
-    sessionHandler.removeAllListeners();
-  }
-
   public void close() {
     sessionHandler.unsubscribe();
     log.debug("disconnecting session {}", session.getSessionId());
@@ -82,9 +78,5 @@ public class NaughtsAndCrossesWebsocketClient implements AutoCloseable {
   private static SockJsClient buildWebsocketClient() {
     List<Transport> transports = List.of(new WebSocketTransport(new StandardWebSocketClient()));
     return new SockJsClient(transports);
-  }
-
-  private static StompHeaders toStompHeaders(String token) {
-    return new AuthorizationStompHeaders(token);
   }
 }
