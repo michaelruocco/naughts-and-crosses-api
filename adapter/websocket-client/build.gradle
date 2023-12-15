@@ -5,9 +5,9 @@ plugins {
 dependencies {
     runtimeOnly "org.glassfish.tyrus.bundles:tyrus-standalone-client:2.1.4"
     runtimeOnly "org.slf4j:slf4j-simple:${slf4jVersion}"
-    api "org.springframework:spring-messaging:6.1.1"
+    api "org.springframework:spring-messaging:${springVersion}"
     implementation project(":api")
-    implementation "org.springframework:spring-websocket:6.1.1"
+    implementation "org.springframework:spring-websocket:${springVersion}"
     implementation "com.fasterxml.jackson.core:jackson-databind:2.16.0"
 
     testImplementation "com.github.stefanbirkner:system-lambda:1.2.1"

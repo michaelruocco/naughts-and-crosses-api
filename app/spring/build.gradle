@@ -12,7 +12,7 @@ plugins {
 
 ext {
     testContainersVersion = "1.19.3"
-    apacheKafkaVersion = "3.6.0"
+    apacheKafkaVersion = "3.6.1"
 }
 ext["junit-jupiter.version"] = "${junitVersion}"
 
@@ -22,6 +22,7 @@ configurations {
 }
 
 dependencies {
+    runtimeOnly "org.flywaydb:flyway-database-postgresql:${flywayVersion}"
     implementation project(":api")
     implementation project(":repository")
     implementation project(":use-cases")

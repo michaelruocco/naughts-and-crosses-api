@@ -25,10 +25,11 @@ subprojects {
     ext {
         slf4jVersion = "2.0.9"
         lombokVersion = "1.18.30"
-        postgresqlVersion = "42.7.0"
-        flywayVersion = "9.22.3"
+        postgresqlVersion = "42.7.1"
+        flywayVersion = "10.3.0"
         jsonAdapterVersion = "1.0.4"
         springKafkaVersion = "3.1.0"
+        springVersion = "6.1.2"
 
         junitVersion = "5.10.1"
 
