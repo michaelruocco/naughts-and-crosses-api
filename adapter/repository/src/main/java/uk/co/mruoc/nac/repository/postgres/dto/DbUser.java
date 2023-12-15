@@ -9,8 +9,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @NoArgsConstructor(force = true)
 @Data
-public class DbPlayer {
+public class DbUser {
 
-  private final DbUser user;
-  private final char token;
+  private final String id;
+  private final String name;
+  private final String email;
 }

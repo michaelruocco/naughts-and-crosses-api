@@ -14,15 +14,21 @@ import uk.co.mruoc.nac.usecases.GameFactory;
 import uk.co.mruoc.nac.usecases.GameRepository;
 import uk.co.mruoc.nac.usecases.GameService;
 import uk.co.mruoc.nac.usecases.IdSupplier;
+import uk.co.mruoc.nac.usecases.PlayerFactory;
 
 @Configuration
 public class ApplicationConfig {
 
   @Bean
+  public GameFactory gameFactory(IdSupplier idSupplier) {
+    return GameFactory.builder().idSupplier(idSupplier).playerFactory(new PlayerFactory()).build();
+  }
+
+  @Bean
   public GameService gameService(
-      IdSupplier idSupplier, GameRepository repository, GameEventPublisher publisher) {
+      GameFactory gameFactory, GameRepository repository, GameEventPublisher publisher) {
     return GameService.builder()
-        .factory(new GameFactory(idSupplier))
+        .factory(gameFactory)
         .formatter(new BoardFormatter())
         .repository(repository)
         .eventPublisher(publisher)

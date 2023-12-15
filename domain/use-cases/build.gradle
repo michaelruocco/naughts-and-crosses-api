@@ -4,6 +4,8 @@ plugins {
 
 dependencies {
     implementation project(":entities")
+
+    testImplementation testFixtures(project(":entities"))
 }
 
 apply from: rootProject.file("publish.gradle")

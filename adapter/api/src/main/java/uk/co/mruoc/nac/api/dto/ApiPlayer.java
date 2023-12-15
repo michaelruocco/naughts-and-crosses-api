@@ -11,6 +11,6 @@ import lombok.RequiredArgsConstructor;
 @Data
 public class ApiPlayer {
 
-  private final String name;
+  private final ApiUser user;
   private final char token;
 }

@@ -79,11 +79,19 @@
   "id": 1,
   "players": [
     {
-      "name": "Player 1",
+      "user": {
+        "id": "1",
+        "name": "Player One",
+        "email": "player-1@email.com"
+      },
       "token": "X"
     },
     {
-      "name": "Player 2",
+      "user": {
+        "id": "2",
+        "name": "Player Two",
+        "email": "player-2@email.com"
+      },
       "token": "O"
     }
   ],

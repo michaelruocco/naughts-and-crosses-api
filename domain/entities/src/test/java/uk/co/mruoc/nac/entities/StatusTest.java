@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 class StatusTest {
 
-  private final Status status = new Status();
+  private final Status status = new Status(PlayerMother.players());
 
   @Test
   void shouldReturnInitialTurnAsZero() {

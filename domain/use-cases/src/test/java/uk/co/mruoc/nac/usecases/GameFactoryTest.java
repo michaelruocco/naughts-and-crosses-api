@@ -14,7 +14,10 @@ class GameFactoryTest {
 
   private final LongSupplier idSupplier = mock(LongSupplier.class);
 
-  private final GameFactory factory = new GameFactory(idSupplier);
+  private final PlayerFactory playerFactory = new PlayerFactory();
+
+  private final GameFactory factory =
+      GameFactory.builder().idSupplier(idSupplier).playerFactory(playerFactory).build();
 
   @Test
   void shouldPopulateIdFromSupplier() {
