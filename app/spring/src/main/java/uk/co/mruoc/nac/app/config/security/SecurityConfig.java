@@ -13,6 +13,9 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.web.SecurityFilterChain;
 import uk.co.mruoc.nac.app.config.websocket.AuthChannelInterceptor;
 import uk.co.mruoc.nac.app.config.websocket.DefaultAuthChannelInterceptor;
+import uk.co.mruoc.nac.usecases.UserProvider;
+import uk.co.mruoc.nac.user.keycloak.KeycloakAdminConfig;
+import uk.co.mruoc.nac.user.keycloak.KeycloakUserProvider;
 
 @ConditionalOnProperty(value = "auth.security.enabled", havingValue = "true", matchIfMissing = true)
 @Configuration
@@ -38,5 +41,20 @@ public class SecurityConfig {
   @Bean
   public AuthChannelInterceptor authChannelInterceptor(JwtDecoder jwtDecoder) {
     return new DefaultAuthChannelInterceptor(jwtDecoder);
+  }
+
+  @Bean
+  public KeycloakAdminConfig keycloakAdminConfig() {
+    return KeycloakAdminConfig.builder()
+            .url("http://keycloak:4021")
+            .realm("naughts-and-crosses-local")
+            .clientId("blah")
+            .clientSecret("blah")
+            .build();
+  }
+
+  @Bean
+  public UserProvider keycloakUserProvider(KeycloakAdminConfig config) {
+    return new KeycloakUserProvider(config);
   }
 }

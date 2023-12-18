@@ -50,7 +50,7 @@ public class PostgresGameRepository implements GameRepository {
   }
 
   @Override
-  public Optional<Game> find(long id) {
+  public Optional<Game> get(long id) {
     Instant start = Instant.now();
     try (var connection = dataSource.getConnection()) {
       return readDao.findById(connection, id);

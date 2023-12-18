@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.co.mruoc.nac.app.config.websocket.AuthChannelInterceptor;
 import uk.co.mruoc.nac.app.config.websocket.NoOpAuthChannelInterceptor;
+import uk.co.mruoc.nac.usecases.UserProvider;
+import uk.co.mruoc.nac.user.inmemory.StubUserProvider;
 
 @ConditionalOnProperty(value = "auth.security.enabled", havingValue = "false")
 @Configuration
@@ -18,5 +20,10 @@ public class DisableSecurityAutoConfig {
   @Bean
   public AuthChannelInterceptor noOpAuthChannelInterceptor() {
     return new NoOpAuthChannelInterceptor();
+  }
+
+  @Bean
+  public UserProvider stubUserProvider() {
+    return new StubUserProvider();
   }
 }

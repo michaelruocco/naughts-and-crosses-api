@@ -1,0 +1,11 @@
+plugins {
+    id "naughts-and-crosses-api.java-conventions"
+}
+
+dependencies {
+    implementation project(":use-cases")
+    implementation project(":entities")
+    api "org.keycloak:keycloak-admin-client:23.0.3"
+}
+
+apply from: rootProject.file("publish.gradle")

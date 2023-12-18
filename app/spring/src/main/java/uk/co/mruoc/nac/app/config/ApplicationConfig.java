@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import uk.co.mruoc.nac.api.converter.ApiConverter;
+import uk.co.mruoc.nac.api.converter.ApiUserConverter;
 import uk.co.mruoc.nac.app.config.security.CorsWebMvcConfigurer;
 import uk.co.mruoc.nac.usecases.BoardFormatter;
 import uk.co.mruoc.nac.usecases.GameEventPublisher;
@@ -14,14 +15,20 @@ import uk.co.mruoc.nac.usecases.GameFactory;
 import uk.co.mruoc.nac.usecases.GameRepository;
 import uk.co.mruoc.nac.usecases.GameService;
 import uk.co.mruoc.nac.usecases.IdSupplier;
-import uk.co.mruoc.nac.usecases.PlayerFactory;
+import uk.co.mruoc.nac.usecases.UserProvider;
+import uk.co.mruoc.nac.usecases.UserService;
 
 @Configuration
 public class ApplicationConfig {
 
   @Bean
+  public UserService userService(UserProvider provider) {
+    return new UserService(provider);
+  }
+
+  @Bean
   public GameFactory gameFactory(IdSupplier idSupplier) {
-    return GameFactory.builder().idSupplier(idSupplier).playerFactory(new PlayerFactory()).build();
+    return new GameFactory(idSupplier);
   }
 
   @Bean
@@ -38,6 +45,11 @@ public class ApplicationConfig {
   @Bean
   public ApiConverter apiConverter() {
     return new ApiConverter();
+  }
+
+  @Bean
+  public ApiUserConverter apiUserConverter() {
+    return new ApiUserConverter();
   }
 
   @Bean

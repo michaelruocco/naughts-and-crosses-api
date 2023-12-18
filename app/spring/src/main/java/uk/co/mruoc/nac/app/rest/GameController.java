@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import uk.co.mruoc.nac.api.converter.ApiConverter;
 import uk.co.mruoc.nac.api.dto.ApiGame;
+import uk.co.mruoc.nac.api.dto.ApiPlayer;
 import uk.co.mruoc.nac.api.dto.ApiTurn;
 import uk.co.mruoc.nac.entities.Game;
+import uk.co.mruoc.nac.entities.Players;
 import uk.co.mruoc.nac.entities.Turn;
 import uk.co.mruoc.nac.usecases.GameService;
 
@@ -45,8 +47,9 @@ public class GameController {
   }
 
   @PostMapping
-  public ApiGame createGame() {
-    Game game = service.createGame();
+  public ApiGame createGame(Collection<ApiPlayer> apiPlayers) {
+    Players players = converter.toPlayers(apiPlayers);
+    Game game = service.createGame(players);
     return converter.toApiGame(game);
   }
 

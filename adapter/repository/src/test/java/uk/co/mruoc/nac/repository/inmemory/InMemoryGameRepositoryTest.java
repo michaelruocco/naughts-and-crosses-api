@@ -21,7 +21,7 @@ class InMemoryGameRepositoryTest {
 
     repository.create(game);
 
-    assertThat(repository.find(id)).contains(game);
+    assertThat(repository.get(id)).contains(game);
   }
 
   @Test
@@ -33,14 +33,14 @@ class InMemoryGameRepositoryTest {
 
     repository.update(updatedGame);
 
-    assertThat(repository.find(id)).contains(updatedGame);
+    assertThat(repository.get(id)).contains(updatedGame);
   }
 
   @Test
   void shouldReturnEmptyIfGameWithIdPresent() {
     long id = 2;
 
-    Optional<Game> game = repository.find(id);
+    Optional<Game> game = repository.get(id);
 
     assertThat(game).isEmpty();
   }
