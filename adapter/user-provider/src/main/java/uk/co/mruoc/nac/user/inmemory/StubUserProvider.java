@@ -2,9 +2,7 @@ package uk.co.mruoc.nac.user.inmemory;
 
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.nac.entities.User;
-import uk.co.mruoc.nac.usecases.UserNotFoundException;
 import uk.co.mruoc.nac.usecases.UserProvider;
-import uk.co.mruoc.nac.usecases.UserService;
 
 import java.util.Collection;
 import java.util.List;
@@ -42,10 +40,10 @@ public class StubUserProvider implements UserProvider {
   }
 
   private static User user1() {
-    return User.builder().id("user-1").email("user-1@email.com").name("User One").build();
+    return User.builder().id("707d9fa6-13dd-4985-93aa-a28f01e89a6b").username("user-1").email("user-1@email.com").firstName("User").lastName("One").build();
   }
 
   private static User user2() {
-    return User.builder().id("user-2").email("user-2@email.com").name("User Two").build();
+    return User.builder().id("dadfde25-9924-4982-802d-dfd0bce2218d").username("user-2").email("user-2@email.com").firstName("User").lastName("Two").build();
   }
 }

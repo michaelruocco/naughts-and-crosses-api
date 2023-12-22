@@ -12,14 +12,13 @@ public class KeycloakUserConverter {
         return users.stream().map(this::toUser);
     }
 
-    public User toUser(UserRepresentation user) {
-        return User.builder()
-                .id(user.getId())
-                .name(toName(user))
-                .email(user.getEmail())
-                .build();
-    }
-    private static String toName(UserRepresentation user) {
-        return String.format("%s %s", user.getFirstName(), user.getLastName());
+  public User toUser(UserRepresentation user) {
+    return User.builder()
+        .id(user.getId())
+        .username(user.getUsername())
+        .firstName(user.getFirstName())
+        .lastName(user.getLastName())
+        .email(user.getEmail())
+        .build();
     }
 }

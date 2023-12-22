@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 public class ApiUser {
 
   private final String id;
-  private final String name;
+  private final String username;
+  private final String firstName;
+  private final String lastName;
   private final String email;
 }

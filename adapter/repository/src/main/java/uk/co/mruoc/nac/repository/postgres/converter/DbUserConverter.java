@@ -12,7 +12,13 @@ public class DbUserConverter {
   }
 
   public DbUser toDbUser(User user) {
-    return DbUser.builder().id(user.getId()).name(user.getName()).email(user.getEmail()).build();
+    return DbUser.builder()
+        .id(user.getId())
+        .username(user.getUsername())
+        .firstName(user.getFirstName())
+        .lastName(user.getLastName())
+        .email(user.getEmail())
+        .build();
   }
 
   public List<User> toUsers(Collection<DbUser> dbUsers) {
@@ -22,7 +28,9 @@ public class DbUserConverter {
   public User toUser(DbUser dbUser) {
     return User.builder()
         .id(dbUser.getId())
-        .name(dbUser.getName())
+        .username(dbUser.getUsername())
+        .firstName(dbUser.getFirstName())
+        .lastName(dbUser.getLastName())
         .email(dbUser.getEmail())
         .build();
   }

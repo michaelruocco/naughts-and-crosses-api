@@ -13,7 +13,7 @@ public class ApiUserConverter {
   }
 
   public ApiUser toApiUser(User user) {
-    return ApiUser.builder().id(user.getId()).name(user.getName()).email(user.getEmail()).build();
+    return ApiUser.builder().id(user.getId()).username(user.getUsername()).firstName(user.getFirstName()).lastName(user.getLastName()).email(user.getEmail()).build();
   }
 
   public Collection<User> toUsers(Collection<ApiUser> apiUsers) {
@@ -23,7 +23,9 @@ public class ApiUserConverter {
   public User toUser(ApiUser apiUser) {
     return User.builder()
         .id(apiUser.getId())
-        .name(apiUser.getName())
+            .username(apiUser.getUsername())
+        .firstName(apiUser.getFirstName())
+            .lastName(apiUser.getLastName())
         .email(apiUser.getEmail())
         .build();
   }

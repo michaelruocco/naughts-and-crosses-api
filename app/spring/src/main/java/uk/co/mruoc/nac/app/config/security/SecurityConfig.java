@@ -48,8 +48,8 @@ public class SecurityConfig {
     return KeycloakAdminConfig.builder()
             .url("http://keycloak:4021")
             .realm("naughts-and-crosses-local")
-            .clientId("blah")
-            .clientSecret("blah")
+            .clientId("naughts-and-crosses-api")
+            .clientSecret("naughts-and-crosses-api-secret")
             .build();
   }
 

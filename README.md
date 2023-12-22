@@ -114,6 +114,18 @@ curl "http://keycloak:4021/realms/naughts-and-crosses-local/protocol/openid-conn
         -d "grant_type=client_credentials"
 ```
 
+### Getting users
+
+```bash
+curl http://localhost:3002/v1/users
+```
+
+or with a bearer token:
+
+```bash
+curl -H 'Authorization:Bearer <token-value>' http://localhost:3002/v1/users
+```
+
 ### Creating a game
 
 Once the API is running locally, to generate a game you can run, note - for this command
