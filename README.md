@@ -126,7 +126,9 @@ curl -H 'Authorization:Bearer <token-value>' -X POST http://localhost:3002/v1/ga
 To take a turn you can run:
 
 ```bash
-curl -H 'Authorization:Bearer <token-value>' -X POST http://localhost:3002/v1/games/{game-id}/turns -H "Content-Type: application/json" -d '{"coordinates":{"x":1,"y":1},"token":"X"}'
+curl -H "Content-Type: application/json" \
+  -d '{"coordinates":{"x":1,"y":1},"token":"X"}' \
+  -X POST http://localhost:3002/v1/games/{game-id}/turns  
 ```
 
 To get all created games you can do either:
