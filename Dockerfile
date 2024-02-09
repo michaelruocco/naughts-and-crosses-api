@@ -12,15 +12,7 @@ CMD java \
   -Dapp.database.username=${DATABASE_USERNAME} \
   -Dapp.database.password=${DATABASE_PASSWORD} \
   -Dapp.database.driver=${DATABASE_DRIVER} \
-  -Dkafka.listeners.enabled="${KAFKA_LISTENERS_ENABLED}" \
-  -Dkafka.producers.enabled="${KAFKA_PRODUCERS_ENABLED}" \
-  -Dkafka.bootstrap.servers="${KAFKA_BOOTSTRAP_SERVERS}" \
-  -Dkafka.consumer.group.id="${KAFKA_CONSUMER_GROUP_ID}" \
-  -Dkafka.client.id="${KAFKA_CLIENT_ID}" \
-  -Dkafka.game.event.topic="${KAFKA_GAME_EVENT_TOPIC}" \
-  -Dkafka.security.protocol="${KAFKA_SECURITY_PROTOCOL}" \
-  -Dkafka.ssl.keystore="${KAFKA_SSL_KEYSTORE}" \
-  -Dkafka.ssl.keystore.type="${KAFKA_SSL_KEYSTORE_TYPE}" \
-  -Dkafka.ssl.keystore.password="${KAFKA_SSL_KEYSTORE_PASSWORD}" \
+  -Dbroker.relay.host="${BROKER_RELAY_HOST}" \
+  -Dbroker.relay.port="${BROKER_RELAY_PORT}" \
   -Dauth.issuer.url="${AUTH_ISSUER_URL}" \
   -jar /opt/app.jar

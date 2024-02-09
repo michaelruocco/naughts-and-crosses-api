@@ -49,4 +49,11 @@ public class ApplicationConfig {
   public WebMvcConfigurer webMvcConfigurer(AllowedOriginsSupplier provider) {
     return new CorsWebMvcConfigurer(provider);
   }
+
+  @Bean
+  public RelayConfig relayConfig(
+      @Value("${broker.relay.host:127.0.0.1}") String host,
+      @Value("${broker.relay.port:61613}") int port) {
+    return RelayConfig.builder().host(host).port(port).build();
+  }
 }

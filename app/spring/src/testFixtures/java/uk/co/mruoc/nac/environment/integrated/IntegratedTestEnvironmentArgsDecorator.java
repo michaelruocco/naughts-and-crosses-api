@@ -12,8 +12,8 @@ public class IntegratedTestEnvironmentArgsDecorator implements UnaryOperator<Str
   private final Supplier<Integer> dbPort;
   private final String dbName;
 
-  private final String kafkaBootstrapServers;
-  private final String kafkaGameEventTopicName;
+  private final String brokerHost;
+  private final int brokerPort;
 
   private final String authIssuerUrl;
 
@@ -28,13 +28,8 @@ public class IntegratedTestEnvironmentArgsDecorator implements UnaryOperator<Str
         "--database.password=postgres",
         String.format("--database.url=%s", buildJdbcUrl()),
         "--database.driver=org.postgresql.Driver",
-        "--kafka.listeners.enabled=true",
-        "--kafka.producers.enabled=true",
-        "--kafka.consumer.group.id=naughts-and-crosses-api-group",
-        "--kafka.client.id=naughts-and-crosses-api-client-id",
-        "--kafka.security.protocol=PLAINTEXT",
-        String.format("--kafka.game.event.topic=%s", kafkaGameEventTopicName),
-        String.format("--kafka.bootstrap.servers=%s", kafkaBootstrapServers),
+        String.format("--broker.relay.host=%s", brokerHost),
+        String.format("--broker.relay.port=%s", brokerPort),
         String.format("--auth.issuer.url=%s", authIssuerUrl));
   }
 

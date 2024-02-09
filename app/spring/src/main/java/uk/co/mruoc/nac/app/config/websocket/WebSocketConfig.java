@@ -15,6 +15,7 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import uk.co.mruoc.nac.api.converter.ApiConverter;
 import uk.co.mruoc.nac.app.config.AllowedOriginsSupplier;
+import uk.co.mruoc.nac.app.config.RelayConfig;
 import uk.co.mruoc.nac.app.websocket.WebSocketGameEventPublisher;
 import uk.co.mruoc.nac.usecases.GameEventPublisher;
 
@@ -25,6 +26,7 @@ import uk.co.mruoc.nac.usecases.GameEventPublisher;
 @Order(Ordered.HIGHEST_PRECEDENCE + 99)
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+  private final RelayConfig relayConfig;
   private final AllowedOriginsSupplier originsSupplier;
   private final AuthChannelInterceptor authChannelInterceptor;
 
@@ -38,17 +40,20 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
   @Override
   public void configureMessageBroker(MessageBrokerRegistry registry) {
     registry.setApplicationDestinationPrefixes("/app");
-    registry.enableSimpleBroker("/topic");
+    registry
+        .enableStompBrokerRelay("/topic")
+        .setRelayHost(relayConfig.getHost())
+        .setRelayPort(relayConfig.getPort());
+  }
+
+  @Override
+  public void configureClientInboundChannel(ChannelRegistration registration) {
+    registration.interceptors(authChannelInterceptor);
   }
 
   @Bean
   public GameEventPublisher webSocketGameEventPublisher(
       SimpMessagingTemplate template, ApiConverter converter) {
     return WebSocketGameEventPublisher.builder().template(template).converter(converter).build();
-  }
-
-  @Override
-  public void configureClientInboundChannel(ChannelRegistration registration) {
-    registration.interceptors(authChannelInterceptor);
   }
 }

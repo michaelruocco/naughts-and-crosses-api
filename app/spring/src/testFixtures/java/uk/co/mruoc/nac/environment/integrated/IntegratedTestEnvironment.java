@@ -8,7 +8,7 @@ import uk.co.mruoc.nac.app.TestEnvironment;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClient;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesWebsocketClient;
 import uk.co.mruoc.nac.environment.LocalApp;
-import uk.co.mruoc.nac.environment.integrated.kafka.TestKafkaContainer;
+import uk.co.mruoc.nac.environment.integrated.activemq.TestActiveMQContainer;
 import uk.co.mruoc.nac.environment.integrated.keycloak.TestKeycloakContainer;
 import uk.co.mruoc.nac.environment.integrated.postgres.TestPostgresContainer;
 
@@ -18,15 +18,14 @@ public class IntegratedTestEnvironment implements TestEnvironment {
 
   private static final TestPostgresContainer POSTGRES = new TestPostgresContainer();
 
-  private static final TestKafkaContainer KAFKA = new TestKafkaContainer();
-
   private static final TestKeycloakContainer KEYCLOAK = new TestKeycloakContainer();
 
+  private static final TestActiveMQContainer ACTIVEMQ = new TestActiveMQContainer();
+
   private final LocalApp localApp;
-  private final String kafkaGameEventTopicName;
 
   public IntegratedTestEnvironment() {
-    this(new LocalApp(), "game-event");
+    this(new LocalApp());
   }
 
   @Override
@@ -35,19 +34,18 @@ public class IntegratedTestEnvironment implements TestEnvironment {
     KEYCLOAK.start();
     log.info("starting postgres");
     POSTGRES.start();
-    log.info("starting kafka");
-    KAFKA.start();
-    KAFKA.createTopics(kafkaGameEventTopicName);
+    log.info("starting activemq");
+    ACTIVEMQ.start();
   }
 
   @Override
   public void stopDependentServices() {
-    log.info("stopping kafka");
-    KAFKA.close();
     log.info("stopping postgres");
     POSTGRES.close();
     log.info("stopping keycloak");
     KEYCLOAK.close();
+    log.info("stopping activemq");
+    ACTIVEMQ.close();
   }
 
   @Override
@@ -66,8 +64,8 @@ public class IntegratedTestEnvironment implements TestEnvironment {
         .dbHost(POSTGRES.getHost())
         .dbPort(POSTGRES::getFirstMappedPort)
         .dbName(POSTGRES.getDatabaseName())
-        .kafkaBootstrapServers(KAFKA.getBootstrapServers())
-        .kafkaGameEventTopicName(kafkaGameEventTopicName)
+        .brokerHost(ACTIVEMQ.getHost())
+        .brokerPort(ACTIVEMQ.getMappedStompPort())
         .authIssuerUrl(KEYCLOAK.getIssuerUrl())
         .build()
         .apply(Stream.of(localApp.getServerPortArg()))

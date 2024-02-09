@@ -135,7 +135,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
   private void awaitMostRecentGameUpdateEquals(DefaultGameUpdateListener listener, String json) {
     await()
-        .atMost(Duration.ofSeconds(5))
+        .atMost(Duration.ofSeconds(10))
         .pollInterval(Duration.ofMillis(250))
         .ignoreExceptionsInstanceOf(NoSuchElementException.class)
         .until(() -> mostRecentUpdateEquals(listener, json));
