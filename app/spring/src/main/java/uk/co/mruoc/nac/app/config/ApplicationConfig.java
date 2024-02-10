@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import uk.co.mruoc.nac.api.converter.ApiConverter;
 import uk.co.mruoc.nac.app.config.security.CorsWebMvcConfigurer;
+import uk.co.mruoc.nac.app.config.websocket.BrokerConfig;
 import uk.co.mruoc.nac.usecases.BoardFormatter;
 import uk.co.mruoc.nac.usecases.GameEventPublisher;
 import uk.co.mruoc.nac.usecases.GameFactory;
@@ -51,9 +52,22 @@ public class ApplicationConfig {
   }
 
   @Bean
-  public RelayConfig relayConfig(
-      @Value("${broker.relay.host:127.0.0.1}") String host,
-      @Value("${broker.relay.port:61613}") int port) {
-    return RelayConfig.builder().host(host).port(port).build();
+  public BrokerConfig relayConfig(
+      @Value("${broker.in.memory.enabled:false}") boolean inMemoryEnabled,
+      @Value("${broker.host:127.0.0.1}") String host,
+      @Value("${broker.port:61613}") int port,
+      @Value("${broker.client.login:guest}") String clientLogin,
+      @Value("${broker.client.passcode:guest}") String clientPasscode,
+      @Value("${broker.system.login:guest}") String systemLogin,
+      @Value("${broker.system.passcode:guest}") String systemPasscode) {
+    return BrokerConfig.builder()
+        .inMemoryEnabled(inMemoryEnabled)
+        .host(host)
+        .port(port)
+        .clientLogin(clientLogin)
+        .clientPasscode(clientPasscode)
+        .systemLogin(systemLogin)
+        .systemPasscode(systemPasscode)
+        .build();
   }
 }

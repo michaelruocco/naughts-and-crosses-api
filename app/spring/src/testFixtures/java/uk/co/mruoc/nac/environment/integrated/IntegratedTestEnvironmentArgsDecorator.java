@@ -28,8 +28,12 @@ public class IntegratedTestEnvironmentArgsDecorator implements UnaryOperator<Str
         "--database.password=postgres",
         String.format("--database.url=%s", buildJdbcUrl()),
         "--database.driver=org.postgresql.Driver",
-        String.format("--broker.relay.host=%s", brokerHost),
-        String.format("--broker.relay.port=%s", brokerPort),
+        String.format("--broker.host=%s", brokerHost),
+        String.format("--broker.port=%s", brokerPort),
+        "--broker.client.login=guest",
+        "--broker.client.passcode=guest",
+        "--broker.system.login=guest",
+        "--broker.system.passcode=guest",
         String.format("--auth.issuer.url=%s", authIssuerUrl));
   }
 

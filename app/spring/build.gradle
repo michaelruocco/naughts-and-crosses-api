@@ -57,8 +57,6 @@ dependencies {
     testFixturesImplementation "org.testcontainers:postgresql:${testContainersVersion}"
     testFixturesImplementation "org.testcontainers:activemq:${testContainersVersion}"
     testFixturesImplementation "org.postgresql:postgresql:${postgresqlVersion}"
-    testFixturesImplementation "com.github.dasniko:testcontainers-keycloak:3.2.0"
-
 }
 
 bootRun {

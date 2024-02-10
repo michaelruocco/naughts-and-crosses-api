@@ -15,7 +15,6 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import uk.co.mruoc.nac.api.converter.ApiConverter;
 import uk.co.mruoc.nac.app.config.AllowedOriginsSupplier;
-import uk.co.mruoc.nac.app.config.RelayConfig;
 import uk.co.mruoc.nac.app.websocket.WebSocketGameEventPublisher;
 import uk.co.mruoc.nac.usecases.GameEventPublisher;
 
@@ -26,7 +25,7 @@ import uk.co.mruoc.nac.usecases.GameEventPublisher;
 @Order(Ordered.HIGHEST_PRECEDENCE + 99)
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-  private final RelayConfig relayConfig;
+  private final BrokerConfig brokerConfig;
   private final AllowedOriginsSupplier originsSupplier;
   private final AuthChannelInterceptor authChannelInterceptor;
 
@@ -40,10 +39,22 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
   @Override
   public void configureMessageBroker(MessageBrokerRegistry registry) {
     registry.setApplicationDestinationPrefixes("/app");
+    if (brokerConfig.isInMemoryEnabled()) {
+      registry.enableSimpleBroker("/topic");
+      return;
+    }
+    configureExternalBroker(registry);
+  }
+
+  private void configureExternalBroker(MessageBrokerRegistry registry) {
     registry
         .enableStompBrokerRelay("/topic")
-        .setRelayHost(relayConfig.getHost())
-        .setRelayPort(relayConfig.getPort());
+        .setRelayHost(brokerConfig.getHost())
+        .setRelayPort(brokerConfig.getPort());
+    // .setClientLogin(brokerConfig.getClientLogin())
+    // .setClientPasscode(brokerConfig.getClientPasscode())
+    // .setSystemLogin(brokerConfig.getSystemLogin())
+    // .setSystemPasscode(brokerConfig.getSystemPasscode());
   }
 
   @Override

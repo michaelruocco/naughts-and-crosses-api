@@ -12,9 +12,8 @@ public class MinimalTestEnvironmentArgsDecorator implements UnaryOperator<Stream
 
   private Stream<String> args() {
     return Stream.of(
-        "--in.memory.repository.enabled=true",
-        "--kafka.listeners.enabled=false",
-        "--kafka.producers.enabled=false",
+        "--repository.in.memory.enabled=true",
+        "--broker.in.memory.enabled=true",
         "--auth.security.enabled=false");
   }
 }

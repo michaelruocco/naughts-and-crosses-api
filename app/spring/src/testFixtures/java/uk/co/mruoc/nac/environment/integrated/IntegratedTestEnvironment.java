@@ -31,7 +31,9 @@ public class IntegratedTestEnvironment implements TestEnvironment {
   @Override
   public void startDependentServices() {
     log.info("starting keycloak");
+    log.info("{} {}", KEYCLOAK.getCommandParts(), KEYCLOAK.getPortBindings());
     KEYCLOAK.start();
+
     log.info("starting postgres");
     POSTGRES.start();
     log.info("starting activemq");
