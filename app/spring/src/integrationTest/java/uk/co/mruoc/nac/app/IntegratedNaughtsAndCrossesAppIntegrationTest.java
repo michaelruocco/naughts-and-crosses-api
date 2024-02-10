@@ -13,7 +13,4 @@ class IntegratedNaughtsAndCrossesAppIntegrationTest extends NaughtsAndCrossesApp
   public NaughtsAndCrossesAppExtension getExtension() {
     return EXTENSION;
   }
-
-  // TODO add tests for rest and websocket endpoints failing when auth token
-  // is invalid or not provided
 }

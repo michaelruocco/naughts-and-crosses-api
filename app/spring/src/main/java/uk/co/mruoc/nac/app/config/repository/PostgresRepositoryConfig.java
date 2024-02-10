@@ -12,7 +12,7 @@ import uk.co.mruoc.nac.usecases.IdSupplier;
 
 @Configuration
 @ConditionalOnProperty(
-    name = "in.memory.repository.enabled",
+    name = "repository.in.memory.enabled",
     havingValue = "false",
     matchIfMissing = true)
 public class PostgresRepositoryConfig {

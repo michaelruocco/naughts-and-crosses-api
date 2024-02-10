@@ -25,6 +25,7 @@ import uk.co.mruoc.nac.usecases.GameEventPublisher;
 @Order(Ordered.HIGHEST_PRECEDENCE + 99)
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+  private final BrokerConfig brokerConfig;
   private final AllowedOriginsSupplier originsSupplier;
   private final AuthChannelInterceptor authChannelInterceptor;
 
@@ -38,17 +39,32 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
   @Override
   public void configureMessageBroker(MessageBrokerRegistry registry) {
     registry.setApplicationDestinationPrefixes("/app");
-    registry.enableSimpleBroker("/topic");
+    if (brokerConfig.isInMemoryEnabled()) {
+      registry.enableSimpleBroker("/topic");
+      return;
+    }
+    configureExternalBroker(registry);
+  }
+
+  private void configureExternalBroker(MessageBrokerRegistry registry) {
+    registry
+        .enableStompBrokerRelay("/topic")
+        .setRelayHost(brokerConfig.getHost())
+        .setRelayPort(brokerConfig.getPort())
+        .setClientLogin(brokerConfig.getClientLogin())
+        .setClientPasscode(brokerConfig.getClientPasscode())
+        .setSystemLogin(brokerConfig.getSystemLogin())
+        .setSystemPasscode(brokerConfig.getSystemPasscode());
+  }
+
+  @Override
+  public void configureClientInboundChannel(ChannelRegistration registration) {
+    registration.interceptors(authChannelInterceptor);
   }
 
   @Bean
   public GameEventPublisher webSocketGameEventPublisher(
       SimpMessagingTemplate template, ApiConverter converter) {
     return WebSocketGameEventPublisher.builder().template(template).converter(converter).build();
-  }
-
-  @Override
-  public void configureClientInboundChannel(ChannelRegistration registration) {
-    registration.interceptors(authChannelInterceptor);
   }
 }
