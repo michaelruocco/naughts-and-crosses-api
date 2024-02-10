@@ -50,11 +50,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     registry
         .enableStompBrokerRelay("/topic")
         .setRelayHost(brokerConfig.getHost())
-        .setRelayPort(brokerConfig.getPort());
-    // .setClientLogin(brokerConfig.getClientLogin())
-    // .setClientPasscode(brokerConfig.getClientPasscode())
-    // .setSystemLogin(brokerConfig.getSystemLogin())
-    // .setSystemPasscode(brokerConfig.getSystemPasscode());
+        .setRelayPort(brokerConfig.getPort())
+        .setClientLogin(brokerConfig.getClientLogin())
+        .setClientPasscode(brokerConfig.getClientPasscode())
+        .setSystemLogin(brokerConfig.getSystemLogin())
+        .setSystemPasscode(brokerConfig.getSystemPasscode());
   }
 
   @Override
