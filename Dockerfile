@@ -12,15 +12,11 @@ CMD java \
   -Dapp.database.username=${DATABASE_USERNAME} \
   -Dapp.database.password=${DATABASE_PASSWORD} \
   -Dapp.database.driver=${DATABASE_DRIVER} \
-  -Dkafka.listeners.enabled="${KAFKA_LISTENERS_ENABLED}" \
-  -Dkafka.producers.enabled="${KAFKA_PRODUCERS_ENABLED}" \
-  -Dkafka.bootstrap.servers="${KAFKA_BOOTSTRAP_SERVERS}" \
-  -Dkafka.consumer.group.id="${KAFKA_CONSUMER_GROUP_ID}" \
-  -Dkafka.client.id="${KAFKA_CLIENT_ID}" \
-  -Dkafka.game.event.topic="${KAFKA_GAME_EVENT_TOPIC}" \
-  -Dkafka.security.protocol="${KAFKA_SECURITY_PROTOCOL}" \
-  -Dkafka.ssl.keystore="${KAFKA_SSL_KEYSTORE}" \
-  -Dkafka.ssl.keystore.type="${KAFKA_SSL_KEYSTORE_TYPE}" \
-  -Dkafka.ssl.keystore.password="${KAFKA_SSL_KEYSTORE_PASSWORD}" \
+  -Dbroker.host="${BROKER_HOST}" \
+  -Dbroker.port="${BROKER_PORT}" \
+  -Dbroker.client.login="${BROKER_CLIENT_LOGIN}" \
+  -Dbroker.client.passcode="${BROKER_CLIENT_PASSCODE}" \
+  -Dbroker.system.login="${BROKER_SYSTEM_LOGIN}" \
+  -Dbroker.system.passcode="${BROKER_SYSTEM_PASSCODE}" \
   -Dauth.issuer.url="${AUTH_ISSUER_URL}" \
   -jar /opt/app.jar

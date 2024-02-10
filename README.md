@@ -38,9 +38,8 @@ you can run:
 ./gradlew bootRun \
     -Dserver.port=3002 \
     -Dcors.allowed.origins=http://localhost:3001 \
-    -Din.memory.repository.enabled=true \
-    -Dkafka.listeners.enabled=false \
-    -Dkafka.producers.enabled=false \
+    -Drepository.in.memory.enabled=true \
+    -Dbroker.in.memory.enabled=true \
     -Dauth.security.enabled=false
 ```
 
@@ -75,13 +74,12 @@ you can run:
     -Ddatabase.username=postgres \
     -Ddatabase.password=postgres \
     -Ddatabase.driver=org.postgresql.Driver \
-    -Dkafka.listeners.enabled=true \
-    -Dkafka.producers.enabled=true \
-    -Dkafka.bootstrap.servers=http://localhost:9094 \
-    -Dkafka.consumer.group.id=naughts-and-crosses-api-group \
-    -Dkafka.client.id=naughts-and-crosses-api-client-id \
-    -Dkafka.game.event.topic=game-update \
-    -Dkafka.security.protocol=PLAINTEXT \
+    -Dbroker.host=127.0.0.1 \
+    -Dbroker.port=61613 \
+    -Dbroker.client.login=guest \
+    -Dbroker.client.passcode=guest \
+    -Dbroker.system.login=guest \
+    -Dbroker.system.passcode=guest \
     -Dauth.issuer.url=http://keycloak:4021/realms/naughts-and-crosses-local
 ```
 
@@ -127,13 +125,16 @@ curl -X POST http://localhost:3002/v1/games
 or with a bearer token:
 
 ```bash
-curl -H 'Authorization:Bearer <token-value>' -X POST http://localhost:3002/v1/games
+curl -H 'Authorization:Bearer <token-value>' \
+  -X POST http://localhost:3002/v1/games
 ```
 
 To take a turn you can run:
 
 ```bash
-curl -X POST http://localhost:3002/v1/games/{game-id}/turns -H "Content-Type: application/json" -d '{"coordinates":{"x":1,"y":1},"token":"X"}'
+curl -H "Content-Type: application/json" \
+  -d '{"coordinates":{"x":1,"y":1},"token":"X"}' \
+  -X POST http://localhost:3002/v1/games/{game-id}/turns  
 ```
 
 To get all created games you can do either:
