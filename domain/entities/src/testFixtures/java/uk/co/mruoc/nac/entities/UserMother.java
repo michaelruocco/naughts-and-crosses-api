@@ -7,10 +7,20 @@ import lombok.NoArgsConstructor;
 public class UserMother {
 
   public static User user1() {
-    return User.builder().id("user-1").email("user-1@email.com").name("User One").build();
+    return User.builder()
+        .id("user-1")
+        .email("user-1@email.com")
+        .firstName("User")
+        .lastName("One")
+        .build();
   }
 
   public static User user2() {
-    return User.builder().id("user-2").email("user-2@email.com").name("User Two").build();
+    return User.builder()
+        .id("user-2")
+        .email("user-2@email.com")
+        .firstName("User")
+        .lastName("Two")
+        .build();
   }
 }

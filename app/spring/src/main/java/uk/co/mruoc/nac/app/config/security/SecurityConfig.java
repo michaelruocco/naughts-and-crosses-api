@@ -1,7 +1,10 @@
 package uk.co.mruoc.nac.app.config.security;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+import static uk.co.mruoc.nac.app.config.security.KeycloakAuthIssuerUrlParser.toRealm;
+import static uk.co.mruoc.nac.app.config.security.KeycloakAuthIssuerUrlParser.toSchemeHostAndPort;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,13 +47,16 @@ public class SecurityConfig {
   }
 
   @Bean
-  public KeycloakAdminConfig keycloakAdminConfig() {
+  public KeycloakAdminConfig keycloakAdminConfig(
+      @Value("${auth.issuer.url}") String url,
+      @Value("${keycloak.admin.client.id}") String clientId,
+      @Value("${keycloak.admin.client.secret}") String clientSecret) {
     return KeycloakAdminConfig.builder()
-            .url("http://keycloak:4021")
-            .realm("naughts-and-crosses-local")
-            .clientId("naughts-and-crosses-api")
-            .clientSecret("naughts-and-crosses-api-secret")
-            .build();
+        .url(toSchemeHostAndPort(url))
+        .realm(toRealm(url))
+        .clientId(clientId)
+        .clientSecret(clientSecret)
+        .build();
   }
 
   @Bean

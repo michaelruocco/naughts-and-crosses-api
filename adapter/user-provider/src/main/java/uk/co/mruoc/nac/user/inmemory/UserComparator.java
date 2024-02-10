@@ -1,9 +1,7 @@
 package uk.co.mruoc.nac.user.inmemory;
 
 import java.util.Comparator;
-
 import lombok.RequiredArgsConstructor;
-import uk.co.mruoc.nac.entities.Game;
 import uk.co.mruoc.nac.entities.User;
 
 @RequiredArgsConstructor

@@ -14,6 +14,10 @@ import uk.mruoc.nac.access.RestAccessTokenConfig;
 public class TestKeycloakContainer extends GenericContainer<TestKeycloakContainer> {
 
   private static final int HTTP_PORT = 8080;
+  private static final String REALM = "naughts-and-crosses-local";
+  private static final String CLIENT_ID = "naughts-and-crosses-api";
+  private static final String CLIENT_SECRET = "naughts-and-crosses-api-secret";
+
   private AccessTokenClient client;
 
   public TestKeycloakContainer() {
@@ -24,9 +28,24 @@ public class TestKeycloakContainer extends GenericContainer<TestKeycloakContaine
     waitingFor(StartupLogMessageWaitStrategyFactory.build());
   }
 
+  public String getAdminUrl() {
+    return String.format("http://%s:%d", getHost(), getMappedPort(HTTP_PORT));
+  }
+
+  public String getRealm() {
+    return REALM;
+  }
+
+  public String getAdminClientId() {
+    return CLIENT_ID;
+  }
+
+  public String getAdminClientSecret() {
+    return CLIENT_SECRET;
+  }
+
   public String getIssuerUrl() {
-    return String.format(
-        "http://%s:%d/realms/naughts-and-crosses-local", getHost(), getMappedPort(HTTP_PORT));
+    return String.format("%s/realms/%s", getAdminUrl(), REALM);
   }
 
   public String getAuthTokenValue() {
@@ -43,8 +62,8 @@ public class TestKeycloakContainer extends GenericContainer<TestKeycloakContaine
   private AccessTokenClient buildClient() {
     RestAccessTokenConfig config =
         RestAccessTokenConfig.builder()
-            .clientId("naughts-and-crosses-api")
-            .clientSecret("naughts-and-crosses-api-secret")
+            .clientId(CLIENT_ID)
+            .clientSecret(CLIENT_SECRET)
             .grantType("client_credentials")
             .tokenUrl(getTokenUrl())
             .build();

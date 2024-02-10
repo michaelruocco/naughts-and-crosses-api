@@ -10,8 +10,10 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+import uk.co.mruoc.nac.api.dto.ApiCreateGameRequest;
 import uk.co.mruoc.nac.api.dto.ApiGame;
 import uk.co.mruoc.nac.api.dto.ApiTurn;
+import uk.co.mruoc.nac.api.dto.ApiUser;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -29,13 +31,18 @@ public class NaughtsAndCrossesApiClient {
     this(new UriFactory(baseUrl), new HttpEntityFactory(token), new RestTemplate());
   }
 
-  public Collection<ApiGame> getAllGames() {
-    ApiGame[] games = performGet(uriFactory.buildGamesUri(), ApiGame[].class);
-    return Optional.ofNullable(games).map(List::of).orElse(Collections.emptyList());
+  public Collection<ApiUser> getAllUsers() {
+    ApiUser[] users = performGet(uriFactory.buildUsersUri(), ApiUser[].class);
+    return toCollection(users);
   }
 
-  public ApiGame createGame() {
-    return performPost(uriFactory.buildGamesUri(), entityFactory.buildRequest());
+  public Collection<ApiGame> getAllGames() {
+    ApiGame[] games = performGet(uriFactory.buildGamesUri(), ApiGame[].class);
+    return toCollection(games);
+  }
+
+  public ApiGame createGame(ApiCreateGameRequest request) {
+    return performPost(uriFactory.buildGamesUri(), entityFactory.buildRequest(request));
   }
 
   public ApiGame takeTurn(long gameId, ApiTurn turn) {
@@ -79,10 +86,14 @@ public class NaughtsAndCrossesApiClient {
     template.exchange(uri, HttpMethod.DELETE, entityFactory.buildRequest(), Void.class);
   }
 
-  private <T> T toBodyIfNotNull(HttpEntity<T> response) {
+  private static <T> T toBodyIfNotNull(HttpEntity<T> response) {
     return Optional.ofNullable(response)
         .map(HttpEntity::getBody)
         .orElseThrow(
             () -> new NaughtsAndCrossesApiClientException("null response body returned from api"));
+  }
+
+  private static <T> Collection<T> toCollection(T[] array) {
+    return Optional.ofNullable(array).map(List::of).orElse(Collections.emptyList());
   }
 }

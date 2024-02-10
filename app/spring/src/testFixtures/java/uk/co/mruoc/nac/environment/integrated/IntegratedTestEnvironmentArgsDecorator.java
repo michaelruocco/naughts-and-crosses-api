@@ -17,6 +17,11 @@ public class IntegratedTestEnvironmentArgsDecorator implements UnaryOperator<Str
 
   private final String authIssuerUrl;
 
+  private final String keycloakAdminUrl;
+  private final String keycloakAdminRealm;
+  private final String keycloakAdminClientId;
+  private final String keycloakAdminClientSecret;
+
   @Override
   public Stream<String> apply(Stream<String> args) {
     return Stream.concat(args, args());
@@ -34,7 +39,9 @@ public class IntegratedTestEnvironmentArgsDecorator implements UnaryOperator<Str
         "--broker.client.passcode=guest",
         "--broker.system.login=guest",
         "--broker.system.passcode=guest",
-        String.format("--auth.issuer.url=%s", authIssuerUrl));
+        String.format("--auth.issuer.url=%s", authIssuerUrl),
+        String.format("--keycloak.admin.client.id=%s", keycloakAdminClientId),
+        String.format("--keycloak.admin.client.secret=%s", keycloakAdminClientSecret));
   }
 
   private String buildJdbcUrl() {

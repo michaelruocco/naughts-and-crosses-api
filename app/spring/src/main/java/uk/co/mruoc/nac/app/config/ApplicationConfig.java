@@ -12,6 +12,7 @@ import uk.co.mruoc.nac.app.config.security.CorsWebMvcConfigurer;
 import uk.co.mruoc.nac.app.config.websocket.BrokerConfig;
 import uk.co.mruoc.nac.usecases.BoardFormatter;
 import uk.co.mruoc.nac.usecases.GameEventPublisher;
+import uk.co.mruoc.nac.usecases.GameFacade;
 import uk.co.mruoc.nac.usecases.GameFactory;
 import uk.co.mruoc.nac.usecases.GameRepository;
 import uk.co.mruoc.nac.usecases.GameService;
@@ -21,6 +22,11 @@ import uk.co.mruoc.nac.usecases.UserService;
 
 @Configuration
 public class ApplicationConfig {
+
+  @Bean
+  public GameFacade gameFacade(UserService userService, GameService gameService) {
+    return GameFacade.builder().userService(userService).gameService(gameService).build();
+  }
 
   @Bean
   public UserService userService(UserProvider provider) {

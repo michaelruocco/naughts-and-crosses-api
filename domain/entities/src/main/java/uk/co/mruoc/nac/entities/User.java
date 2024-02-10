@@ -1,11 +1,10 @@
 package uk.co.mruoc.nac.entities;
 
-import lombok.Builder;
-import lombok.Data;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
+import lombok.Builder;
+import lombok.Data;
 
 @Builder
 @Data

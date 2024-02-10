@@ -1,6 +1,5 @@
 package uk.co.mruoc.nac.api.dto;
 
-import java.util.Collection;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +9,8 @@ import lombok.RequiredArgsConstructor;
 @NoArgsConstructor(force = true)
 @Builder
 @Data
-public class ApiCreateGameRequest {
+public class ApiRequestedPlayer {
 
-  private final Collection<ApiRequestedPlayer> requestedPlayers;
+  private final String userId;
+  private final char token;
 }

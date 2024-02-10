@@ -31,9 +31,7 @@ public class IntegratedTestEnvironment implements TestEnvironment {
   @Override
   public void startDependentServices() {
     log.info("starting keycloak");
-    log.info("{} {}", KEYCLOAK.getCommandParts(), KEYCLOAK.getPortBindings());
     KEYCLOAK.start();
-
     log.info("starting postgres");
     POSTGRES.start();
     log.info("starting activemq");
@@ -69,6 +67,10 @@ public class IntegratedTestEnvironment implements TestEnvironment {
         .brokerHost(ACTIVEMQ.getHost())
         .brokerPort(ACTIVEMQ.getMappedStompPort())
         .authIssuerUrl(KEYCLOAK.getIssuerUrl())
+        .keycloakAdminUrl(KEYCLOAK.getAdminUrl())
+        .keycloakAdminRealm(KEYCLOAK.getRealm())
+        .keycloakAdminClientId(KEYCLOAK.getAdminClientId())
+        .keycloakAdminClientSecret(KEYCLOAK.getAdminClientSecret())
         .build()
         .apply(Stream.of(localApp.getServerPortArg()))
         .toArray(String[]::new);

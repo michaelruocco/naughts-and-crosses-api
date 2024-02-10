@@ -1,0 +1,12 @@
+{
+  "requestedPlayers": [
+    {
+      "userId": "707d9fa6-13dd-4985-93aa-a28f01e89a6b",
+      "token": "X"
+    },
+    {
+      "userId": "dadfde25-9924-4982-802d-dfd0bce2218d",
+      "token": "O"
+    }
+  ]
+}

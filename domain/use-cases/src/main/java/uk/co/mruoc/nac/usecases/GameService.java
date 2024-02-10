@@ -39,6 +39,10 @@ public class GameService {
     return repository.get(id).orElseThrow(() -> new GameNotFoundException(id));
   }
 
+  public void deleteAll() {
+    repository.deleteAll();
+  }
+
   private void create(Game game) {
     repository.create(game);
     eventPublisher.updated(game);
@@ -47,9 +51,5 @@ public class GameService {
   private void update(Game game) {
     repository.update(game);
     eventPublisher.updated(game);
-  }
-
-  public void deleteAll() {
-    repository.deleteAll();
   }
 }

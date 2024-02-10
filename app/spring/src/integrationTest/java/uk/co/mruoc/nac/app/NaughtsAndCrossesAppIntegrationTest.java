@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.NoSuchElementException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import uk.co.mruoc.nac.api.dto.ApiCreateGameRequest;
 import uk.co.mruoc.nac.api.dto.ApiGame;
 import uk.co.mruoc.nac.api.dto.ApiGameJsonMother;
 import uk.co.mruoc.nac.api.dto.ApiTurn;
@@ -18,11 +19,23 @@ import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClient;
 @Slf4j
 abstract class NaughtsAndCrossesAppIntegrationTest {
 
-  public abstract NaughtsAndCrossesAppExtension getExtension();
+  public ApiCreateGameRequest buildCreateGameRequest() {
+    return getFixtures().buildCreateGameRequest();
+  }
+
+  public ApiGame givenGameExists() {
+    return getFixtures().givenGameExists();
+  }
+
+  public Fixtures getFixtures() {
+    return new Fixtures(getAppClient());
+  }
 
   public NaughtsAndCrossesApiClient getAppClient() {
     return getExtension().getRestClient();
   }
+
+  public abstract NaughtsAndCrossesAppExtension getExtension();
 
   @Test
   public void shouldReturnNoGamesInitially() {
@@ -36,8 +49,9 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
   @Test
   public void shouldCreateGame() {
     NaughtsAndCrossesApiClient client = getAppClient();
+    ApiCreateGameRequest request = buildCreateGameRequest();
 
-    ApiGame game = client.createGame();
+    ApiGame game = client.createGame(request);
 
     assertThatJson(game).isEqualTo(ApiGameJsonMother.initial());
   }
@@ -48,8 +62,9 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     DefaultGameUpdateListener listener = extension.connectAndListenToWebsocket();
     try {
       NaughtsAndCrossesApiClient client = getAppClient();
+      ApiCreateGameRequest request = buildCreateGameRequest();
 
-      client.createGame();
+      client.createGame(request);
 
       String expectedJson = ApiGameJsonMother.initial();
       awaitMostRecentGameUpdateEquals(listener, expectedJson);
@@ -62,7 +77,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
   @Test
   public void shouldReturnGame() {
     NaughtsAndCrossesApiClient client = getAppClient();
-    ApiGame createdGame = client.createGame();
+    ApiGame createdGame = givenGameExists();
 
     ApiGame game = client.getGame(createdGame.getId());
 
@@ -72,7 +87,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
   @Test
   public void shouldReturnMinimalGame() {
     NaughtsAndCrossesApiClient client = getAppClient();
-    ApiGame createdGame = client.createGame();
+    ApiGame createdGame = givenGameExists();
 
     ApiGame game = client.getMinimalGame(createdGame.getId());
 
@@ -87,7 +102,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     DefaultGameUpdateListener listener = extension.connectAndListenToWebsocket();
     try {
       NaughtsAndCrossesApiClient client = getAppClient();
-      ApiGame game = client.createGame();
+      ApiGame game = givenGameExists();
 
       client.takeTurn(game.getId(), new ApiTurn(0, 0, 'X'));
 
@@ -102,7 +117,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
   @Test
   public void gameShouldCompleteWithXWinner() {
     NaughtsAndCrossesApiClient client = getAppClient();
-    ApiGame game = client.createGame();
+    ApiGame game = givenGameExists();
     long id = game.getId();
 
     client.takeTurn(id, new ApiTurn(0, 0, 'X'));
@@ -117,7 +132,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
   @Test
   public void gameShouldCompleteWithDraw() {
     NaughtsAndCrossesApiClient client = getAppClient();
-    ApiGame game = client.createGame();
+    ApiGame game = givenGameExists();
     long id = game.getId();
 
     client.takeTurn(id, new ApiTurn(0, 0, 'X'));

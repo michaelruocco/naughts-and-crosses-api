@@ -10,7 +10,7 @@ import org.testcontainers.containers.wait.strategy.WaitStrategy;
 public class StartupLogMessageWaitStrategyFactory {
 
   public static WaitStrategy build() {
-    return build(Duration.ofMinutes(2));
+    return build(Duration.ofMinutes(3));
   }
 
   private static WaitStrategy build(Duration duration) {

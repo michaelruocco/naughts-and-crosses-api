@@ -19,4 +19,6 @@ CMD java \
   -Dbroker.system.login="${BROKER_SYSTEM_LOGIN}" \
   -Dbroker.system.passcode="${BROKER_SYSTEM_PASSCODE}" \
   -Dauth.issuer.url="${AUTH_ISSUER_URL}" \
+  -Dkeycloak.admin.client.id="${KEYCLOAK_ADMIN_CLIENT_ID}" \
+  -Dkeycloak.admin.client.secret="${KEYCLOAK_ADMIN_CLIENT_SECRET}" \
   -jar /opt/app.jar
