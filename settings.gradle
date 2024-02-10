@@ -12,9 +12,6 @@ project(":repository").projectDir = file("adapter/repository")
 include "api"
 project(":api").projectDir = file("adapter/api")
 
-include "kafka"
-project(":kafka").projectDir = file("adapter/kafka")
-
 include "rest-client"
 project(":rest-client").projectDir = file("adapter/rest-client")
 

@@ -18,7 +18,7 @@ import uk.co.mruoc.nac.usecases.IdSupplier;
       DataSourceAutoConfiguration.class,
       DataSourceTransactionManagerAutoConfiguration.class
     })
-@ConditionalOnProperty(name = "in.memory.repository.enabled", havingValue = "true")
+@ConditionalOnProperty(name = "repository.in.memory.enabled", havingValue = "true")
 @Slf4j
 public class InMemoryRepositoryConfig {
 
