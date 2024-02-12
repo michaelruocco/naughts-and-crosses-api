@@ -53,7 +53,7 @@ services:
       retries: 15
 
   activemq:
-    image: apache/activemq-classic:latest
+    image: apache/activemq-artemis:latest-alpine
     container_name: activemq
     ports:
       - 61613:61613
