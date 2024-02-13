@@ -76,10 +76,10 @@ you can run:
     -Ddatabase.driver=org.postgresql.Driver \
     -Dbroker.host=127.0.0.1 \
     -Dbroker.port=61613 \
-    -Dbroker.client.login=guest \
-    -Dbroker.client.passcode=guest \
-    -Dbroker.system.login=guest \
-    -Dbroker.system.passcode=guest \
+    -Dbroker.client.login=artemis \
+    -Dbroker.client.passcode=artemis \
+    -Dbroker.system.login=artemis \
+    -Dbroker.system.passcode=artemis \
     -Dauth.issuer.url=http://keycloak:4021/realms/naughts-and-crosses-local
 ```
 
