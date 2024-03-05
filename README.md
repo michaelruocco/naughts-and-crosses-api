@@ -16,6 +16,40 @@
 This repo contains the backend API for a simple naughts and crosses (or tic-tac-toe) game.
 The accompanying UI that uses this API can be found [here](https://github.com/michaelruocco/naughts-and-crosses-ui)
 
+## Java Version
+
+This repo requires the use of Java 20. If you also work with other repos that required different
+versions of Java, [SDKMan](https://sdkman.io/) is a useful tool for enabling you to switch between version of Java
+(or other  Java SDK based languages) easily when required.
+
+The local build for this repo has been tested using Java 20.0.2 Temurin version which can be set up by running
+
+```bash
+sdk env install
+```
+
+which will set the java version based on the config defined in the `.sdkmanrc` file at the root
+of this project. If you also update the file at `~/.sdkman/etc/config` to contain `sdkman_auto_env=true` then
+each time you navigate into the root project directory in a terminal sdk man will auto set the java version for you.
+
+Alternatively if you would rather manually configure your sdk versions using sdk man you can use the following commands
+
+```bash
+sdk install java 20.0.2-tem
+sdk java use 20.0.2-tem   
+```
+
+Note - the second command is only required if you do not choose to make the Java 20 Temurin version
+your default JVM when installing.
+
+Once this is set up it will give the following output when the `java -version` command is run:
+
+```bash
+openjdk version "20.0.2" 2023-07-18
+OpenJDK Runtime Environment Temurin-20.0.2+9 (build 20.0.2+9)
+OpenJDK 64-Bit Server VM Temurin-20.0.2+9 (build 20.0.2+9, mixed mode, sharing)
+```
+
 ## Useful Commands
 
 ```gradle
