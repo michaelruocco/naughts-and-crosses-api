@@ -1,4 +1,4 @@
-FROM eclipse-temurin:19-jre
+FROM eclipse-temurin:20-jre
 
 ENV SERVER_PORT=80
 
