@@ -16,5 +16,5 @@ public interface GameRepository {
 
   void deleteAll();
 
-    void delete(long id);
+  void delete(long id);
 }

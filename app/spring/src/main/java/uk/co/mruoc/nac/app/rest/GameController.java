@@ -47,8 +47,7 @@ public class GameController {
   }
 
   @DeleteMapping("/{id}")
-  public void deleteGame(
-          @PathVariable long id) {
+  public void deleteGame(@PathVariable long id) {
     facade.delete(id);
   }
 

@@ -34,7 +34,7 @@ public class GameFacade {
     gameService.deleteAll();
   }
 
-    public void delete(long id) {
-        gameService.delete(id);
-    }
+  public void delete(long id) {
+    gameService.delete(id);
+  }
 }
