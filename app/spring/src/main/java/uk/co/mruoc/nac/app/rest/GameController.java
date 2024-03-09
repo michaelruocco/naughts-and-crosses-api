@@ -46,6 +46,12 @@ public class GameController {
     return toGameConverter(minimal).apply(facade.get(id));
   }
 
+  @DeleteMapping("/{id}")
+  public void deleteGame(
+          @PathVariable long id) {
+    facade.delete(id);
+  }
+
   @PostMapping
   public ApiGame createGame(@RequestBody ApiCreateGameRequest apiRequest) {
     CreateGameRequest request = converter.toCreateGameRequest(apiRequest);

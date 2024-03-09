@@ -15,6 +15,6 @@ public class Player {
   }
 
   public String getName() {
-    return user.getName();
+    return user.getFullName();
   }
 }

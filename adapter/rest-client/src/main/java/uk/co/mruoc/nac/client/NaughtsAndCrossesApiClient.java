@@ -51,7 +51,7 @@ public class NaughtsAndCrossesApiClient {
   }
 
   public ApiGame getGame(long gameId) {
-    return performGetGame(uriFactory.buildGetGameUri(gameId));
+    return performGetGame(uriFactory.buildGameUri(gameId));
   }
 
   public ApiGame getMinimalGame(long gameId) {
@@ -60,6 +60,10 @@ public class NaughtsAndCrossesApiClient {
 
   public void deleteAllGames() {
     performDelete(uriFactory.buildGamesUri());
+  }
+
+  public void deleteGame(long id) {
+    performDelete(uriFactory.buildGameUri(id));
   }
 
   public void resetIds() {

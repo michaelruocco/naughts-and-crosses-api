@@ -125,7 +125,7 @@ you can run:
     -Dbroker.client.passcode=artemis \
     -Dbroker.system.login=artemis \
     -Dbroker.system.passcode=artemis \
-    -Dauth.issuer.url=http://keycloak:4021/realms/naughts-and-crosses-local
+    -Dauth.issuer.url=http://keycloak:4021/realms/naughts-and-crosses-local \
     -Dkeycloak.admin.client.id=naughts-and-crosses-api \
     -Dkeycloak.admin.client.secret=naughts-and-crosses-api-secret
 ```

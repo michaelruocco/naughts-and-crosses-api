@@ -100,4 +100,17 @@ public class PostgresGameRepository implements GameRepository {
       log.info("delete all games took {}ms", duration.toMillis());
     }
   }
+
+  @Override
+  public void delete(long id) {
+    Instant start = Instant.now();
+    try (var connection = dataSource.getConnection()) {
+      deleteDao.delete(connection, id);
+    } catch (SQLException e) {
+      throw new GameRepositoryException(e);
+    } finally {
+      var duration = Duration.between(start, Instant.now());
+      log.info("delete game with id {} took {}ms", id, duration.toMillis());
+    }
+  }
 }

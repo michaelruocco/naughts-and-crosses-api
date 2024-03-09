@@ -84,6 +84,7 @@
         "username": "user-1",
         "firstName": "User",
         "lastName": "One",
+        "fullName": "User One",
         "email": "user-1@email.com"
       },
       "token": "X"
@@ -94,6 +95,7 @@
         "username": "user-2",
         "firstName": "User",
         "lastName": "Two",
+        "fullName": "User Two",
         "email": "user-2@email.com"
       },
       "token": "O"

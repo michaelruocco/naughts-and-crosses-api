@@ -16,7 +16,7 @@ public class User {
   private final String lastName;
   private final String email;
 
-  public String getName() {
+  public String getFullName() {
     Collection<String> names = new ArrayList<>();
     if (Objects.nonNull(firstName)) {
       names.add(firstName);

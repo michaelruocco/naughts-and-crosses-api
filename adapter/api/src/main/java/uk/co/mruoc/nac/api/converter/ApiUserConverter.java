@@ -18,6 +18,7 @@ public class ApiUserConverter {
         .username(user.getUsername())
         .firstName(user.getFirstName())
         .lastName(user.getLastName())
+        .fullName(user.getFullName())
         .email(user.getEmail())
         .build();
   }

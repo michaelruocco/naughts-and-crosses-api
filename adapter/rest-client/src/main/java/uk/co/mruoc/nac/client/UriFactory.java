@@ -8,14 +8,14 @@ public class UriFactory {
   private final String baseUrl;
 
   public String buildGetMinimalGameUri(long gameId) {
-    return String.format("%s?minimal=true", buildGetGameUri(gameId));
+    return String.format("%s?minimal=true", buildGameUri(gameId));
   }
 
   public String buildTakeTurnUri(long gameId) {
-    return String.format("%s/turns", buildGetGameUri(gameId));
+    return String.format("%s/turns", buildGameUri(gameId));
   }
 
-  public String buildGetGameUri(long gameId) {
+  public String buildGameUri(long gameId) {
     return String.format("%s/%d", buildGamesUri(), gameId);
   }
 

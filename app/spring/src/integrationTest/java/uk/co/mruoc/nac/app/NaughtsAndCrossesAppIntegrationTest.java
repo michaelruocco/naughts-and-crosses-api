@@ -2,6 +2,7 @@ package uk.co.mruoc.nac.app;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.awaitility.Awaitility.await;
 
 import java.time.Duration;
@@ -9,6 +10,7 @@ import java.util.Collection;
 import java.util.NoSuchElementException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.client.HttpServerErrorException;
 import uk.co.mruoc.nac.api.dto.ApiCreateGameRequest;
 import uk.co.mruoc.nac.api.dto.ApiGame;
 import uk.co.mruoc.nac.api.dto.ApiGameJsonMother;
@@ -146,6 +148,17 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     ApiGame updatedGame = client.takeTurn(id, new ApiTurn(2, 0, 'X'));
 
     assertThatJson(updatedGame).isEqualTo(ApiGameJsonMother.draw());
+  }
+
+  @Test
+  public void shouldDeleteGame() {
+    NaughtsAndCrossesApiClient client = getAppClient();
+    ApiGame createdGame = givenGameExists();
+
+    client.deleteGame(createdGame.getId());
+
+    Throwable error = catchThrowable(() -> client.getGame(createdGame.getId()));
+    assertThat(error).isInstanceOf(HttpServerErrorException.InternalServerError.class);
   }
 
   private void awaitMostRecentGameUpdateEquals(DefaultGameUpdateListener listener, String json) {

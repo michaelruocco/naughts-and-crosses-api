@@ -43,6 +43,10 @@ public class GameService {
     repository.deleteAll();
   }
 
+  public void delete(long id) {
+    repository.delete(id);
+  }
+
   private void create(Game game) {
     repository.create(game);
     eventPublisher.updated(game);

@@ -15,4 +15,6 @@ public interface GameRepository {
   Stream<Game> getAll();
 
   void deleteAll();
+
+    void delete(long id);
 }
