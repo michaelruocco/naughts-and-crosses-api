@@ -1,7 +1,5 @@
 package uk.co.mruoc.nac.environment.integrated.postgres;
 
-import javax.sql.DataSource;
-import org.postgresql.ds.PGSimpleDataSource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
@@ -17,13 +15,5 @@ public class TestPostgresContainer extends PostgreSQLContainer<TestPostgresConta
     withUsername(USERNAME);
     withPassword(PASSWORD);
     withInitScript("postgres/create-empty-schema.sql");
-  }
-
-  public DataSource getDataSource() {
-    PGSimpleDataSource dataSource = new PGSimpleDataSource();
-    dataSource.setURL(getJdbcUrl());
-    dataSource.setUser(USERNAME);
-    dataSource.setPassword(PASSWORD);
-    return dataSource;
   }
 }
