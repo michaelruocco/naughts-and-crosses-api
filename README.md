@@ -18,31 +18,37 @@ The accompanying UI that uses this API can be found [here](https://github.com/mi
 
 ## Java Version
 
-This repo requires the use of Java 20. If you also work with other repos that required different
-versions of Java, [SDKMan](https://sdkman.io/) is a useful tool for enabling you to switch between version of Java
-(or other  Java SDK based languages) easily when required.
+This repo requires the use of Java 20. If you also work with other repos that
+required different versions of Java, [SDKMan](https://sdkman.io/) is a useful
+tool for enabling you to switch between version of Java (or other  Java SDK
+based languages) easily when required.
 
-The local build for this repo has been tested using Java 20.0.2 Temurin version which can be set up by running
+The local build for this repo has been tested using Java 20.0.2 Temurin
+version which can be set up by running
 
 ```bash
 sdk env install
 ```
 
-which will set the java version based on the config defined in the `.sdkmanrc` file at the root
-of this project. If you also update the file at `~/.sdkman/etc/config` to contain `sdkman_auto_env=true` then
-each time you navigate into the root project directory in a terminal sdk man will auto set the java version for you.
+which will set the java version based on the config defined in the
+`.sdkmanrc` file at the root of this project. If you also update the file
+at `~/.sdkman/etc/config` to contain `sdkman_auto_env=true` then each time
+you navigate into the root project directory in a terminal sdk man will
+auto set the java version for you.
 
-Alternatively if you would rather manually configure your sdk versions using sdk man you can use the following commands
+Alternatively if you would rather manually configure your sdk versions
+using sdk man you can use the following commands
 
 ```bash
 sdk install java 20.0.2-tem
 sdk java use 20.0.2-tem   
 ```
 
-Note - the second command is only required if you do not choose to make the Java 20 Temurin version
-your default JVM when installing.
+Note - the second command is only required if you do not choose to make
+the Java 20 Temurin version your default JVM when installing.
 
-Once this is set up it will give the following output when the `java -version` command is run:
+Once this is set up it will give the following output when the
+`java -version` command is run:
 
 ```bash
 openjdk version "20.0.2" 2023-07-18
@@ -60,7 +66,12 @@ OpenJDK 64-Bit Server VM Temurin-20.0.2+9 (build 20.0.2+9, mixed mode, sharing)
 // builds code
 // runs unit tests
 // runs integration test
-./gradlew clean dependencyUpdates lintGradle spotlessApply build integrationTest
+./gradlew clean \
+    dependencyUpdates \
+    lintGradle \
+    spotlessApply \
+    build \
+    integrationTest
 ```
 
 ### Running the API locally with an in memory repository
