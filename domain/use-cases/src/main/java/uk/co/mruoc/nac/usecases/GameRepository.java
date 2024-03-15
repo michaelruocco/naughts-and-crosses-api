@@ -8,11 +8,13 @@ public interface GameRepository {
 
   void create(Game game);
 
-  Optional<Game> find(long id);
+  Optional<Game> get(long id);
 
   void update(Game game);
 
   Stream<Game> getAll();
 
   void deleteAll();
+
+  void delete(long id);
 }

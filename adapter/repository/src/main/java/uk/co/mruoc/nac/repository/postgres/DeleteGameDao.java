@@ -15,4 +15,12 @@ public class DeleteGameDao {
       statement.execute();
     }
   }
+
+  public void delete(Connection connection, long id) throws SQLException {
+    try (PreparedStatement statement =
+        connection.prepareStatement("delete from game where id = ?;")) {
+      statement.setLong(1, id);
+      statement.execute();
+    }
+  }
 }

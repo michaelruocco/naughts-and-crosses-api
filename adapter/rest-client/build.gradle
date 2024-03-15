@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     implementation project(":api")
-    implementation "org.springframework:spring-web:6.1.1"
+    implementation "org.springframework:spring-web:${springVersion}"
 }
 
 apply from: rootProject.file("publish.gradle")

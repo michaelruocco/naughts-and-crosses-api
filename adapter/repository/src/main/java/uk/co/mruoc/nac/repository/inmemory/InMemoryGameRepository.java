@@ -18,7 +18,7 @@ public class InMemoryGameRepository implements GameRepository {
   }
 
   @Override
-  public Optional<Game> find(long id) {
+  public Optional<Game> get(long id) {
     return Optional.ofNullable(games.get(id));
   }
 
@@ -40,6 +40,11 @@ public class InMemoryGameRepository implements GameRepository {
   @Override
   public void deleteAll() {
     games.clear();
+  }
+
+  @Override
+  public void delete(long id) {
+    games.remove(id);
   }
 
   private void save(Game game) {

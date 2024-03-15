@@ -11,6 +11,8 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import uk.co.mruoc.nac.entities.Game;
+import uk.co.mruoc.nac.entities.PlayerMother;
+import uk.co.mruoc.nac.entities.Players;
 import uk.co.mruoc.nac.entities.Turn;
 
 class GameServiceTest {
@@ -19,6 +21,7 @@ class GameServiceTest {
   private final GameRepository repository = mock(GameRepository.class);
   private final BoardFormatter formatter = mock(BoardFormatter.class);
   private final GameEventPublisher eventPublisher = mock(GameEventPublisher.class);
+  private final Players players = PlayerMother.players();
 
   private final GameService service =
       GameService.builder()
@@ -32,7 +35,7 @@ class GameServiceTest {
   void shouldReturnCreatedGame() {
     Game expectedGame = givenGameCreated();
 
-    Game game = service.createGame();
+    Game game = service.createGame(players);
 
     assertThat(game).isEqualTo(expectedGame);
   }
@@ -41,7 +44,7 @@ class GameServiceTest {
   void shouldCreateGame() {
     Game expectedGame = givenGameCreated();
 
-    service.createGame();
+    service.createGame(players);
 
     ArgumentCaptor<Game> captor = ArgumentCaptor.forClass(Game.class);
     verify(repository).create(captor.capture());
@@ -52,7 +55,7 @@ class GameServiceTest {
   void shouldPublishGameUpdateEventWhenGameCreated() {
     Game expectedGame = givenGameCreated();
 
-    service.createGame();
+    service.createGame(players);
 
     ArgumentCaptor<Game> captor = ArgumentCaptor.forClass(Game.class);
     verify(eventPublisher).updated(captor.capture());
@@ -130,13 +133,13 @@ class GameServiceTest {
 
   private Game givenGameCreated() {
     Game game = mock(Game.class);
-    when(factory.buildGame()).thenReturn(game);
+    when(factory.buildGame(players)).thenReturn(game);
     return game;
   }
 
   private Game givenGameFound(long id) {
     Game game = mock(Game.class);
-    when(repository.find(id)).thenReturn(Optional.of(game));
+    when(repository.get(id)).thenReturn(Optional.of(game));
     return game;
   }
 

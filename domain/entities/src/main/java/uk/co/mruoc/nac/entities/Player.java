@@ -7,10 +7,14 @@ import lombok.Data;
 @Data
 public class Player {
 
-  private final String name;
+  private final User user;
   private final char token;
 
   public boolean hasToken(char otherToken) {
     return token == otherToken;
+  }
+
+  public String getName() {
+    return user.getFullName();
   }
 }

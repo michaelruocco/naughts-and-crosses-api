@@ -125,7 +125,9 @@ you can run:
     -Dbroker.client.passcode=artemis \
     -Dbroker.system.login=artemis \
     -Dbroker.system.passcode=artemis \
-    -Dauth.issuer.url=http://keycloak:4021/realms/naughts-and-crosses-local
+    -Dauth.issuer.url=http://keycloak:4021/realms/naughts-and-crosses-local \
+    -Dkeycloak.admin.client.id=naughts-and-crosses-api \
+    -Dkeycloak.admin.client.secret=naughts-and-crosses-api-secret
 ```
 
 ### Running the API as a docker container with a postgres database repository, and kafka
@@ -157,6 +159,18 @@ curl "http://keycloak:4021/realms/naughts-and-crosses-local/protocol/openid-conn
         -d "grant_type=client_credentials"
 ```
 
+### Getting users
+
+```bash
+curl http://localhost:3002/v1/users
+```
+
+or with a bearer token:
+
+```bash
+curl -H 'Authorization:Bearer <token-value>' http://localhost:3002/v1/users
+```
+
 ### Creating a game
 
 Once the API is running locally, to generate a game you can run, note - for this command
@@ -164,7 +178,9 @@ and any of the subsequent ones listed, if authentication is enabled on the API t
 bearer token needs to be supplied in an authorization header on the request
 
 ```bash
-curl -X POST http://localhost:3002/v1/games
+curl -H "Content-Type: application/json" \
+  -d '{"requestedPlayers":[{"userId":"707d9fa6-13dd-4985-93aa-a28f01e89a6b","token":"X"},{"userId":"dadfde25-9924-4982-802d-dfd0bce2218d","token":"O"}]}' \
+  -X POST http://localhost:3002/v1/games
 ```
 
 or with a bearer token:

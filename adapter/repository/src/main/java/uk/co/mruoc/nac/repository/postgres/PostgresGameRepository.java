@@ -50,7 +50,7 @@ public class PostgresGameRepository implements GameRepository {
   }
 
   @Override
-  public Optional<Game> find(long id) {
+  public Optional<Game> get(long id) {
     Instant start = Instant.now();
     try (var connection = dataSource.getConnection()) {
       return readDao.findById(connection, id);
@@ -98,6 +98,19 @@ public class PostgresGameRepository implements GameRepository {
     } finally {
       var duration = Duration.between(start, Instant.now());
       log.info("delete all games took {}ms", duration.toMillis());
+    }
+  }
+
+  @Override
+  public void delete(long id) {
+    Instant start = Instant.now();
+    try (var connection = dataSource.getConnection()) {
+      deleteDao.delete(connection, id);
+    } catch (SQLException e) {
+      throw new GameRepositoryException(e);
+    } finally {
+      var duration = Duration.between(start, Instant.now());
+      log.info("delete game with id {} took {}ms", id, duration.toMillis());
     }
   }
 }

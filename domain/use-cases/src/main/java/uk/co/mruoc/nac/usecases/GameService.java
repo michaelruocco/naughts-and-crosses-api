@@ -4,6 +4,7 @@ import java.util.stream.Stream;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.nac.entities.Game;
+import uk.co.mruoc.nac.entities.Players;
 import uk.co.mruoc.nac.entities.Turn;
 
 @Slf4j
@@ -15,8 +16,8 @@ public class GameService {
   private final BoardFormatter formatter;
   private final GameEventPublisher eventPublisher;
 
-  public Game createGame() {
-    Game game = factory.buildGame();
+  public Game createGame(Players players) {
+    Game game = factory.buildGame(players);
     create(game);
     return game;
   }
@@ -35,7 +36,15 @@ public class GameService {
   }
 
   public Game get(long id) {
-    return repository.find(id).orElseThrow(() -> new GameNotFoundException(id));
+    return repository.get(id).orElseThrow(() -> new GameNotFoundException(id));
+  }
+
+  public void deleteAll() {
+    repository.deleteAll();
+  }
+
+  public void delete(long id) {
+    repository.delete(id);
   }
 
   private void create(Game game) {
@@ -46,9 +55,5 @@ public class GameService {
   private void update(Game game) {
     repository.update(game);
     eventPublisher.updated(game);
-  }
-
-  public void deleteAll() {
-    repository.deleteAll();
   }
 }

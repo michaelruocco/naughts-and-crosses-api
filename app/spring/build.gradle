@@ -21,6 +21,7 @@ configurations {
 }
 
 dependencies {
+    runtimeOnly "org.flywaydb:flyway-database-postgresql:${flywayVersion}"
     implementation project(":api")
     implementation project(":repository")
     implementation project(":use-cases")
@@ -28,6 +29,7 @@ dependencies {
     implementation project(":rest-client")
     implementation project(":websocket-client")
     implementation project(":access-token-client")
+    implementation project(":user-provider")
     implementation platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
@@ -49,6 +51,7 @@ dependencies {
     integrationTestImplementation "net.javacrumbs.json-unit:json-unit-assertj:3.2.2"
     integrationTestImplementation "org.awaitility:awaitility:4.2.0"
 
+    testFixturesImplementation project(":api")
     testFixturesImplementation project(":rest-client")
     testFixturesImplementation project(":websocket-client")
     testFixturesImplementation project(":access-token-client")

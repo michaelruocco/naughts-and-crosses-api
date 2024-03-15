@@ -6,11 +6,11 @@ import org.junit.jupiter.api.Test;
 
 class PlayersTest {
 
-  private final Players players = new Players();
+  private final Players players = PlayerMother.players();
 
   @Test
-  void shouldCreateTwoPlayers() {
-    assertThat(players.stream()).map(Player::getName).containsExactly("Player 1", "Player 2");
+  void shouldReturnStreamOfPlayers() {
+    assertThat(players.stream()).map(Player::getName).containsExactly("User One", "User Two");
   }
 
   @Test

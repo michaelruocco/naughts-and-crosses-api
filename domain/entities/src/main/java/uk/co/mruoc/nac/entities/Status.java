@@ -15,10 +15,6 @@ public class Status {
   private final boolean complete;
   private final Character winner;
 
-  public Status() {
-    this(new Players());
-  }
-
   public Status(Players players) {
     this(0, players, false, null);
   }

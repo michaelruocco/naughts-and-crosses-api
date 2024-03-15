@@ -469,38 +469,44 @@
       "realmRoles": [
         "default-roles-naughts-and-crosses-local"
       ],
+      "clientRoles": {
+        "realm-management": [
+          "view-users",
+          "query-users"
+        ]
+      },
       "notBefore": 0,
       "groups": []
     },
     {
-      "username": "player-1",
+      "id": "707d9fa6-13dd-4985-93aa-a28f01e89a6b",
+      "username": "user-1",
       "enabled": true,
-      "email": "player-1@myemail.com",
-      "firstName": "Player",
+      "emailVerified": true,
+      "firstName": "User",
       "lastName": "One",
+      "email": "user-1@email.com",
       "credentials": [
         {
           "type": "password",
           "value": "pwd"
         }
-      ],
-      "realmRoles": [],
-      "groups": []
+      ]
     },
     {
-      "username": "player-2",
+      "id": "dadfde25-9924-4982-802d-dfd0bce2218d",
+      "username": "user-2",
       "enabled": true,
-      "email": "player-2@myemail.com",
-      "firstName": "Player",
+      "emailVerified": true,
+      "firstName": "User",
       "lastName": "Two",
+      "email": "user-2@email.com",
       "credentials": [
         {
           "type": "password",
           "value": "pwd"
         }
-      ],
-      "realmRoles": [],
-      "groups": []
+      ]
     }
   ],
   "scopeMappings": [
@@ -1566,14 +1572,14 @@
         "subComponents": {},
         "config": {
           "allowed-protocol-mapper-types": [
-            "saml-role-list-mapper",
-            "oidc-full-name-mapper",
-            "oidc-usermodel-attribute-mapper",
             "oidc-address-mapper",
+            "oidc-usermodel-attribute-mapper",
+            "oidc-usermodel-property-mapper",
+            "oidc-full-name-mapper",
             "oidc-sha256-pairwise-sub-mapper",
-            "saml-user-property-mapper",
+            "saml-role-list-mapper",
             "saml-user-attribute-mapper",
-            "oidc-usermodel-property-mapper"
+            "saml-user-property-mapper"
           ]
         }
       },
@@ -1601,14 +1607,14 @@
         "subComponents": {},
         "config": {
           "allowed-protocol-mapper-types": [
+            "oidc-full-name-mapper",
+            "oidc-sha256-pairwise-sub-mapper",
             "oidc-usermodel-property-mapper",
             "oidc-usermodel-attribute-mapper",
             "oidc-address-mapper",
             "saml-user-property-mapper",
-            "saml-role-list-mapper",
-            "oidc-full-name-mapper",
-            "oidc-sha256-pairwise-sub-mapper",
-            "saml-user-attribute-mapper"
+            "saml-user-attribute-mapper",
+            "saml-role-list-mapper"
           ]
         }
       }

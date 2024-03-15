@@ -1,8 +1,10 @@
 package uk.co.mruoc.nac.api.converter;
 
 import lombok.RequiredArgsConstructor;
+import uk.co.mruoc.nac.api.dto.ApiCreateGameRequest;
 import uk.co.mruoc.nac.api.dto.ApiGame;
 import uk.co.mruoc.nac.api.dto.ApiTurn;
+import uk.co.mruoc.nac.entities.CreateGameRequest;
 import uk.co.mruoc.nac.entities.Game;
 import uk.co.mruoc.nac.entities.Turn;
 
@@ -11,9 +13,10 @@ public class ApiConverter {
 
   private final ApiGameConverter gameConverter;
   private final ApiTurnConverter turnConverter;
+  private final ApiRequestedPlayerConverter requestedPlayerConverter;
 
   public ApiConverter() {
-    this(new ApiGameConverter(), new ApiTurnConverter());
+    this(new ApiGameConverter(), new ApiTurnConverter(), new ApiRequestedPlayerConverter());
   }
 
   public ApiGame toMinimalApiGame(Game game) {
@@ -26,5 +29,10 @@ public class ApiConverter {
 
   public Turn toTurn(ApiTurn apiTurn) {
     return turnConverter.toTurn(apiTurn);
+  }
+
+  public CreateGameRequest toCreateGameRequest(ApiCreateGameRequest apiRequest) {
+    return new CreateGameRequest(
+        requestedPlayerConverter.toRequestedPlayers(apiRequest.getRequestedPlayers()));
   }
 }

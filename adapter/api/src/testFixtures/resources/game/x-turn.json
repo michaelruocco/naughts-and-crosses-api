@@ -79,11 +79,25 @@
   "id": 1,
   "players": [
     {
-      "name": "Player 1",
+      "user": {
+        "id":"707d9fa6-13dd-4985-93aa-a28f01e89a6b",
+        "username": "user-1",
+        "firstName": "User",
+        "lastName": "One",
+        "fullName": "User One",
+        "email": "user-1@email.com"
+      },
       "token": "X"
     },
     {
-      "name": "Player 2",
+      "user": {
+        "id":"dadfde25-9924-4982-802d-dfd0bce2218d",
+        "username": "user-2",
+        "firstName": "User",
+        "lastName": "Two",
+        "fullName": "User Two",
+        "email": "user-2@email.com"
+      },
       "token": "O"
     }
   ],

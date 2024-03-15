@@ -1,5 +1,7 @@
 package uk.co.mruoc.nac.entities;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -7,20 +9,20 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Builder(toBuilder = true)
+@RequiredArgsConstructor
 public class Players {
 
   private final List<Player> values;
 
   @Getter private final int currentIndex;
 
-  public Players() {
-    this(player1(), player2());
+  public Players(Player... values) {
+    this(List.of(values));
   }
 
-  public Players(Player... values) {
-    this(List.of(values), 0);
+  public Players(Collection<Player> values) {
+    this(new ArrayList<>(values), 0);
   }
 
   public Stream<Player> stream() {
@@ -59,13 +61,5 @@ public class Players {
       return 0;
     }
     return nextIndex;
-  }
-
-  private static Player player1() {
-    return Player.builder().name("Player 1").token('X').build();
-  }
-
-  private static Player player2() {
-    return Player.builder().name("Player 2").token('O').build();
   }
 }

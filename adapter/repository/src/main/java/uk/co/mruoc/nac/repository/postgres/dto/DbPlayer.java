@@ -11,6 +11,6 @@ import lombok.RequiredArgsConstructor;
 @Data
 public class DbPlayer {
 
-  private final String name;
+  private final DbUser user;
   private final char token;
 }

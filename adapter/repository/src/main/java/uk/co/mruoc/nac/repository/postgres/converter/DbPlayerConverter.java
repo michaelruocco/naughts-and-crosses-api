@@ -3,12 +3,20 @@ package uk.co.mruoc.nac.repository.postgres.converter;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
+import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.nac.entities.Player;
 import uk.co.mruoc.nac.entities.Players;
 import uk.co.mruoc.nac.repository.postgres.dto.DbPlayer;
 import uk.co.mruoc.nac.repository.postgres.dto.DbPlayers;
 
+@RequiredArgsConstructor
 public class DbPlayerConverter {
+
+  private final DbUserConverter userConverter;
+
+  public DbPlayerConverter() {
+    this(new DbUserConverter());
+  }
 
   public DbPlayers toDbPlayers(Players players) {
     return DbPlayers.builder()
@@ -22,7 +30,10 @@ public class DbPlayerConverter {
   }
 
   public DbPlayer toDbPlayer(Player player) {
-    return DbPlayer.builder().name(player.getName()).token(player.getToken()).build();
+    return DbPlayer.builder()
+        .user(userConverter.toDbUser(player.getUser()))
+        .token(player.getToken())
+        .build();
   }
 
   public Players toPlayers(DbPlayers dbPlayers) {
@@ -37,6 +48,9 @@ public class DbPlayerConverter {
   }
 
   public Player toPlayer(DbPlayer dbPlayer) {
-    return Player.builder().name(dbPlayer.getName()).token(dbPlayer.getToken()).build();
+    return Player.builder()
+        .user(userConverter.toUser(dbPlayer.getUser()))
+        .token(dbPlayer.getToken())
+        .build();
   }
 }

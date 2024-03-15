@@ -21,6 +21,9 @@ project(":websocket-client").projectDir = file("adapter/websocket-client")
 include "access-token-client"
 project(":access-token-client").projectDir = file("adapter/access-token-client")
 
+include "user-provider"
+project(":user-provider").projectDir = file("adapter/user-provider")
+
 include "naughts-and-crosses-api-spring-app"
 project(":naughts-and-crosses-api-spring-app").projectDir = file("app/spring")
 
