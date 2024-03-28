@@ -9,3 +9,11 @@ spring:
     username: ${database.username}
     password: ${database.password}
     driver-class-name: ${database.driver}
+
+management:
+  endpoints:
+    web.exposure.include: health,info
+  endpoint:
+    health:
+      probes.enabled: true
+      show-details: always
