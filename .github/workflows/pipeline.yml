@@ -79,7 +79,7 @@ jobs:
           coverage-reports: ./code-coverage-report/build/reports/jacoco/unitCoverage/unitCoverage.xml,./code-coverage-report/build/reports/jacoco/integrationCoverage/integrationCoverage.xml
 
       - name: Publish snapshot
-        if: github.ref != 'refs/heads/master'
+        if: github.ref != 'refs/heads/main'
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
@@ -88,7 +88,7 @@ jobs:
         run: ./gradlew publishToSonatype
 
       - name: Release
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/main'
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
