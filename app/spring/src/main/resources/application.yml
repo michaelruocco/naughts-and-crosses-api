@@ -12,7 +12,12 @@ spring:
 
 management:
   endpoints:
-    web.exposure.include: health,info
+    web:
+      exposure.include: health,info
+      cors:
+        allowed-origins: ${cors.allowed.origins}
+        allowed-methods: GET
+        allowed-headers: '*'
   endpoint:
     health:
       probes.enabled: true
