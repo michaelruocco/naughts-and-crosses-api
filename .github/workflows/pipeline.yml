@@ -100,7 +100,12 @@ jobs:
           ./gradlew currentVersion
 
       - name: Build Image
-        run: ./gradlew buildImage
+        run: |
+          rm app/spring/build/libs/*-javadoc.jar
+          rm app/spring/build/libs/*-plain.jar
+          rm app/spring/build/libs/*-sources.jar
+          rm app/spring/build/libs/*-test-fixtures.jar
+          ./gradlew buildImage
 
       - name: Push Image
         env:
