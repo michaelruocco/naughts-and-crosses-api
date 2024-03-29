@@ -5,6 +5,7 @@ plugins {
     id "pl.allegro.tech.build.axion-release" version "1.16.1"
     id "org.sonarqube" version "4.4.1.3373"
     id "nebula.lint" version "19.0.1"
+    id "com.bmuschko.docker-remote-api" version "9.4.0"
 }
 
 scmVersion {
@@ -18,7 +19,7 @@ project.version = scmVersion.version
 subprojects {
     group "com.github.michaelruocco"
 
-    tasks.withType(Javadoc) {
+    tasks.withType(Javadoc).configureEach {
         options.addStringOption('Xdoclint:none', '-quiet')
     }
 
@@ -93,4 +94,23 @@ nexusPublishing {
             password = System.getenv("OSSRH_PASSWORD")
         }
     }
+}
+
+docker {
+    registryCredentials {
+        username.set(System.getenv("DOCKER_USERNAME"))
+        password.set(System.getenv("DOCKER_PASSWORD"))
+    }
+}
+
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
+
+task buildImage(type: DockerBuildImage) {
+    inputDir.set(file("."))
+    images.add("michaelruocco/${project.name}:${version}")
+}
+
+task pushImage(type: DockerPushImage) {
+    images.set(buildImage.images)
 }
