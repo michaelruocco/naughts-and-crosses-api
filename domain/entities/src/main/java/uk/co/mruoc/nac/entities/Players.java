@@ -2,6 +2,7 @@ package uk.co.mruoc.nac.entities;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -27,6 +28,15 @@ public class Players {
 
   public Stream<Player> stream() {
     return values.stream();
+  }
+
+  public int size() {
+    return values.size();
+  }
+
+  public Collection<Character> getDuplicateTokens() {
+    Collection<Character> chars = values.stream().map(Player::getToken).toList();
+    return chars.stream().filter(i -> Collections.frequency(chars, i) > 1).distinct().toList();
   }
 
   public void validateIsTurn(char token) {
