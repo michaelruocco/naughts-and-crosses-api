@@ -47,9 +47,17 @@ class BoardTest {
 
     Throwable error = catchThrowable(() -> updatedBoard.update(turn));
 
-    assertThat(error)
-        .isInstanceOf(LocationNotAvailableException.class)
-        .hasMessage("board location at 0-0 is not available");
+    assertThat(error).isInstanceOf(LocationNotAvailableException.class);
+  }
+
+  @Test
+  void shouldThrowErrorOnGetTokenIfLocationIsNotFound() {
+    int x = 3;
+    int y = 2;
+
+    Throwable error = catchThrowable(() -> board.getToken(x, y));
+
+    assertThat(error).isInstanceOf(LocationNotFoundException.class);
   }
 
   @Test
