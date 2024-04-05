@@ -60,7 +60,10 @@ public class Board {
   }
 
   public char getToken(int x, int y) {
-    return getLocation(new Coordinates(x, y)).map(Location::getToken).orElse(' ');
+    Coordinates coordinates = new Coordinates(x, y);
+    return getLocation(coordinates)
+        .map(Location::getToken)
+        .orElseThrow(() -> new LocationNotFoundException(coordinates));
   }
 
   public Optional<Location> getLocation(Coordinates coordinates) {

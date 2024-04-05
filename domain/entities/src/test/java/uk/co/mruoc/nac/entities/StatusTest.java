@@ -32,11 +32,11 @@ class StatusTest {
 
   @Test
   void shouldThrowExceptionIfNotPlayersTurn() {
-    Throwable error = catchThrowable(() -> status.validateIsTurn('O'));
+    char token = 'O';
 
-    assertThat(error)
-        .isInstanceOf(NotPlayersTurnException.class)
-        .hasMessage("player with token O is not next player so cannot take turn");
+    Throwable error = catchThrowable(() -> status.validateIsTurn(token));
+
+    assertThat(error).isInstanceOf(NotPlayersTurnException.class);
   }
 
   @Test

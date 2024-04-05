@@ -1,6 +1,8 @@
 package uk.co.mruoc.nac.usecases;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -15,10 +17,21 @@ import uk.co.mruoc.nac.entities.Status;
 class GameFactoryTest {
 
   private final LongSupplier idSupplier = mock(LongSupplier.class);
+  private final PlayersValidator playersValidator = mock(PlayersValidator.class);
 
   private final Players players = PlayerMother.players();
 
-  private final GameFactory factory = new GameFactory(idSupplier);
+  private final GameFactory factory = new GameFactory(idSupplier, playersValidator);
+
+  @Test
+  void shouldThrowExceptionIfPlayersAreNotValid() {
+    Throwable expectedError = new RuntimeException("players not valid!");
+    doThrow(expectedError).when(playersValidator).validate(players);
+
+    Throwable error = catchThrowable(() -> factory.buildGame(players));
+
+    assertThat(error).isEqualTo(expectedError);
+  }
 
   @Test
   void shouldPopulateIdFromSupplier() {
