@@ -5,7 +5,7 @@ plugins {
 dependencies {
     implementation project(":use-cases")
     implementation project(":entities")
-    api "org.keycloak:keycloak-admin-client:23.0.3"
+    api "org.keycloak:keycloak-admin-client:24.0.2"
 }
 
 apply from: rootProject.file("publish.gradle")
