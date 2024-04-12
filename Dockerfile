@@ -12,6 +12,7 @@ CMD java \
   -Dapp.database.username=${DATABASE_USERNAME} \
   -Dapp.database.password=${DATABASE_PASSWORD} \
   -Dapp.database.driver=${DATABASE_DRIVER} \
+  -Dbroker.ssl.enabled=${BROKER_SSL_ENABLED} \
   -Dbroker.host="${BROKER_HOST}" \
   -Dbroker.port="${BROKER_PORT}" \
   -Dbroker.client.login="${BROKER_CLIENT_LOGIN}" \

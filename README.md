@@ -85,6 +85,7 @@ you can run:
     -Dcors.allowed.origins=http://localhost:3001 \
     -Drepository.in.memory.enabled=true \
     -Dbroker.in.memory.enabled=true \
+    -Dbroker.ssl.enabled=false \
     -Dauth.security.enabled=false
 ```
 
@@ -119,6 +120,7 @@ you can run:
     -Ddatabase.username=postgres \
     -Ddatabase.password=postgres \
     -Ddatabase.driver=org.postgresql.Driver \
+    -Dbroker.ssl.enabled=false \
     -Dbroker.host=127.0.0.1 \
     -Dbroker.port=61613 \
     -Dbroker.client.login=artemis \
