@@ -14,6 +14,7 @@ public class MinimalTestEnvironmentArgsDecorator implements UnaryOperator<Stream
     return Stream.of(
         "--repository.in.memory.enabled=true",
         "--broker.in.memory.enabled=true",
+        "--broker.ssl.enabled=false",
         "--auth.security.enabled=false");
   }
 }

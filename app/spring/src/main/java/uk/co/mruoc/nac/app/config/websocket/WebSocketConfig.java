@@ -10,9 +10,14 @@ import org.springframework.core.annotation.Order;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.messaging.simp.config.StompBrokerRelayRegistration;
+import org.springframework.messaging.simp.stomp.StompReactorNettyCodec;
+import org.springframework.messaging.tcp.TcpOperations;
+import org.springframework.messaging.tcp.reactor.ReactorNettyTcpClient;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import reactor.netty.tcp.TcpClient;
 import uk.co.mruoc.nac.api.converter.ApiConverter;
 import uk.co.mruoc.nac.app.config.AllowedOriginsSupplier;
 import uk.co.mruoc.nac.app.websocket.WebSocketGameEventPublisher;
@@ -47,14 +52,22 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
   }
 
   private void configureExternalBroker(MessageBrokerRegistry registry) {
-    registry
-        .enableStompBrokerRelay("/topic")
-        .setRelayHost(brokerConfig.getHost())
-        .setRelayPort(brokerConfig.getPort())
-        .setClientLogin(brokerConfig.getClientLogin())
-        .setClientPasscode(brokerConfig.getClientPasscode())
-        .setSystemLogin(brokerConfig.getSystemLogin())
-        .setSystemPasscode(brokerConfig.getSystemPasscode());
+    StompBrokerRelayRegistration registration =
+        registry
+            .enableStompBrokerRelay("/topic")
+            .setRelayHost(brokerConfig.getHost())
+            .setRelayPort(brokerConfig.getPort())
+            .setClientLogin(brokerConfig.getClientLogin())
+            .setClientPasscode(brokerConfig.getClientPasscode())
+            .setSystemLogin(brokerConfig.getSystemLogin())
+            .setSystemPasscode(brokerConfig.getSystemPasscode());
+    if (brokerConfig.isSslEnabled()) {
+      log.info("broker ssl enabled");
+      registration.setTcpClient(buildSslTcpClient());
+    } else {
+      log.warn(
+          "broker config ssl is disabled this should only be used for non production environments");
+    }
   }
 
   @Override
@@ -66,5 +79,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
   public GameEventPublisher webSocketGameEventPublisher(
       SimpMessagingTemplate template, ApiConverter converter) {
     return WebSocketGameEventPublisher.builder().template(template).converter(converter).build();
+  }
+
+  private TcpOperations<byte[]> buildSslTcpClient() {
+    TcpClient client =
+        TcpClient.create().host(brokerConfig.getHost()).port(brokerConfig.getPort()).secure();
+    return new ReactorNettyTcpClient<>(client, new StompReactorNettyCodec());
   }
 }

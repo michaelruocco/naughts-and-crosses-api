@@ -78,6 +78,7 @@ public class ApplicationConfig {
   @Bean
   public BrokerConfig relayConfig(
       @Value("${broker.in.memory.enabled:false}") boolean inMemoryEnabled,
+      @Value("${broker.ssl.enabled:true}") boolean sslEnabled,
       @Value("${broker.host:127.0.0.1}") String host,
       @Value("${broker.port:61613}") int port,
       @Value("${broker.client.login:guest}") String clientLogin,
@@ -86,6 +87,7 @@ public class ApplicationConfig {
       @Value("${broker.system.passcode:guest}") String systemPasscode) {
     return BrokerConfig.builder()
         .inMemoryEnabled(inMemoryEnabled)
+        .sslEnabled(sslEnabled)
         .host(host)
         .port(port)
         .clientLogin(clientLogin)

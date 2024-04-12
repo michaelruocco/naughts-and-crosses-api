@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = "3.2.0"
+        springBootVersion = "3.2.4"
     }
 }
 
@@ -11,7 +11,8 @@ plugins {
 }
 
 ext {
-    testContainersVersion = "1.19.4"
+    testContainersVersion = "1.19.7"
+    awaitilityVersion = "4.2.1"
 }
 ext["junit-jupiter.version"] = "${junitVersion}"
 
@@ -48,15 +49,15 @@ dependencies {
     integrationTestImplementation project(":rest-client")
     integrationTestImplementation project(":websocket-client")
     integrationTestImplementation project(":access-token-client")
-    integrationTestImplementation "net.javacrumbs.json-unit:json-unit-assertj:3.2.2"
-    integrationTestImplementation "org.awaitility:awaitility:4.2.0"
+    integrationTestImplementation "net.javacrumbs.json-unit:json-unit-assertj:3.2.7"
+    integrationTestImplementation "org.awaitility:awaitility:${awaitilityVersion}"
 
     testFixturesImplementation project(":api")
     testFixturesImplementation project(":rest-client")
     testFixturesImplementation project(":websocket-client")
     testFixturesImplementation project(":access-token-client")
     testFixturesImplementation "org.springframework.boot:spring-boot:${springBootVersion}"
-    testFixturesImplementation "org.awaitility:awaitility:4.2.0"
+    testFixturesImplementation "org.awaitility:awaitility:${awaitilityVersion}"
     testFixturesImplementation "org.testcontainers:postgresql:${testContainersVersion}"
     testFixturesImplementation "org.testcontainers:activemq:${testContainersVersion}"
     testFixturesImplementation "org.postgresql:postgresql:${postgresqlVersion}"
