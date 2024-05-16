@@ -8,6 +8,7 @@ import uk.co.mruoc.nac.app.TestEnvironment;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClient;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesWebsocketClient;
 import uk.co.mruoc.nac.environment.LocalApp;
+import uk.mruoc.nac.access.TokenCredentials;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -47,7 +48,7 @@ public class MinimalTestEnvironment implements TestEnvironment {
   }
 
   @Override
-  public NaughtsAndCrossesApiClient buildApiClient() {
+  public NaughtsAndCrossesApiClient buildApiClient(TokenCredentials credentials) {
     return new NaughtsAndCrossesApiClient(localApp.getUrl());
   }
 

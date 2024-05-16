@@ -11,6 +11,8 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import uk.co.mruoc.nac.client.DefaultGameUpdateListener;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClient;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesWebsocketClient;
+import uk.co.mruoc.nac.environment.integrated.cognito.DefaultCognitoTokenCredentials;
+import uk.mruoc.nac.access.TokenCredentials;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -56,7 +58,11 @@ public class NaughtsAndCrossesAppExtension
   }
 
   public NaughtsAndCrossesApiClient getRestClient() {
-    return environment.buildApiClient();
+    return getRestClient(new DefaultCognitoTokenCredentials());
+  }
+
+  public NaughtsAndCrossesApiClient getRestClient(TokenCredentials credentials) {
+    return environment.buildApiClient(credentials);
   }
 
   public DefaultGameUpdateListener connectAndListenToWebsocket() {

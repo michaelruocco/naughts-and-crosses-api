@@ -20,6 +20,10 @@ CMD java \
   -Dbroker.system.login="${BROKER_SYSTEM_LOGIN}" \
   -Dbroker.system.passcode="${BROKER_SYSTEM_PASSCODE}" \
   -Dauth.issuer.url="${AUTH_ISSUER_URL}" \
-  -Dkeycloak.admin.client.id="${KEYCLOAK_ADMIN_CLIENT_ID}" \
-  -Dkeycloak.admin.client.secret="${KEYCLOAK_ADMIN_CLIENT_SECRET}" \
+  -Daws.cognito.local.docker="${AWS_COGNITO_LOCAL_DOCKER}" \
+  -Daws.cognito.userPoolId="${AWS_COGNITO_USER_POOL_ID}" \
+  -Daws.cognito.regionName="${AWS_COGNITO_REGION_NAME}" \
+  -Daws.cognito.endpointOverride="${AWS_COGNITO_ENDPOINT_OVERRIDE}" \
+  -Daws.cognito.accessKeyId="${AWS_COGNITO_ACCESS_KEY_ID}" \
+  -Daws.cognito.secretAccessKey="${AWS_COGNITO_SECRET_ACCESS_KEY}" \
   -jar /opt/app.jar

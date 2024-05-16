@@ -15,6 +15,7 @@ public class MinimalTestEnvironmentArgsDecorator implements UnaryOperator<Stream
         "--repository.in.memory.enabled=true",
         "--broker.in.memory.enabled=true",
         "--broker.ssl.enabled=false",
-        "--auth.security.enabled=false");
+        "--auth.security.enabled=false",
+        "--stub.user.provider=true");
   }
 }

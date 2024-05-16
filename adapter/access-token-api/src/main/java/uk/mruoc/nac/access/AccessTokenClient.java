@@ -2,5 +2,5 @@ package uk.mruoc.nac.access;
 
 public interface AccessTokenClient {
 
-  AccessToken generateToken();
+  AccessToken generateToken(TokenCredentials credentials);
 }

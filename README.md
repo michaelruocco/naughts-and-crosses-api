@@ -89,17 +89,17 @@ you can run:
     -Dauth.security.enabled=false
 ```
 
-### Running the API locally with a postgres database repository, kafka and keycloak
+### Running the API locally with a postgres database repository, kafka and cognito
 
-Note - for keycloak to work correctly you will also need to update your hosts file,
+Note - for cognito to work correctly you will also need to update your hosts file,
 on a mac this can be found at `/etc/hosts` and you will need to map the domain name
-`keycloak` to the local machine by adding the following line to the file:
+`cognito` to the local machine by adding the following line to the file:
 
 ```
-127.0.0.1	keycloak
+127.0.0.1	cognito
 ```
 
-To run the API using the postgres database, kafka and keycloak, you will need to start
+To run the API using the postgres database, kafka and cognito, you will need to start
 an instance of each of those systems running in docker by running
 
 ```bash
@@ -107,9 +107,9 @@ docker-compose up -d
 ```
 
 This will start an instance of postgres running on port 5433, kafka running on 9094
-and keycloak running on 4012.
+and cognito running on 9229.
 
-To start the app running on a port 3002 and connecting to postgres, kafka and keycloak
+To start the app running on a port 3002 and connecting to postgres, kafka and cognito
 you can run:
 
 ```gradle
@@ -127,9 +127,13 @@ you can run:
     -Dbroker.client.passcode=artemis \
     -Dbroker.system.login=artemis \
     -Dbroker.system.passcode=artemis \
-    -Dauth.issuer.url=http://keycloak:4021/realms/naughts-and-crosses-local \
-    -Dkeycloak.admin.client.id=naughts-and-crosses-api \
-    -Dkeycloak.admin.client.secret=naughts-and-crosses-api-secret
+    -Dauth.issuer.url=http://localhost:9229/%POOL_ID%  \
+    -Daws.cognito.local.docker=true \
+    -Daws.cognito.userPoolId=%POOL_ID% \
+    -Daws.cognito.regionName=eu-central-1 \
+    -Daws.cognito.endpointOverride=http://localhost:9229 \
+    -Daws.cognito.accessKeyId=abc \
+    -Daws.cognito.secretAccessKey=123
 ```
 
 ### Running the API as a docker container with a postgres database repository, and kafka
@@ -148,17 +152,17 @@ you can run:
 docker-compose --profile docker-api up -d
 ```
 
-### Generating a bearer token from Keycloak
+### Generating a bearer token from Cognito
 
 If you are running the API with oauth security enabled you will need to generate a
 bearer token that you can provide when calling the API. To do this you can run the
 following command:
 
 ```bash
-curl "http://keycloak:4021/realms/naughts-and-crosses-local/protocol/openid-connect/token" \
-        -d "client_id=naughts-and-crosses-api" \
-        -d "client_secret=naughts-and-crosses-api-secret" \
-        -d "grant_type=client_credentials"
+curl -X POST "http://localhost:9229/" \
+  -H "Content-Type:application/x-amz-json-1.1" \
+  -H "X-Amz-Target:AWSCognitoIdentityProviderService.InitiateAuth" \
+  -d '{"AuthParameters":{"USERNAME":"user-1","PASSWORD":"pwd1"},"AuthFlow":"USER_PASSWORD_AUTH","ClientId":"6wov0w1vc6igdvf8zmpsykwdm"}'
 ```
 
 ### Getting users
@@ -170,7 +174,7 @@ curl http://localhost:3002/v1/users
 or with a bearer token:
 
 ```bash
-curl -H 'Authorization:Bearer <token-value>' http://localhost:3002/v1/users
+curl -H 'Authorization:Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkNvZ25pdG9Mb2NhbCJ9.eyJhdXRoX3RpbWUiOjE3MTU4OTQyNjUsImNsaWVudF9pZCI6IjZ3b3YwdzF2YzZpZ2R2Zjh6bXBzeWt3ZG0iLCJldmVudF9pZCI6IjU2MzM4YTVmLWQ1ODItNDY5Ny1hNDQ4LTI5YjJjMGEyN2RhZSIsImlhdCI6MTcxNTg5NDI2NSwianRpIjoiODMzMzExNDUtMDgyMS00ZWM5LThhMGQtNDEwZGJmOTIxZjQ4Iiwic2NvcGUiOiJhd3MuY29nbml0by5zaWduaW4udXNlci5hZG1pbiIsInN1YiI6IjcwN2Q5ZmE2LTEzZGQtNDk4NS05M2FhLWEyOGYwMWU4OWE2YiIsInRva2VuX3VzZSI6ImFjY2VzcyIsInVzZXJuYW1lIjoidXNlci0xIiwiZXhwIjoxNzE1ODk3ODY1LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjkyMjkvbG9jYWxfMEFWVjF3SmMifQ.iSGrY0NGj3x6x52fZKGEBW4zQcZtTWMusTjo48hyF68BFU5CXvgBa2OFvpPnwC8OkrUQjjbDqCWRO5chmMG24ZBfhJZAtaRXSnyUE_DPx82vEVPwGvzhlAMoth_Yz6dOI62iho9TXIkw632IPx6QS47-qTvCl7GflcGRpe7_ALzTXMcKGAxxazkLSN3_aKuK23H1v14Z4eYT9YqRyUBUOQuoIChGWl3KBewVetKjALoq5m1ksBbKhjFvC21-GC2qG75djuhwx2liT0xeqvRRmvEJCeIhjkkZZR330Ux0x8PgUow_H-Z98uMNJUsk90cD6bZpTKDIYoWhwUxoNFAUuQ' http://localhost:3002/v1/users
 ```
 
 ### Creating a game

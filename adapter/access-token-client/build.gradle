@@ -3,8 +3,10 @@ plugins {
 }
 
 dependencies {
+    api project(":access-token-api")
     implementation "org.springframework:spring-web:${springVersion}"
     implementation "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
+    implementation "software.amazon.awssdk:cognitoidentityprovider:${cognitoVersion}"
 }
 
 apply from: rootProject.file("publish.gradle")

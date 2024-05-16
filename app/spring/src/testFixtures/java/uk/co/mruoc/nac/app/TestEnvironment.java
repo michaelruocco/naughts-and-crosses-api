@@ -3,6 +3,8 @@ package uk.co.mruoc.nac.app;
 import java.net.SocketAddress;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClient;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesWebsocketClient;
+import uk.co.mruoc.nac.environment.integrated.cognito.DefaultCognitoTokenCredentials;
+import uk.mruoc.nac.access.TokenCredentials;
 
 public interface TestEnvironment {
 
@@ -16,7 +18,11 @@ public interface TestEnvironment {
 
   String[] getAppArgs();
 
-  NaughtsAndCrossesApiClient buildApiClient();
+  default NaughtsAndCrossesApiClient buildApiClient() {
+    return buildApiClient(new DefaultCognitoTokenCredentials());
+  }
+
+  NaughtsAndCrossesApiClient buildApiClient(TokenCredentials credentials);
 
   NaughtsAndCrossesWebsocketClient buildWebsocketClient();
 }

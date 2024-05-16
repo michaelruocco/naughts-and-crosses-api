@@ -56,11 +56,13 @@ dependencies {
     testFixturesImplementation project(":rest-client")
     testFixturesImplementation project(":websocket-client")
     testFixturesImplementation project(":access-token-client")
+    testFixturesImplementation project(":user-provider")
     testFixturesImplementation "org.springframework.boot:spring-boot:${springBootVersion}"
     testFixturesImplementation "org.awaitility:awaitility:${awaitilityVersion}"
     testFixturesImplementation "org.testcontainers:postgresql:${testContainersVersion}"
     testFixturesImplementation "org.testcontainers:activemq:${testContainersVersion}"
     testFixturesImplementation "org.postgresql:postgresql:${postgresqlVersion}"
+    testFixturesImplementation "software.amazon.awssdk:cognitoidentityprovider:${cognitoVersion}"
 }
 
 springBoot {
