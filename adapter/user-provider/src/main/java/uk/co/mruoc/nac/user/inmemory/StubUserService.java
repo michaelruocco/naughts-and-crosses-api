@@ -4,20 +4,24 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
+import uk.co.mruoc.nac.entities.CreateUserRequest;
 import uk.co.mruoc.nac.entities.User;
-import uk.co.mruoc.nac.usecases.UserProvider;
+import uk.co.mruoc.nac.usecases.ExternalUserService;
 
 @RequiredArgsConstructor
-public class StubUserProvider implements UserProvider {
+public class StubUserService implements ExternalUserService {
 
   private final Map<String, User> users;
+  private final Supplier<UUID> idSupplier;
 
-  public StubUserProvider() {
-    this(buildUsers());
+  public StubUserService() {
+    this(buildUsers(), UUID::randomUUID);
   }
 
   @Override
@@ -26,8 +30,27 @@ public class StubUserProvider implements UserProvider {
   }
 
   @Override
+  public void create(Collection<CreateUserRequest> requests) {
+    requests.stream().map(this::toUser).forEach(this::add);
+  }
+
+  @Override
   public Optional<User> get(String id) {
     return Optional.ofNullable(users.get(id));
+  }
+
+  private void add(User user) {
+    users.put(user.getId(), user);
+  }
+
+  private User toUser(CreateUserRequest request) {
+    return User.builder()
+        .id(idSupplier.get().toString())
+        .username(request.getUsername())
+        .email(request.getEmail())
+        .firstName(request.getFirstName())
+        .lastName(request.getLastName())
+        .build();
   }
 
   private static Map<String, User> buildUsers() {

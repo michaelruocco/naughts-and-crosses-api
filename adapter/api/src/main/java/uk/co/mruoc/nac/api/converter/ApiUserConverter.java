@@ -1,12 +1,24 @@
 package uk.co.mruoc.nac.api.converter;
 
+import java.io.InputStream;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.nac.api.dto.ApiUser;
+import uk.co.mruoc.nac.entities.CreateUserRequest;
 import uk.co.mruoc.nac.entities.User;
 
 @RequiredArgsConstructor
 public class ApiUserConverter {
+
+  private final ApiCsvUserConverter csvConverter;
+
+  public ApiUserConverter() {
+    this(new ApiCsvUserConverter());
+  }
+
+  public Collection<CreateUserRequest> toCreateUserRequests(InputStream inputStream) {
+    return csvConverter.toCreateUserRequests(inputStream);
+  }
 
   public Collection<ApiUser> toApiUsers(Collection<User> users) {
     return users.stream().map(this::toApiUser).toList();

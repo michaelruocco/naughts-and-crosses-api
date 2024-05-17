@@ -162,7 +162,19 @@ following command:
 curl -X POST "http://localhost:9229/" \
   -H "Content-Type:application/x-amz-json-1.1" \
   -H "X-Amz-Target:AWSCognitoIdentityProviderService.InitiateAuth" \
-  -d '{"AuthParameters":{"USERNAME":"user-1","PASSWORD":"pwd1"},"AuthFlow":"USER_PASSWORD_AUTH","ClientId":"{client-id}"}'
+  -d '{"AuthParameters":{"USERNAME":"user-1","PASSWORD":"pwd1"},"AuthFlow":"USER_PASSWORD_AUTH","ClientId":"38fdq0fmxashfmazwznm5b05b"}'
+```
+
+### Creating users
+
+You can create users by uploading a csv file using the following command:
+
+```bash
+curl -X POST \
+    -H 'Authorization:Bearer <token>' \
+    -F "data=@./app/spring/src/testFixtures/resources/users/users.csv;type=text/csv" \
+    -F "name=users.csv" \
+    http://localhost:3002/v1/users
 ```
 
 ### Getting users

@@ -13,8 +13,8 @@ import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
-import uk.co.mruoc.nac.usecases.UserProvider;
-import uk.co.mruoc.nac.user.cognito.CognitoUserProvider;
+import uk.co.mruoc.nac.usecases.ExternalUserService;
+import uk.co.mruoc.nac.user.cognito.CognitoUserService;
 import uk.co.mruoc.nac.user.cognito.LocalDockerCognitoConfigurer;
 
 @ConditionalOnProperty(value = "aws.cognito.local.docker", havingValue = "true")
@@ -23,13 +23,13 @@ import uk.co.mruoc.nac.user.cognito.LocalDockerCognitoConfigurer;
 public class LocalDockerCognitoConfig {
 
   @Bean
-  public UserProvider localDockerCognitoUserProvider(
+  public ExternalUserService localDockerCognitoUserProvider(
       CognitoIdentityProviderClient client,
       @Value("${aws.cognito.userPoolId:}") String initialUserPoolId,
       LocalDockerCognitoConfigurer configurer) {
     String userPoolId = configurer.configureAndReplacePoolIdIfRequired(initialUserPoolId);
     log.info("configuring cognito user provider with user pool id {}", userPoolId);
-    return CognitoUserProvider.builder().client(client).userPoolId(userPoolId).build();
+    return CognitoUserService.builder().client(client).userPoolId(userPoolId).build();
   }
 
   @Bean

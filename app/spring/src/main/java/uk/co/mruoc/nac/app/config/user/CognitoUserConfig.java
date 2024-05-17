@@ -14,9 +14,9 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClientBuilder;
-import uk.co.mruoc.nac.usecases.UserProvider;
-import uk.co.mruoc.nac.user.cognito.CognitoUserProvider;
-import uk.co.mruoc.nac.user.inmemory.StubUserProvider;
+import uk.co.mruoc.nac.usecases.ExternalUserService;
+import uk.co.mruoc.nac.user.cognito.CognitoUserService;
+import uk.co.mruoc.nac.user.inmemory.StubUserService;
 
 @Configuration
 @Slf4j
@@ -40,16 +40,16 @@ public class CognitoUserConfig {
 
   @ConditionalOnProperty(value = "aws.cognito.local.docker", havingValue = "false")
   @Bean
-  public UserProvider cognitoUserProvider(
+  public ExternalUserService cognitoUserProvider(
       CognitoIdentityProviderClient client, @Value("${aws.cognito.userPoolId}") String userPoolId) {
     log.info("configuring cognito user provider with user pool id {}", userPoolId);
-    return CognitoUserProvider.builder().client(client).userPoolId(userPoolId).build();
+    return CognitoUserService.builder().client(client).userPoolId(userPoolId).build();
   }
 
   @ConditionalOnProperty(value = "stub.user.provider", havingValue = "true")
   @Bean
-  public UserProvider stubUserProvider() {
-    return new StubUserProvider();
+  public ExternalUserService stubUserProvider() {
+    return new StubUserService();
   }
 
   private static AwsCredentialsProvider toCredentialsProvider(
