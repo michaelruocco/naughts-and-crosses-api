@@ -2,14 +2,17 @@ package uk.co.mruoc.nac.usecases;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InOrder;
 import uk.co.mruoc.nac.entities.Game;
 import uk.co.mruoc.nac.entities.PlayerMother;
 import uk.co.mruoc.nac.entities.Players;
@@ -116,7 +119,7 @@ class GameServiceTest {
 
   @Test
   void shouldReturnAllGames() {
-    Stream<Game> expectedGames = Stream.of(mock(Game.class), mock(Game.class));
+    Stream<Game> expectedGames = givenGamesWithIds(5L, 6L);
     when(repository.getAll()).thenReturn(expectedGames);
 
     Stream<Game> games = service.getAll();
@@ -125,10 +128,44 @@ class GameServiceTest {
   }
 
   @Test
+  void shouldDeleteGameById() {
+    long id = 7;
+
+    service.delete(id);
+
+    ArgumentCaptor<Long> captor = ArgumentCaptor.forClass(Long.class);
+    verify(repository).delete(captor.capture());
+    assertThat(captor.getValue()).isEqualTo(id);
+  }
+
+  @Test
+  void shouldPublishGameDeleteEventWhenGameDeletedById() {
+    long id = 8;
+
+    service.delete(id);
+
+    ArgumentCaptor<Long> captor = ArgumentCaptor.forClass(Long.class);
+    verify(eventPublisher).deleted(captor.capture());
+    assertThat(captor.getValue()).isEqualTo(id);
+  }
+
+  @Test
   void shouldDeleteAllGames() {
     service.deleteAll();
 
     verify(repository).deleteAll();
+  }
+
+  @Test
+  void shouldPublishGameDeleteEventsWhenAllGamesDeleted() {
+    Stream<Game> games = givenGamesWithIds(9L, 10L);
+    when(repository.getAll()).thenReturn(games);
+
+    service.deleteAll();
+
+    InOrder inOrder = inOrder(eventPublisher);
+    inOrder.verify(eventPublisher).deleted(9);
+    inOrder.verify(eventPublisher).deleted(10);
   }
 
   private Game givenGameCreated() {
@@ -143,9 +180,19 @@ class GameServiceTest {
     return game;
   }
 
-  private Game givenGameUpdated(Game game, Turn turn) {
+  private static Game givenGameUpdated(Game game, Turn turn) {
     Game updated = mock(Game.class);
     when(game.take(turn)).thenReturn(updated);
     return updated;
+  }
+
+  private Stream<Game> givenGamesWithIds(Long... ids) {
+    return Arrays.stream(ids).map(GameServiceTest::givenGameWithId);
+  }
+
+  private static Game givenGameWithId(long id) {
+    Game game = mock(Game.class);
+    when(game.getId()).thenReturn(id);
+    return game;
   }
 }
