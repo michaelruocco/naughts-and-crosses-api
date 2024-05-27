@@ -45,6 +45,7 @@ public class GameService {
 
   public void delete(long id) {
     repository.delete(id);
+    eventPublisher.deleted(id);
   }
 
   private void create(Game game) {

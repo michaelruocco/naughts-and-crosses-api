@@ -8,7 +8,8 @@ import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
-import uk.co.mruoc.nac.client.DefaultGameUpdateListener;
+import uk.co.mruoc.nac.api.dto.ApiGame;
+import uk.co.mruoc.nac.client.GameEventSubscriber;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClient;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesWebsocketClient;
 
@@ -59,14 +60,19 @@ public class NaughtsAndCrossesAppExtension
     return environment.buildApiClient();
   }
 
-  public DefaultGameUpdateListener connectAndListenToWebsocket() {
+  public void connectToWebsocket() {
     if (Objects.isNull(websocketClient)) {
       websocketClient = environment.buildWebsocketClient();
       websocketClient.connect();
     }
-    DefaultGameUpdateListener listener = new DefaultGameUpdateListener();
-    websocketClient.add(listener);
-    return listener;
+  }
+
+  public GameEventSubscriber<ApiGame> subscribeToGameUpdateEvents() {
+    return websocketClient.subscribeToGameUpdateEvents();
+  }
+
+  public GameEventSubscriber<Long> subscribeToGameDeleteEvents() {
+    return websocketClient.subscribeToGameDeleteEvents();
   }
 
   public void disconnectWebsocket() {
