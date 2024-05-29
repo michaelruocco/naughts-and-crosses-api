@@ -37,10 +37,7 @@ class GameSessionHandlerTest {
     Throwable error = new Exception("boom!");
 
     String output =
-        tapSystemErr(
-            () -> {
-              handler.handleException(session, command, headers, payload, error);
-            });
+        tapSystemErr(() -> handler.handleException(session, command, headers, payload, error));
 
     assertThat(output)
         .containsIgnoringWhitespaces("received error java.lang.Exception: boom!")
@@ -85,6 +82,19 @@ class GameSessionHandlerTest {
     inOrder.verify(subscription1).unsubscribe();
     inOrder.verify(subscription2).unsubscribe();
     inOrder.verify(session).disconnect();
+  }
+
+  @Test
+  void shouldLogPayload() throws Exception {
+    StompHeaders headers = givenHeaders();
+    Object payload = "test-payload";
+
+    String output = tapSystemErr(() -> handler.handleFrame(headers, payload));
+
+    assertThat(output)
+        .isEqualToIgnoringWhitespace(
+            "[Test worker] INFO uk.co.mruoc.nac.client.GameSessionHandler "
+                + "- received payload test-payload with headers mock-headers");
   }
 
   private Subscription givenSubscriptionForSubscriber(
