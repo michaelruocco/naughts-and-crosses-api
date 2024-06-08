@@ -12,7 +12,7 @@ public class ApiRequestedPlayerConverter {
 
   private RequestedPlayer toRequestedPlayer(ApiRequestedPlayer apiRequestedPlayer) {
     return RequestedPlayer.builder()
-        .userId(apiRequestedPlayer.getUserId())
+        .username(apiRequestedPlayer.getUsername())
         .token(apiRequestedPlayer.getToken())
         .build();
   }

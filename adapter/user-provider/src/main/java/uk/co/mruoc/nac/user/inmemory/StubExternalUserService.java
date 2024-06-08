@@ -1,21 +1,23 @@
 package uk.co.mruoc.nac.user.inmemory;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.nac.entities.CreateUserRequest;
 import uk.co.mruoc.nac.entities.User;
-import uk.co.mruoc.nac.entities.Users;
 import uk.co.mruoc.nac.usecases.ExternalUserService;
-import uk.co.mruoc.nac.usecases.UserNotFoundByIdException;
+import uk.co.mruoc.nac.usecases.UserNotFoundException;
 import uk.co.mruoc.nac.usecases.UsernameAlreadyExistsException;
 
 @RequiredArgsConstructor
 public class StubExternalUserService implements ExternalUserService {
 
-  private final Users users;
+  private final Map<String, User> users;
   private final Supplier<UUID> idSupplier;
 
   public StubExternalUserService() {
@@ -26,30 +28,35 @@ public class StubExternalUserService implements ExternalUserService {
   public User create(CreateUserRequest request) {
     User user = toUser(request);
     String username = user.getUsername();
-    if (users.containsUserWithUsername(username)) {
+    if (users.containsKey(username)) {
       throw new UsernameAlreadyExistsException(username);
     }
-    users.add(user);
+    users.put(username, user);
     return user;
   }
 
   @Override
   public void update(User user) {
-    String id = user.getId();
-    if (!users.containsUserWithId(id)) {
-      throw new UserNotFoundByIdException(id);
+    String username = user.getUsername();
+    if (!users.containsKey(username)) {
+      throw new UserNotFoundException(username);
     }
-    users.update(user);
+    users.put(username, user);
+  }
+
+  @Override
+  public void delete(String username) {
+    users.remove(username);
   }
 
   @Override
   public Stream<User> getAll() {
-    return users.stream();
+    return users.values().stream();
   }
 
   @Override
-  public Optional<User> getById(String id) {
-    return users.findById(id);
+  public Optional<User> getByUsername(String username) {
+    return Optional.ofNullable(users.get(username));
   }
 
   private User toUser(CreateUserRequest request) {
@@ -63,8 +70,9 @@ public class StubExternalUserService implements ExternalUserService {
         .build();
   }
 
-  private static Users buildUsers() {
-    return new Users(user1(), user2());
+  private static Map<String, User> buildUsers() {
+    return Stream.of(user1(), user2())
+        .collect(Collectors.toMap(User::getUsername, Function.identity()));
   }
 
   private static User user1() {

@@ -2,6 +2,8 @@ package uk.co.mruoc.nac.app.rest;
 
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,11 +33,11 @@ public class UserController {
     return converter.toApiUser(service.getByUsername(request.getUsername()));
   }
 
-  @PutMapping("/{id}")
-  public ApiUser update(@PathVariable String id, ApiUpdateUserRequest apiRequest) {
-    UpdateUserRequest request = converter.toUpdateUserRequest(id, apiRequest);
+  @PutMapping("/{username}")
+  public ApiUser update(@PathVariable String username, ApiUpdateUserRequest apiRequest) {
+    UpdateUserRequest request = converter.toUpdateUserRequest(username, apiRequest);
     service.update(request);
-    return converter.toApiUser(service.getById(request.getId()));
+    return converter.toApiUser(service.getByUsername(request.getUsername()));
   }
 
   @GetMapping
@@ -43,8 +45,14 @@ public class UserController {
     return service.getAll().stream().map(converter::toApiUser).toList();
   }
 
-  @GetMapping("/{id}")
-  public ApiUser getUser(@PathVariable String id) {
-    return converter.toApiUser(service.getById(id));
+  @GetMapping("/{username}")
+  public ApiUser getUser(@PathVariable String username) {
+    return converter.toApiUser(service.getByUsername(username));
+  }
+
+  @DeleteMapping("/{username}")
+  public ResponseEntity<Void> delete(@PathVariable String username) {
+    service.delete(username);
+    return ResponseEntity.noContent().build();
   }
 }

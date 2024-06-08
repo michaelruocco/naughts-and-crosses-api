@@ -16,17 +16,17 @@ public class ReadUserDao {
 
   private final PostgresUserConverter userConverter;
 
-  public Optional<User> findById(Connection connection, String id) throws SQLException {
+  public Optional<User> findByUsername(Connection connection, String username) throws SQLException {
     try (PreparedStatement statement =
-        connection.prepareStatement("select * from user_record where id = ?::varchar;")) {
-      statement.setString(1, id);
+        connection.prepareStatement("select * from user_record where username = ?::varchar;")) {
+      statement.setString(1, username);
       return toUserIfPresent(statement);
     }
   }
 
   public Stream<User> getAll(Connection connection) throws SQLException {
     try (PreparedStatement statement =
-        connection.prepareStatement("select * from user_record order by id asc;")) {
+        connection.prepareStatement("select * from user_record order by username asc;")) {
       return toUsers(statement);
     }
   }

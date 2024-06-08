@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminCreateUserRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminCreateUserResponse;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminDeleteUserRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminUpdateUserAttributesRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.DeliveryMediumType;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.ListUsersRequest;
@@ -31,9 +32,12 @@ public class CognitoUserService implements ExternalUserService {
   }
 
   @Override
-  public Optional<User> getById(String id) {
+  public Optional<User> getByUsername(String username) {
     ListUsersRequest usersRequest =
-        ListUsersRequest.builder().userPoolId(userPoolId).filter(converter.toSubFilter(id)).build();
+        ListUsersRequest.builder()
+            .userPoolId(userPoolId)
+            .filter(converter.toUsernameFilter(username))
+            .build();
     ListUsersResponse response = client.listUsers(usersRequest);
     return response.users().stream().findFirst().map(converter::toUser);
   }
@@ -62,5 +66,12 @@ public class CognitoUserService implements ExternalUserService {
             .userAttributes(converter.toAttributes(user))
             .build();
     client.adminUpdateUserAttributes(cognitoRequest);
+  }
+
+  @Override
+  public void delete(String username) {
+    AdminDeleteUserRequest cognitoRequest =
+        AdminDeleteUserRequest.builder().userPoolId(userPoolId).username(username).build();
+    client.adminDeleteUser(cognitoRequest);
   }
 }

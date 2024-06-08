@@ -51,9 +51,9 @@ public class ApiUserConverter {
         .build();
   }
 
-  public UpdateUserRequest toUpdateUserRequest(String id, ApiUpdateUserRequest apiRequest) {
+  public UpdateUserRequest toUpdateUserRequest(String username, ApiUpdateUserRequest apiRequest) {
     return UpdateUserRequest.builder()
-        .id(id)
+        .username(username)
         .firstName(apiRequest.getFirstName())
         .lastName(apiRequest.getLastName())
         .email(apiRequest.getEmail())

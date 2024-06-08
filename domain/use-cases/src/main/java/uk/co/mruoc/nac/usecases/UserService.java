@@ -15,6 +15,7 @@ public class UserService {
 
   private final UserCreator creator;
   private final UserUpdater updater;
+  private final UserDeleter deleter;
   private final UserRepository repository;
 
   public void create(CreateUserRequest request) {
@@ -25,6 +26,10 @@ public class UserService {
     updater.update(request);
   }
 
+  public void delete(String username) {
+    deleter.delete(username);
+  }
+
   public Users getAll() {
     return repository.getAll().collect(usersCollector()).sortByUsername();
   }
@@ -32,10 +37,6 @@ public class UserService {
   public User getByUsername(String username) {
     return repository
         .getByUsername(username)
-        .orElseThrow(() -> new UserNotFoundByUsernameException(username));
-  }
-
-  public User getById(String id) {
-    return repository.getById(id).orElseThrow(() -> new UserNotFoundByIdException(id));
+        .orElseThrow(() -> new UserNotFoundException(username));
   }
 }

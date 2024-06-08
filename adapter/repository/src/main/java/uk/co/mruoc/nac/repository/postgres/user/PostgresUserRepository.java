@@ -15,7 +15,6 @@ import uk.co.mruoc.nac.usecases.UserRepository;
 
 @RequiredArgsConstructor
 @Slf4j
-// TODO refactor to use normal postgres sql table rather than using json to store all fields
 public class PostgresUserRepository implements UserRepository {
 
   private final DataSource dataSource;
@@ -46,25 +45,20 @@ public class PostgresUserRepository implements UserRepository {
       throw new UserRepositoryException(e);
     } finally {
       var duration = Duration.between(start, Instant.now());
-      log.info("create user with id {} took {}ms", user.getId(), duration.toMillis());
+      log.info("create user {} took {}ms", user.getUsername(), duration.toMillis());
     }
   }
 
   @Override
   public Optional<User> getByUsername(String username) {
-    return getAll().filter(user -> user.hasUsername(username)).findFirst();
-  }
-
-  @Override
-  public Optional<User> getById(String id) {
     Instant start = Instant.now();
     try (var connection = dataSource.getConnection()) {
-      return readDao.findById(connection, id);
+      return readDao.findByUsername(connection, username);
     } catch (SQLException e) {
       throw new UserRepositoryException(e);
     } finally {
       var duration = Duration.between(start, Instant.now());
-      log.info("find user by id {} took {}ms", id, duration.toMillis());
+      log.info("find user {} took {}ms", username, duration.toMillis());
     }
   }
 
@@ -77,7 +71,7 @@ public class PostgresUserRepository implements UserRepository {
       throw new UserRepositoryException(e);
     } finally {
       var duration = Duration.between(start, Instant.now());
-      log.info("update user with id {} took {}ms", user.getId(), duration.toMillis());
+      log.info("update user {} took {}ms", user.getUsername(), duration.toMillis());
     }
   }
 
@@ -90,7 +84,7 @@ public class PostgresUserRepository implements UserRepository {
       throw new UserRepositoryException(e);
     } finally {
       var duration = Duration.between(start, Instant.now());
-      log.info("get all games took {}ms", duration.toMillis());
+      log.info("get all users took {}ms", duration.toMillis());
     }
   }
 
@@ -108,15 +102,15 @@ public class PostgresUserRepository implements UserRepository {
   }
 
   @Override
-  public void delete(String id) {
+  public void delete(String username) {
     Instant start = Instant.now();
     try (var connection = dataSource.getConnection()) {
-      deleteDao.delete(connection, id);
+      deleteDao.delete(connection, username);
     } catch (SQLException e) {
       throw new UserRepositoryException(e);
     } finally {
       var duration = Duration.between(start, Instant.now());
-      log.info("delete user with id {} took {}ms", id, duration.toMillis());
+      log.info("delete user {} took {}ms", username, duration.toMillis());
     }
   }
 }

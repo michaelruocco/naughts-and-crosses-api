@@ -9,6 +9,6 @@ import lombok.RequiredArgsConstructor;
 @Data
 public class RequestedPlayer {
 
-  private final String userId;
+  private final String username;
   private final char token;
 }

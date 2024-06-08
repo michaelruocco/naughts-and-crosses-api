@@ -32,10 +32,6 @@ public class User {
     return username.equals(otherUsername);
   }
 
-  public boolean hasId(String otherId) {
-    return id.equals(otherId);
-  }
-
   public User update(UpdateUserRequest request) {
     return toBuilder()
         .firstName(request.getFirstName())

@@ -7,11 +7,13 @@ import uk.co.mruoc.nac.entities.User;
 
 public interface ExternalUserService {
 
-  Stream<User> getAll();
-
-  Optional<User> getById(String id);
-
   User create(CreateUserRequest request);
 
   void update(User user);
+
+  void delete(String id);
+
+  Stream<User> getAll();
+
+  Optional<User> getByUsername(String id);
 }

@@ -13,9 +13,11 @@ public class UserUpdater {
   private final UserRepository repository;
 
   public void update(UpdateUserRequest request) {
-    String id = request.getId();
+    String username = request.getUsername();
     User existingUser =
-        externalService.getById(id).orElseThrow(() -> new UserNotFoundByIdException(id));
+        externalService
+            .getByUsername(username)
+            .orElseThrow(() -> new UserNotFoundException(username));
     User updatedUser = existingUser.update(request);
     externalService.update(updatedUser);
     repository.update(updatedUser);

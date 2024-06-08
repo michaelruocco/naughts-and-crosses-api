@@ -32,6 +32,6 @@ public class ApiCreateGameRequestFactory {
   }
 
   private static ApiRequestedPlayer toRequestedPlayer(ApiUser user, char token) {
-    return ApiRequestedPlayer.builder().userId(user.getId()).token(token).build();
+    return ApiRequestedPlayer.builder().username(user.getUsername()).token(token).build();
   }
 }

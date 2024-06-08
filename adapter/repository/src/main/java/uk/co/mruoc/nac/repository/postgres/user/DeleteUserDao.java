@@ -14,10 +14,10 @@ public class DeleteUserDao {
     }
   }
 
-  public void delete(Connection connection, String id) throws SQLException {
+  public void delete(Connection connection, String username) throws SQLException {
     try (PreparedStatement statement =
-        connection.prepareStatement("delete from user_record where id = ?::varchar;")) {
-      statement.setString(1, id);
+        connection.prepareStatement("delete from user_record where username = ?::varchar;")) {
+      statement.setString(1, username);
       statement.execute();
     }
   }

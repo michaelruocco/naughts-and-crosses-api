@@ -7,7 +7,7 @@ import uk.co.mruoc.nac.entities.User;
 public interface UserRepository {
 
   default void upsert(User user) {
-    if (getById(user.getId()).isPresent()) {
+    if (getByUsername(user.getUsername()).isPresent()) {
       update(user);
     } else {
       create(user);
@@ -15,8 +15,6 @@ public interface UserRepository {
   }
 
   Optional<User> getByUsername(String username);
-
-  Optional<User> getById(String id);
 
   Stream<User> getAll();
 
@@ -26,5 +24,5 @@ public interface UserRepository {
 
   void deleteAll();
 
-  void delete(String id);
+  void delete(String username);
 }

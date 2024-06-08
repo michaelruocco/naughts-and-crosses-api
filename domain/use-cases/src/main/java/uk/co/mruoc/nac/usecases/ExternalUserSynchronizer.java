@@ -16,7 +16,7 @@ public class ExternalUserSynchronizer {
   }
 
   private void deleteIfNotPresentInExternalUsers(User dbUser) {
-    Optional<User> externalUser = externalUserService.getById(dbUser.getId());
+    Optional<User> externalUser = externalUserService.getByUsername(dbUser.getUsername());
     if (externalUser.isEmpty()) {
       repository.delete(dbUser.getId());
     }

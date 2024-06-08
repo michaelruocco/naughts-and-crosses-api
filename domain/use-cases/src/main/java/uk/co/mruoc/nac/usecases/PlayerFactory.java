@@ -19,7 +19,7 @@ public class PlayerFactory {
 
   private Player toPlayer(RequestedPlayer requestedPlayer) {
     return Player.builder()
-        .user(userService.getById(requestedPlayer.getUserId()))
+        .user(userService.getByUsername(requestedPlayer.getUsername()))
         .token(requestedPlayer.getToken())
         .build();
   }

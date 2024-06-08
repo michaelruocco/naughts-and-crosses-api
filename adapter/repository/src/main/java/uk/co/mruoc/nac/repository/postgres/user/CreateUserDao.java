@@ -14,8 +14,8 @@ public class CreateUserDao {
   public void create(Connection connection, User user) throws SQLException {
     try (PreparedStatement statement =
         connection.prepareStatement(
-            "insert into user_record (id, user_json) values (?::varchar, ?::jsonb);")) {
-      statement.setString(1, user.getId());
+            "insert into user_record (username, user_json) values (?::varchar, ?::jsonb);")) {
+      statement.setString(1, user.getUsername());
       statement.setString(2, userConverter.toPostgresJson(user));
       statement.execute();
     }

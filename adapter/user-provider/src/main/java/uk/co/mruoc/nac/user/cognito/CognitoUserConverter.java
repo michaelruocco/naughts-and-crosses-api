@@ -17,8 +17,8 @@ public class CognitoUserConverter {
   private static final String EMAIL = "email";
   private static final String EMAIL_VERIFIED = "email_verified";
 
-  public String toSubFilter(String id) {
-    return String.format("%s = \"%s\"", SUB, id);
+  public String toUsernameFilter(String username) {
+    return String.format("username = \"%s\"", username);
   }
 
   public User toUser(UserType user) {

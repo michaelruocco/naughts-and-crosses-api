@@ -14,9 +14,9 @@ public class UpdateUserDao {
   public void update(Connection connection, User user) throws SQLException {
     try (PreparedStatement statement =
         connection.prepareStatement(
-            "update user_record set user_json = ?::jsonb where id = ?::varchar;")) {
+            "update user_record set user_json = ?::jsonb where username = ?::varchar;")) {
       statement.setString(1, userConverter.toPostgresJson(user));
-      statement.setString(2, user.getId());
+      statement.setString(2, user.getUsername());
       statement.execute();
     }
   }
