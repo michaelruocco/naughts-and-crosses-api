@@ -26,4 +26,12 @@ public class User {
     }
     return String.join(" ", names);
   }
+
+  public boolean hasUsername(String otherUsername) {
+    return username.equals(otherUsername);
+  }
+
+  public boolean hasId(String otherId) {
+    return id.equals(otherId);
+  }
 }

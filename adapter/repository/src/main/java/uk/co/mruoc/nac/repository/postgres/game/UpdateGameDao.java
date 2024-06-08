@@ -1,4 +1,4 @@
-package uk.co.mruoc.nac.repository.postgres;
+package uk.co.mruoc.nac.repository.postgres.game;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,15 +9,15 @@ import uk.co.mruoc.nac.entities.Game;
 
 @RequiredArgsConstructor
 @Slf4j
-public class CreateGameDao {
+public class UpdateGameDao {
 
   private final PostgresGameConverter gameConverter;
 
-  public void create(Connection connection, Game game) throws SQLException {
+  public void update(Connection connection, Game game) throws SQLException {
     try (PreparedStatement statement =
-        connection.prepareStatement("insert into game (id, game) values (?::bigint, ?::jsonb);")) {
-      statement.setLong(1, game.getId());
-      statement.setString(2, gameConverter.toPostgresJson(game));
+        connection.prepareStatement("update game set game = ?::jsonb where id = ?::bigint;")) {
+      statement.setString(1, gameConverter.toPostgresJson(game));
+      statement.setLong(2, game.getId());
       statement.execute();
     }
   }

@@ -1,15 +1,14 @@
-package uk.co.mruoc.nac.repository.inmemory;
+package uk.co.mruoc.nac.entities;
 
 import java.util.Comparator;
 import lombok.RequiredArgsConstructor;
-import uk.co.mruoc.nac.entities.User;
 
 @RequiredArgsConstructor
-public class UserComparator implements Comparator<User> {
+public class UserIdComparator implements Comparator<User> {
 
   private final Comparator<String> idComparator;
 
-  public UserComparator() {
+  public UserIdComparator() {
     this(Comparator.nullsLast(Comparator.naturalOrder()));
   }
 

@@ -15,8 +15,9 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClientBuilder;
 import uk.co.mruoc.nac.usecases.ExternalUserService;
+import uk.co.mruoc.nac.user.cognito.CognitoUserConverter;
 import uk.co.mruoc.nac.user.cognito.CognitoUserService;
-import uk.co.mruoc.nac.user.inmemory.StubUserService;
+import uk.co.mruoc.nac.user.inmemory.StubExternalUserService;
 
 @Configuration
 @Slf4j
@@ -43,13 +44,17 @@ public class CognitoUserConfig {
   public ExternalUserService cognitoUserProvider(
       CognitoIdentityProviderClient client, @Value("${aws.cognito.userPoolId}") String userPoolId) {
     log.info("configuring cognito user provider with user pool id {}", userPoolId);
-    return CognitoUserService.builder().client(client).userPoolId(userPoolId).build();
+    return CognitoUserService.builder()
+        .client(client)
+        .userPoolId(userPoolId)
+        .converter(new CognitoUserConverter())
+        .build();
   }
 
   @ConditionalOnProperty(value = "stub.user.provider", havingValue = "true")
   @Bean
   public ExternalUserService stubUserProvider() {
-    return new StubUserService();
+    return new StubExternalUserService();
   }
 
   private static AwsCredentialsProvider toCredentialsProvider(

@@ -1,46 +1,49 @@
 package uk.co.mruoc.nac.user.inmemory;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.nac.entities.CreateUserRequest;
 import uk.co.mruoc.nac.entities.User;
+import uk.co.mruoc.nac.entities.Users;
 import uk.co.mruoc.nac.usecases.ExternalUserService;
+import uk.co.mruoc.nac.usecases.UsernameAlreadyExistsException;
 
 @RequiredArgsConstructor
-public class StubUserService implements ExternalUserService {
+public class StubExternalUserService implements ExternalUserService {
 
-  private final Map<String, User> users;
+  private final Users users;
   private final Supplier<UUID> idSupplier;
 
-  public StubUserService() {
+  public StubExternalUserService() {
     this(buildUsers(), UUID::randomUUID);
   }
 
   @Override
   public Stream<User> getAll() {
-    return users.values().stream().sorted(new UserComparator());
+    return users.stream();
   }
 
   @Override
-  public void create(Collection<CreateUserRequest> requests) {
-    requests.stream().map(this::toUser).forEach(this::add);
+  public Optional<User> getById(String id) {
+    return users.findById(id);
   }
 
   @Override
-  public Optional<User> get(String id) {
-    return Optional.ofNullable(users.get(id));
+  public User create(CreateUserRequest request) {
+    User user = toUser(request);
+    add(user);
+    return user;
   }
 
   private void add(User user) {
-    users.put(user.getId(), user);
+    String username = user.getUsername();
+    if (users.containsUserWithUsername(username)) {
+      throw new UsernameAlreadyExistsException(username);
+    }
+    users.add(user);
   }
 
   private User toUser(CreateUserRequest request) {
@@ -53,12 +56,8 @@ public class StubUserService implements ExternalUserService {
         .build();
   }
 
-  private static Map<String, User> buildUsers() {
-    return toMap(List.of(user1(), user2()));
-  }
-
-  private static Map<String, User> toMap(Collection<User> userCollection) {
-    return userCollection.stream().collect(Collectors.toMap(User::getId, Function.identity()));
+  private static Users buildUsers() {
+    return new Users(user1(), user2());
   }
 
   private static User user1() {

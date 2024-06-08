@@ -1,4 +1,4 @@
-package uk.co.mruoc.nac.repository.postgres;
+package uk.co.mruoc.nac.repository.postgres.user;
 
 import java.sql.SQLException;
 import java.time.Duration;
@@ -9,79 +9,79 @@ import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.json.JsonConverter;
-import uk.co.mruoc.nac.entities.Game;
-import uk.co.mruoc.nac.repository.GameRepositoryException;
-import uk.co.mruoc.nac.usecases.GameRepository;
+import uk.co.mruoc.nac.entities.User;
+import uk.co.mruoc.nac.repository.UserRepositoryException;
+import uk.co.mruoc.nac.usecases.UserRepository;
 
 @RequiredArgsConstructor
 @Slf4j
-public class PostgresGameRepository implements GameRepository {
+public class PostgresUserRepository implements UserRepository {
 
   private final DataSource dataSource;
-  private final CreateGameDao createDao;
-  private final ReadGameDao readDao;
-  private final UpdateGameDao updateDao;
-  private final DeleteGameDao deleteDao;
+  private final CreateUserDao createDao;
+  private final ReadUserDao readDao;
+  private final UpdateUserDao updateDao;
+  private final DeleteUserDao deleteDao;
 
-  public PostgresGameRepository(DataSource dataSource, JsonConverter jsonConverter) {
-    this(dataSource, new PostgresGameConverter(jsonConverter));
+  public PostgresUserRepository(DataSource dataSource, JsonConverter jsonConverter) {
+    this(dataSource, new PostgresUserConverter(jsonConverter));
   }
 
-  public PostgresGameRepository(DataSource dataSource, PostgresGameConverter gameConverter) {
+  public PostgresUserRepository(DataSource dataSource, PostgresUserConverter userConverter) {
     this(
         dataSource,
-        new CreateGameDao(gameConverter),
-        new ReadGameDao(gameConverter),
-        new UpdateGameDao(gameConverter),
-        new DeleteGameDao());
+        new CreateUserDao(userConverter),
+        new ReadUserDao(userConverter),
+        new UpdateUserDao(userConverter),
+        new DeleteUserDao());
   }
 
   @Override
-  public void create(Game game) {
+  public void create(User user) {
     Instant start = Instant.now();
     try (var connection = dataSource.getConnection()) {
-      createDao.create(connection, game);
+      createDao.create(connection, user);
     } catch (SQLException e) {
-      throw new GameRepositoryException(e);
+      throw new UserRepositoryException(e);
     } finally {
       var duration = Duration.between(start, Instant.now());
-      log.info("create game with id {} took {}ms", game.getId(), duration.toMillis());
+      log.info("create user with id {} took {}ms", user.getId(), duration.toMillis());
     }
   }
 
   @Override
-  public Optional<Game> get(long id) {
+  public Optional<User> get(String id) {
     Instant start = Instant.now();
     try (var connection = dataSource.getConnection()) {
       return readDao.findById(connection, id);
     } catch (SQLException e) {
-      throw new GameRepositoryException(e);
+      throw new UserRepositoryException(e);
     } finally {
       var duration = Duration.between(start, Instant.now());
-      log.info("find game by id {} took {}ms", id, duration.toMillis());
+      log.info("find user by id {} took {}ms", id, duration.toMillis());
     }
   }
 
   @Override
-  public void update(Game game) {
+  public void update(User user) {
     Instant start = Instant.now();
     try (var connection = dataSource.getConnection()) {
-      updateDao.update(connection, game);
+      updateDao.update(connection, user);
     } catch (SQLException e) {
-      throw new GameRepositoryException(e);
+      throw new UserRepositoryException(e);
     } finally {
       var duration = Duration.between(start, Instant.now());
-      log.info("update game with id {} took {}ms", game.getId(), duration.toMillis());
+      log.info("update user with id {} took {}ms", user.getId(), duration.toMillis());
     }
   }
 
   @Override
-  public Stream<Game> getAll() {
+  public Stream<User> getAll() {
     Instant start = Instant.now();
     try (var connection = dataSource.getConnection()) {
       return readDao.getAll(connection);
     } catch (SQLException e) {
-      throw new GameRepositoryException(e);
+      throw new UserRepositoryException(e);
     } finally {
       var duration = Duration.between(start, Instant.now());
       log.info("get all games took {}ms", duration.toMillis());
@@ -94,23 +94,23 @@ public class PostgresGameRepository implements GameRepository {
     try (var connection = dataSource.getConnection()) {
       deleteDao.deleteAll(connection);
     } catch (SQLException e) {
-      throw new GameRepositoryException(e);
+      throw new UserRepositoryException(e);
     } finally {
       var duration = Duration.between(start, Instant.now());
-      log.info("delete all games took {}ms", duration.toMillis());
+      log.info("delete all users took {}ms", duration.toMillis());
     }
   }
 
   @Override
-  public void delete(long id) {
+  public void delete(String id) {
     Instant start = Instant.now();
     try (var connection = dataSource.getConnection()) {
       deleteDao.delete(connection, id);
     } catch (SQLException e) {
-      throw new GameRepositoryException(e);
+      throw new UserRepositoryException(e);
     } finally {
       var duration = Duration.between(start, Instant.now());
-      log.info("delete game with id {} took {}ms", id, duration.toMillis());
+      log.info("delete user with id {} took {}ms", id, duration.toMillis());
     }
   }
 }

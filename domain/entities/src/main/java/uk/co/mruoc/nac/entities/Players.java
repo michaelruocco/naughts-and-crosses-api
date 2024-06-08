@@ -22,6 +22,10 @@ public class Players {
     this(List.of(values));
   }
 
+  public Players(Stream<Player> stream) {
+    this(stream.toList());
+  }
+
   public Players(Collection<Player> values) {
     this(new ArrayList<>(values), 0);
   }
@@ -63,6 +67,10 @@ public class Players {
 
   public Players updateCurrentPlayer() {
     return toBuilder().currentIndex(nextTurnIndex()).build();
+  }
+
+  public Players add(Player player) {
+    return new Players(Stream.concat(values.stream(), Stream.of(player)));
   }
 
   private int nextTurnIndex() {

@@ -31,6 +31,11 @@ public class NaughtsAndCrossesApiClient {
     this(new UriFactory(baseUrl), new HttpEntityFactory(token), new RestTemplate());
   }
 
+  public void synchronizeExternalUsers() {
+    String uri = uriFactory.buildExternalUserSynchronizationsUri();
+    performPost(uri, entityFactory.buildRequest());
+  }
+
   public Collection<ApiUser> getAllUsers() {
     ApiUser[] users = performGet(uriFactory.buildUsersUri(), ApiUser[].class);
     return toCollection(users);
@@ -42,12 +47,12 @@ public class NaughtsAndCrossesApiClient {
   }
 
   public ApiGame createGame(ApiCreateGameRequest request) {
-    return performPost(uriFactory.buildGamesUri(), entityFactory.buildRequest(request));
+    return performPostGame(uriFactory.buildGamesUri(), entityFactory.buildRequest(request));
   }
 
   public ApiGame takeTurn(long gameId, ApiTurn turn) {
     HttpEntity<ApiTurn> request = entityFactory.buildRequest(turn);
-    return performPost(uriFactory.buildTakeTurnUri(gameId), request);
+    return performPostGame(uriFactory.buildTakeTurnUri(gameId), request);
   }
 
   public ApiGame getGame(long gameId) {
@@ -80,7 +85,14 @@ public class NaughtsAndCrossesApiClient {
     return toBodyIfNotNull(response);
   }
 
-  private ApiGame performPost(String uri, HttpEntity<?> request) {
+  private void performPost(String uri, HttpEntity<?> request) {
+    ResponseEntity<Void> response = template.exchange(uri, HttpMethod.POST, request, Void.class);
+    if (!response.getStatusCode().is2xxSuccessful()) {
+      throw new NaughtsAndCrossesApiClientException(response.getStatusCode().toString());
+    }
+  }
+
+  private ApiGame performPostGame(String uri, HttpEntity<?> request) {
     ResponseEntity<ApiGame> response =
         template.exchange(uri, HttpMethod.POST, request, ApiGame.class);
     return toBodyIfNotNull(response);

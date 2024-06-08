@@ -14,6 +14,7 @@ import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import uk.co.mruoc.nac.usecases.ExternalUserService;
+import uk.co.mruoc.nac.user.cognito.CognitoUserConverter;
 import uk.co.mruoc.nac.user.cognito.CognitoUserService;
 import uk.co.mruoc.nac.user.cognito.LocalDockerCognitoConfigurer;
 
@@ -29,7 +30,11 @@ public class LocalDockerCognitoConfig {
       LocalDockerCognitoConfigurer configurer) {
     String userPoolId = configurer.configureAndReplacePoolIdIfRequired(initialUserPoolId);
     log.info("configuring cognito user provider with user pool id {}", userPoolId);
-    return CognitoUserService.builder().client(client).userPoolId(userPoolId).build();
+    return CognitoUserService.builder()
+        .client(client)
+        .userPoolId(userPoolId)
+        .converter(new CognitoUserConverter())
+        .build();
   }
 
   @Bean

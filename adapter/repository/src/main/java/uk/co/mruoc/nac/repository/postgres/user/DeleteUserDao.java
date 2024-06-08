@@ -1,4 +1,4 @@
-package uk.co.mruoc.nac.repository.postgres;
+package uk.co.mruoc.nac.repository.postgres.user;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,18 +8,18 @@ import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Slf4j
-public class DeleteGameDao {
+public class DeleteUserDao {
 
   public void deleteAll(Connection connection) throws SQLException {
-    try (PreparedStatement statement = connection.prepareStatement("delete from game;")) {
+    try (PreparedStatement statement = connection.prepareStatement("delete from user_record;")) {
       statement.execute();
     }
   }
 
-  public void delete(Connection connection, long id) throws SQLException {
+  public void delete(Connection connection, String id) throws SQLException {
     try (PreparedStatement statement =
-        connection.prepareStatement("delete from game where id = ?;")) {
-      statement.setLong(1, id);
+        connection.prepareStatement("delete from user_record where id = ?::varchar;")) {
+      statement.setString(1, id);
       statement.execute();
     }
   }

@@ -1,4 +1,4 @@
-package uk.co.mruoc.nac.repository.postgres;
+package uk.co.mruoc.nac.repository.postgres.game;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,7 +20,7 @@ public class ReadGameDao {
 
   public Optional<Game> findById(Connection connection, long id) throws SQLException {
     try (PreparedStatement statement =
-        connection.prepareStatement("select * from game where id = ?;")) {
+        connection.prepareStatement("select * from game where id = ?::bigint;")) {
       statement.setLong(1, id);
       return toGameIfPresent(statement);
     }

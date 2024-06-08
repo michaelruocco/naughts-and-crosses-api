@@ -37,6 +37,8 @@ public class NaughtsAndCrossesAppExtension
       appRunner.startIfNotStarted(environment);
       log.info("extension startup complete");
       started = true;
+      NaughtsAndCrossesApiClient client = getRestClient();
+      client.synchronizeExternalUsers();
     }
   }
 

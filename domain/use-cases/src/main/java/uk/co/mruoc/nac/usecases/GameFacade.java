@@ -10,11 +10,11 @@ import uk.co.mruoc.nac.entities.Turn;
 @Builder
 public class GameFacade {
 
-  private final UserService userService;
+  private final PlayerFactory playerFactory;
   private final GameService gameService;
 
   public Game createGame(CreateGameRequest request) {
-    Players players = userService.toPlayers(request);
+    Players players = playerFactory.toPlayers(request);
     return gameService.createGame(players);
   }
 

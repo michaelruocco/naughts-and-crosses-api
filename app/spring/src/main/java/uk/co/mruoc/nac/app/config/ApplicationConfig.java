@@ -7,35 +7,66 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import uk.co.mruoc.nac.api.converter.ApiConverter;
+import uk.co.mruoc.nac.api.converter.ApiUserBatchConverter;
 import uk.co.mruoc.nac.api.converter.ApiUserConverter;
 import uk.co.mruoc.nac.app.config.security.CorsWebMvcConfigurer;
 import uk.co.mruoc.nac.app.config.websocket.BrokerConfig;
 import uk.co.mruoc.nac.usecases.BoardFormatter;
 import uk.co.mruoc.nac.usecases.ExternalUserService;
+import uk.co.mruoc.nac.usecases.ExternalUserSynchronizer;
 import uk.co.mruoc.nac.usecases.GameEventPublisher;
 import uk.co.mruoc.nac.usecases.GameFacade;
 import uk.co.mruoc.nac.usecases.GameFactory;
 import uk.co.mruoc.nac.usecases.GameRepository;
 import uk.co.mruoc.nac.usecases.GameService;
 import uk.co.mruoc.nac.usecases.IdSupplier;
+import uk.co.mruoc.nac.usecases.PlayerFactory;
+import uk.co.mruoc.nac.usecases.UserBatchRepository;
+import uk.co.mruoc.nac.usecases.UserBatchService;
+import uk.co.mruoc.nac.usecases.UserCreator;
+import uk.co.mruoc.nac.usecases.UserRepository;
 import uk.co.mruoc.nac.usecases.UserService;
 
 @Configuration
 public class ApplicationConfig {
 
   @Bean
-  public GameFacade gameFacade(UserService userService, GameService gameService) {
-    return GameFacade.builder().userService(userService).gameService(gameService).build();
+  public GameFacade gameFacade(PlayerFactory playerFactory, GameService gameService) {
+    return GameFacade.builder().playerFactory(playerFactory).gameService(gameService).build();
   }
 
   @Bean
-  public UserService userService(ExternalUserService provider) {
-    return new UserService(provider);
+  public UserCreator userCreator(ExternalUserService externalService, UserRepository repository) {
+    return UserCreator.builder().externalService(externalService).repository(repository).build();
+  }
+
+  @Bean
+  public UserBatchService userBatchService(UserBatchRepository repository, UserCreator creator) {
+    return UserBatchService.builder().repository(repository).creator(creator).build();
+  }
+
+  @Bean
+  public UserService userService(UserCreator creator, UserRepository repository) {
+    return UserService.builder().creator(creator).repository(repository).build();
+  }
+
+  @Bean
+  public ExternalUserSynchronizer externalUserSynchronizer(
+      ExternalUserService externalUserService, UserRepository repository) {
+    return ExternalUserSynchronizer.builder()
+        .externalUserService(externalUserService)
+        .repository(repository)
+        .build();
   }
 
   @Bean
   public GameFactory gameFactory(IdSupplier idSupplier) {
     return new GameFactory(idSupplier);
+  }
+
+  @Bean
+  public PlayerFactory playerFactory(UserService userService) {
+    return new PlayerFactory(userService);
   }
 
   @Bean
@@ -57,6 +88,11 @@ public class ApplicationConfig {
   @Bean
   public ApiUserConverter apiUserConverter() {
     return new ApiUserConverter();
+  }
+
+  @Bean
+  public ApiUserBatchConverter apiUserBatchConverter() {
+    return new ApiUserBatchConverter();
   }
 
   @Bean

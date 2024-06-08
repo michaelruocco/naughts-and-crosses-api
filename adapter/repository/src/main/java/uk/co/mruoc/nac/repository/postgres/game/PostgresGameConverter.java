@@ -1,4 +1,4 @@
-package uk.co.mruoc.nac.repository.postgres;
+package uk.co.mruoc.nac.repository.postgres.game;
 
 import java.sql.SQLException;
 import lombok.RequiredArgsConstructor;
