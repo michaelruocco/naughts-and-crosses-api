@@ -9,6 +9,7 @@ import uk.co.mruoc.nac.entities.CreateUserRequest;
 import uk.co.mruoc.nac.entities.User;
 import uk.co.mruoc.nac.entities.Users;
 import uk.co.mruoc.nac.usecases.ExternalUserService;
+import uk.co.mruoc.nac.usecases.UserNotFoundByIdException;
 import uk.co.mruoc.nac.usecases.UsernameAlreadyExistsException;
 
 @RequiredArgsConstructor
@@ -22,6 +23,26 @@ public class StubExternalUserService implements ExternalUserService {
   }
 
   @Override
+  public User create(CreateUserRequest request) {
+    User user = toUser(request);
+    String username = user.getUsername();
+    if (users.containsUserWithUsername(username)) {
+      throw new UsernameAlreadyExistsException(username);
+    }
+    users.add(user);
+    return user;
+  }
+
+  @Override
+  public void update(User user) {
+    String id = user.getId();
+    if (!users.containsUserWithId(id)) {
+      throw new UserNotFoundByIdException(id);
+    }
+    users.update(user);
+  }
+
+  @Override
   public Stream<User> getAll() {
     return users.stream();
   }
@@ -31,21 +52,6 @@ public class StubExternalUserService implements ExternalUserService {
     return users.findById(id);
   }
 
-  @Override
-  public User create(CreateUserRequest request) {
-    User user = toUser(request);
-    add(user);
-    return user;
-  }
-
-  private void add(User user) {
-    String username = user.getUsername();
-    if (users.containsUserWithUsername(username)) {
-      throw new UsernameAlreadyExistsException(username);
-    }
-    users.add(user);
-  }
-
   private User toUser(CreateUserRequest request) {
     return User.builder()
         .id(idSupplier.get().toString())
@@ -53,6 +59,7 @@ public class StubExternalUserService implements ExternalUserService {
         .email(request.getEmail())
         .firstName(request.getFirstName())
         .lastName(request.getLastName())
+        .emailVerified(request.isEmailVerified())
         .build();
   }
 
@@ -65,6 +72,7 @@ public class StubExternalUserService implements ExternalUserService {
         .id("707d9fa6-13dd-4985-93aa-a28f01e89a6b")
         .username("user-1")
         .email("user-1@email.com")
+        .emailVerified(true)
         .firstName("User")
         .lastName("One")
         .build();
@@ -75,6 +83,7 @@ public class StubExternalUserService implements ExternalUserService {
         .id("dadfde25-9924-4982-802d-dfd0bce2218d")
         .username("user-2")
         .email("user-2@email.com")
+        .emailVerified(true)
         .firstName("User")
         .lastName("Two")
         .build();

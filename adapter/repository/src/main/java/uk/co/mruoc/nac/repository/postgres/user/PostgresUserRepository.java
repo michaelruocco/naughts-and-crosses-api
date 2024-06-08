@@ -15,6 +15,7 @@ import uk.co.mruoc.nac.usecases.UserRepository;
 
 @RequiredArgsConstructor
 @Slf4j
+// TODO refactor to use normal postgres sql table rather than using json to store all fields
 public class PostgresUserRepository implements UserRepository {
 
   private final DataSource dataSource;
@@ -50,7 +51,12 @@ public class PostgresUserRepository implements UserRepository {
   }
 
   @Override
-  public Optional<User> get(String id) {
+  public Optional<User> getByUsername(String username) {
+    return getAll().filter(user -> user.hasUsername(username)).findFirst();
+  }
+
+  @Override
+  public Optional<User> getById(String id) {
     Instant start = Instant.now();
     try (var connection = dataSource.getConnection()) {
       return readDao.findById(connection, id);

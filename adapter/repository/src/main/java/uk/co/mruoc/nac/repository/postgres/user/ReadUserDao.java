@@ -9,11 +9,9 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.nac.entities.User;
 
 @RequiredArgsConstructor
-@Slf4j
 public class ReadUserDao {
 
   private final PostgresUserConverter userConverter;

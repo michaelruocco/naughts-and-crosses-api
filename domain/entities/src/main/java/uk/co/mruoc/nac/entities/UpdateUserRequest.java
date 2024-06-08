@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Builder
 @Data
-public class CreateUserRequest {
-  private final String username;
+public class UpdateUserRequest {
+  private final String id;
   private final String firstName;
   private final String lastName;
   private final String email;

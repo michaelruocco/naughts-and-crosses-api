@@ -12,6 +12,7 @@ public class DbUserConverter {
         .firstName(user.getFirstName())
         .lastName(user.getLastName())
         .email(user.getEmail())
+        .emailVerified(user.isEmailVerified())
         .build();
   }
 
@@ -22,6 +23,7 @@ public class DbUserConverter {
         .firstName(dbUser.getFirstName())
         .lastName(dbUser.getLastName())
         .email(dbUser.getEmail())
+        .emailVerified(dbUser.isEmailVerified())
         .build();
   }
 }

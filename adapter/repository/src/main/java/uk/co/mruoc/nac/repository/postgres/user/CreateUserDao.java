@@ -4,11 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.nac.entities.User;
 
 @RequiredArgsConstructor
-@Slf4j
 public class CreateUserDao {
 
   private final PostgresUserConverter userConverter;

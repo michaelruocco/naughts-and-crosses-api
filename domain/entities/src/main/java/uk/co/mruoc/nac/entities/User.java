@@ -6,7 +6,7 @@ import java.util.Objects;
 import lombok.Builder;
 import lombok.Data;
 
-@Builder
+@Builder(toBuilder = true)
 @Data
 public class User {
 
@@ -15,6 +15,7 @@ public class User {
   private final String firstName;
   private final String lastName;
   private final String email;
+  private final boolean emailVerified;
 
   public String getFullName() {
     Collection<String> names = new ArrayList<>();
@@ -33,5 +34,14 @@ public class User {
 
   public boolean hasId(String otherId) {
     return id.equals(otherId);
+  }
+
+  public User update(UpdateUserRequest request) {
+    return toBuilder()
+        .firstName(request.getFirstName())
+        .lastName(request.getLastName())
+        .email(request.getEmail())
+        .emailVerified(request.isEmailVerified())
+        .build();
   }
 }

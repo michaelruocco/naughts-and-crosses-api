@@ -9,11 +9,9 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.nac.entities.Game;
 
 @RequiredArgsConstructor
-@Slf4j
 public class ReadGameDao {
 
   private final PostgresGameConverter gameConverter;

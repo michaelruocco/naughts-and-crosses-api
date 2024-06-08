@@ -12,4 +12,6 @@ public interface ExternalUserService {
   Optional<User> getById(String id);
 
   User create(CreateUserRequest request);
+
+  void update(User user);
 }

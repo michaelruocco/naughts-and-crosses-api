@@ -45,6 +45,7 @@ public class ApiCsvUserConverter {
         .firstName(line.getFirstName())
         .lastName(line.getLastName())
         .email(line.getEmail())
+        .emailVerified(line.isEmailVerified())
         .build();
   }
 }

@@ -9,13 +9,11 @@ import lombok.RequiredArgsConstructor;
 @NoArgsConstructor(force = true)
 @Builder
 @Data
-public class ApiUser {
+public class ApiCreateUserRequest {
 
-  private final String id;
   private final String username;
   private final String firstName;
   private final String lastName;
-  private final String fullName;
   private final String email;
   private final boolean emailVerified;
 }

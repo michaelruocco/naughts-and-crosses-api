@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminCreateUserRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminCreateUserResponse;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminUpdateUserAttributesRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.DeliveryMediumType;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.ListUsersRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.ListUsersResponse;
@@ -50,5 +51,16 @@ public class CognitoUserService implements ExternalUserService {
     User user = converter.toUser(response.user());
     log.info("user {} created with id {}", user.getUsername(), user.getId());
     return user;
+  }
+
+  @Override
+  public void update(User user) {
+    AdminUpdateUserAttributesRequest cognitoRequest =
+        AdminUpdateUserAttributesRequest.builder()
+            .userPoolId(userPoolId)
+            .username(user.getUsername())
+            .userAttributes(converter.toAttributes(user))
+            .build();
+    client.adminUpdateUserAttributes(cognitoRequest);
   }
 }

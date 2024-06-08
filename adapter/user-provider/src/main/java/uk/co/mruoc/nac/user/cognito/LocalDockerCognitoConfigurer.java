@@ -41,6 +41,9 @@ public class LocalDockerCognitoConfigurer {
   private final CognitoIdentityProviderClient client;
   private final String confirmationCode;
 
+  // TODO remove this method when extracting this class into a library
+  // use this method as an example of how to run against a running
+  // docker container
   public static void main(String[] args) {
     LocalDockerCognitoConfigurer.builder()
         .client(buildIdentityProviderClient())
@@ -190,7 +193,8 @@ public class LocalDockerCognitoConfigurer {
         subjectAttribute(params.getSubject()),
         givenNameAttribute(params.getGivenName()),
         familyNameAttribute(params.getFamilyName()),
-        emailAttribute(params.getEmail()));
+        emailAttribute(params.getEmail()),
+        emailVerifiedAttribute(params.isEmailVerified()));
   }
 
   private static AttributeType subjectAttribute(String givenName) {
@@ -209,6 +213,10 @@ public class LocalDockerCognitoConfigurer {
     return AttributeType.builder().name("email").value(email).build();
   }
 
+  private static AttributeType emailVerifiedAttribute(boolean verified) {
+    return AttributeType.builder().name("email_verified").value(Boolean.toString(verified)).build();
+  }
+
   private static UserParams user1() {
     return UserParams.builder()
         .subject("707d9fa6-13dd-4985-93aa-a28f01e89a6b")
@@ -217,6 +225,7 @@ public class LocalDockerCognitoConfigurer {
         .givenName("User")
         .familyName("One")
         .email("user-1@email.com")
+        .emailVerified(true)
         .build();
   }
 
@@ -228,6 +237,7 @@ public class LocalDockerCognitoConfigurer {
         .givenName("User")
         .familyName("Two")
         .email("user-2@email.com")
+        .emailVerified(true)
         .build();
   }
 
@@ -240,5 +250,6 @@ public class LocalDockerCognitoConfigurer {
     private final String givenName;
     private final String familyName;
     private final String email;
+    private final boolean emailVerified;
   }
 }

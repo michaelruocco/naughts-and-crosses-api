@@ -26,6 +26,7 @@ import uk.co.mruoc.nac.usecases.UserBatchService;
 import uk.co.mruoc.nac.usecases.UserCreator;
 import uk.co.mruoc.nac.usecases.UserRepository;
 import uk.co.mruoc.nac.usecases.UserService;
+import uk.co.mruoc.nac.usecases.UserUpdater;
 
 @Configuration
 public class ApplicationConfig {
@@ -38,6 +39,11 @@ public class ApplicationConfig {
   @Bean
   public UserCreator userCreator(ExternalUserService externalService, UserRepository repository) {
     return UserCreator.builder().externalService(externalService).repository(repository).build();
+  }
+
+  @Bean
+  public UserUpdater userUpdater(ExternalUserService externalService, UserRepository repository) {
+    return UserUpdater.builder().externalService(externalService).repository(repository).build();
   }
 
   @Bean

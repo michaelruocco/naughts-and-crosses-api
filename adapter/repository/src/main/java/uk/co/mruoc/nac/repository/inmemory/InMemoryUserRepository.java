@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.nac.entities.User;
+import uk.co.mruoc.nac.entities.Users;
 import uk.co.mruoc.nac.usecases.UserRepository;
 
 @RequiredArgsConstructor
@@ -43,7 +44,12 @@ public class InMemoryUserRepository implements UserRepository {
   }
 
   @Override
-  public Optional<User> get(String id) {
+  public Optional<User> getByUsername(String username) {
+    return new Users(users.values()).findByUsername(username);
+  }
+
+  @Override
+  public Optional<User> getById(String id) {
     return Optional.ofNullable(users.get(id));
   }
 
