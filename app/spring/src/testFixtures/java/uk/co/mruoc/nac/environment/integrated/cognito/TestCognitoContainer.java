@@ -11,7 +11,9 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import uk.co.mruoc.nac.environment.AvailablePortFinder;
 import uk.co.mruoc.nac.user.cognito.CognitoUserPoolAndClientIds;
-import uk.co.mruoc.nac.user.cognito.LocalDockerCognitoConfigurer;
+import uk.co.mruoc.nac.user.cognito.CognitoUserPoolCreator;
+import uk.co.mruoc.nac.user.cognito.CognitoUserPoolCreatorConfig;
+import uk.co.mruoc.nac.user.cognito.CognitoUserPoolCreatorConfigFactory;
 import uk.mruoc.nac.access.AccessTokenClient;
 import uk.mruoc.nac.access.CognitoAccessTokenClient;
 import uk.mruoc.nac.access.TokenCredentials;
@@ -19,6 +21,8 @@ import uk.mruoc.nac.access.TokenCredentials;
 @Slf4j
 public class TestCognitoContainer extends FixedHostPortGenericContainer<TestCognitoContainer> {
 
+  private static final String ACCESS_KEY_ID = "abc";
+  private static final String SECRET_ACCESS_KEY = "123";
   private static final String CONFIRMATION_CODE = "9999";
 
   private final int port;
@@ -32,8 +36,8 @@ public class TestCognitoContainer extends FixedHostPortGenericContainer<TestCogn
 
   public TestCognitoContainer(int port) {
     super("michaelruocco/cognito-local:latest");
-    withEnv("AWS_ACCESS_KEY_ID", "abc");
-    withEnv("AWS_SECRET_ACCESS_KEY", "123");
+    withEnv("AWS_ACCESS_KEY_ID", ACCESS_KEY_ID);
+    withEnv("AWS_SECRET_ACCESS_KEY", SECRET_ACCESS_KEY);
     withEnv("PORT", Integer.toString(port));
     withEnv("CODE", CONFIRMATION_CODE);
     withFixedExposedPort(port, port);
@@ -42,12 +46,8 @@ public class TestCognitoContainer extends FixedHostPortGenericContainer<TestCogn
 
   public void init() {
     CognitoIdentityProviderClient identityProviderClient = buildIdentityProviderClient();
-    poolAndClientIds =
-        LocalDockerCognitoConfigurer.builder()
-            .client(identityProviderClient)
-            .confirmationCode(CONFIRMATION_CODE)
-            .build()
-            .configure();
+    CognitoUserPoolCreator creator = buildUserPoolCreator(identityProviderClient);
+    poolAndClientIds = creator.create();
     tokenClient = buildAccessTokenClient(identityProviderClient, poolAndClientIds);
   }
 
@@ -75,6 +75,16 @@ public class TestCognitoContainer extends FixedHostPortGenericContainer<TestCogn
         .build();
   }
 
+  private static CognitoUserPoolCreator buildUserPoolCreator(CognitoIdentityProviderClient client) {
+    CognitoUserPoolCreatorConfig creatorConfig =
+        new CognitoUserPoolCreatorConfigFactory()
+            .builder()
+            .client(client)
+            .confirmationCode(CONFIRMATION_CODE)
+            .build();
+    return new CognitoUserPoolCreator(creatorConfig);
+  }
+
   private static AccessTokenClient buildAccessTokenClient(
       CognitoIdentityProviderClient identityProviderClient,
       CognitoUserPoolAndClientIds poolAndClientIds) {
@@ -88,7 +98,10 @@ public class TestCognitoContainer extends FixedHostPortGenericContainer<TestCogn
 
   private static AwsCredentialsProvider credentialsProvider() {
     AwsBasicCredentials credentials =
-        AwsBasicCredentials.builder().accessKeyId("abc").secretAccessKey("123").build();
+        AwsBasicCredentials.builder()
+            .accessKeyId(ACCESS_KEY_ID)
+            .secretAccessKey(SECRET_ACCESS_KEY)
+            .build();
     return StaticCredentialsProvider.create(credentials);
   }
 }

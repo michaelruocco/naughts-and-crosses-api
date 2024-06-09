@@ -1,24 +1,23 @@
 package uk.co.mruoc.nac.user.cognito;
 
-import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import lombok.Builder;
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminAddUserToGroupRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AttributeType;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.ConfirmSignUpRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.ConfirmSignUpResponse;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.CreateGroupRequest;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.CreateGroupResponse;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.CreateUserPoolClientRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.CreateUserPoolClientResponse;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.CreateUserPoolRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.CreateUserPoolResponse;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.GroupType;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.ListGroupsRequest;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.ListGroupsResponse;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.ListUserPoolClientsRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.ListUserPoolClientsResponse;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.ListUserPoolsRequest;
@@ -30,57 +29,32 @@ import software.amazon.awssdk.services.cognitoidentityprovider.model.SignUpRespo
 import software.amazon.awssdk.services.cognitoidentityprovider.model.TimeUnitsType;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.UserPoolClientDescription;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.UserPoolDescriptionType;
+import software.amazon.awssdk.services.cognitoidentityprovider.paginators.ListGroupsIterable;
 import software.amazon.awssdk.services.cognitoidentityprovider.paginators.ListUsersIterable;
+import uk.co.mruoc.nac.user.cognito.CognitoUserPoolCreatorConfig.UserParams;
 
+@RequiredArgsConstructor
 @Slf4j
-@Builder
-public class LocalDockerCognitoConfigurer {
+public class CognitoUserPoolCreator {
 
-  private static final String POOL_ID_PLACE_HOLDER = "%POOL_ID%";
+  private final CognitoUserPoolCreatorConfig config;
 
-  private final CognitoIdentityProviderClient client;
-  private final String confirmationCode;
-
-  // TODO remove this method when extracting this class into a library
-  // use this method as an example of how to run against a running
-  // docker container
-  public static void main(String[] args) {
-    LocalDockerCognitoConfigurer.builder()
-        .client(buildIdentityProviderClient())
-        .confirmationCode("9999")
-        .build()
-        .configure();
-  }
-
-  public String configureAndReplacePoolIdIfRequired(String initial) {
-    if (initial.contains(POOL_ID_PLACE_HOLDER)) {
-      String replaced = initial.replace(POOL_ID_PLACE_HOLDER, configure().getPoolId());
-      log.info("replaced initial value {} with {}", initial, replaced);
-      return replaced;
-    }
-    log.info(
-        "initial {} does not contain placeholder {} so no replacement required",
-        initial,
-        POOL_ID_PLACE_HOLDER);
-    return initial;
-  }
-
-  public CognitoUserPoolAndClientIds configure() {
+  public CognitoUserPoolAndClientIds create() {
     String poolId = findOrCreateUserPool();
     String clientId = findOrCreateUserPoolClient(poolId);
-    findOrCreateUser(poolId, clientId, user1());
-    findOrCreateUser(poolId, clientId, user2());
+    findOrCreateGroups(poolId, config.getGroups());
+    findOrCreateUsers(poolId, clientId);
     return CognitoUserPoolAndClientIds.builder().poolId(poolId).clientId(clientId).build();
   }
 
   private String findOrCreateUserPool() {
-    String poolName = "local-nac-pool";
+    String poolName = config.getUserPoolName();
     return findUserPoolId(poolName).orElseGet(() -> createUserPool(poolName));
   }
 
   private Optional<String> findUserPoolId(String name) {
     ListUserPoolsRequest request = ListUserPoolsRequest.builder().build();
-    ListUserPoolsResponse response = client.listUserPools(request);
+    ListUserPoolsResponse response = config.getClient().listUserPools(request);
     return response.userPools().stream()
         .filter(pool -> pool.name().equals(name))
         .map(UserPoolDescriptionType::id)
@@ -89,14 +63,14 @@ public class LocalDockerCognitoConfigurer {
 
   private String createUserPool(String poolName) {
     CreateUserPoolRequest request = CreateUserPoolRequest.builder().poolName(poolName).build();
-    CreateUserPoolResponse response = client.createUserPool(request);
+    CreateUserPoolResponse response = config.getClient().createUserPool(request);
     String poolId = response.userPool().id();
-    log.info("created user pool with id " + poolId + " and name " + poolName);
+    log.info("created user pool with id {} and name {}", poolId, poolName);
     return poolId;
   }
 
   private String findOrCreateUserPoolClient(String poolId) {
-    String clientName = "local-nac-pool-client";
+    String clientName = config.getUserPoolClientName();
     return findUserPoolClientId(poolId, clientName)
         .orElseGet(() -> createUserPoolClient(poolId, clientName));
   }
@@ -104,7 +78,7 @@ public class LocalDockerCognitoConfigurer {
   private Optional<String> findUserPoolClientId(String poolId, String clientName) {
     ListUserPoolClientsRequest request =
         ListUserPoolClientsRequest.builder().userPoolId(poolId).build();
-    ListUserPoolClientsResponse response = client.listUserPoolClients(request);
+    ListUserPoolClientsResponse response = config.getClient().listUserPoolClients(request);
     return response.userPoolClients().stream()
         .filter(poolClient -> poolClient.clientName().equals(clientName))
         .map(UserPoolClientDescription::clientId)
@@ -119,7 +93,7 @@ public class LocalDockerCognitoConfigurer {
             .tokenValidityUnits(u -> u.accessToken(TimeUnitsType.HOURS))
             .accessTokenValidity(1)
             .build();
-    CreateUserPoolClientResponse response = client.createUserPoolClient(request);
+    CreateUserPoolClientResponse response = config.getClient().createUserPoolClient(request);
     String clientId = response.userPoolClient().clientId();
     log.info(
         "created user pool client with id {} with name {} in pool with id {}",
@@ -129,25 +103,58 @@ public class LocalDockerCognitoConfigurer {
     return clientId;
   }
 
+  private void findOrCreateGroups(String poolId, Collection<String> groups) {
+    groups.forEach(group -> findOrCreateGroup(poolId, group));
+  }
+
+  private void findOrCreateGroup(String poolId, String groupName) {
+    Optional<GroupType> group = findGroup(poolId, groupName);
+    if (group.isEmpty()) {
+      createGroup(poolId, groupName);
+    }
+  }
+
+  private Optional<GroupType> findGroup(String poolId, String name) {
+    ListGroupsRequest request = ListGroupsRequest.builder().userPoolId(poolId).build();
+    ListGroupsIterable responses = config.getClient().listGroupsPaginator(request);
+    return responses.stream()
+        .map(ListGroupsResponse::groups)
+        .flatMap(Collection::stream)
+        .filter(group -> group.groupName().equals(name))
+        .findFirst();
+  }
+
+  private void createGroup(String poolId, String groupName) {
+    CreateGroupRequest request =
+        CreateGroupRequest.builder().userPoolId(poolId).groupName(groupName).build();
+    CreateGroupResponse response = config.getClient().createGroup(request);
+    log.info("created group in pool {} with name {}", poolId, response.group().groupName());
+  }
+
+  private void findOrCreateUsers(String poolId, String clientId) {
+    config.getUserParams().forEach(params -> findOrCreateUser(poolId, clientId, params));
+  }
+
   private void findOrCreateUser(String poolId, String clientId, UserParams params) {
     if (userExists(poolId, params)) {
       return;
     }
-    createUser(clientId, params);
+    createUser(poolId, clientId, params);
   }
 
   private boolean userExists(String poolId, UserParams params) {
     ListUsersRequest request = ListUsersRequest.builder().userPoolId(poolId).build();
-    ListUsersIterable responses = client.listUsersPaginator(request);
+    ListUsersIterable responses = config.getClient().listUsersPaginator(request);
     return responses.stream()
         .map(ListUsersResponse::users)
         .flatMap(Collection::stream)
         .anyMatch(user -> user.username().equals(params.getUsername()));
   }
 
-  private void createUser(String clientId, UserParams params) {
+  private void createUser(String poolId, String clientId, UserParams params) {
     signUp(clientId, params);
     confirmSignUp(clientId, params.getUsername());
+    addUserToGroups(poolId, params);
   }
 
   private void signUp(String clientId, UserParams params) {
@@ -159,7 +166,7 @@ public class LocalDockerCognitoConfigurer {
             .password(params.getPassword())
             .userAttributes(toAttributes(params))
             .build();
-    SignUpResponse response = client.signUp(signUpRequest);
+    SignUpResponse response = config.getClient().signUp(signUpRequest);
     log.info("user {} has been signed up with subject {}", username, response.userSub());
   }
 
@@ -168,24 +175,25 @@ public class LocalDockerCognitoConfigurer {
         ConfirmSignUpRequest.builder()
             .clientId(clientId)
             .username(username)
-            .confirmationCode(confirmationCode)
+            .confirmationCode(config.getConfirmationCode())
             .build();
-    ConfirmSignUpResponse response = client.confirmSignUp(signUpRequest);
+    ConfirmSignUpResponse response = config.getClient().confirmSignUp(signUpRequest);
     log.debug("user {} confirmed {}", username, response.sdkHttpResponse().isSuccessful());
   }
 
-  private static CognitoIdentityProviderClient buildIdentityProviderClient() {
-    return CognitoIdentityProviderClient.builder()
-        .credentialsProvider(credentialsProvider())
-        .endpointOverride(URI.create("http://localhost:9229"))
-        .region(Region.EU_WEST_2)
-        .build();
+  private void addUserToGroups(String poolId, UserParams params) {
+    params.getGroups().forEach(group -> addUserToGroup(poolId, params.getUsername(), group));
   }
 
-  private static AwsCredentialsProvider credentialsProvider() {
-    AwsBasicCredentials credentials =
-        AwsBasicCredentials.builder().accessKeyId("abc").secretAccessKey("123").build();
-    return StaticCredentialsProvider.create(credentials);
+  private void addUserToGroup(String poolId, String username, String group) {
+    AdminAddUserToGroupRequest request =
+        AdminAddUserToGroupRequest.builder()
+            .userPoolId(poolId)
+            .username(username)
+            .groupName(group)
+            .build();
+    config.getClient().adminAddUserToGroup(request);
+    log.info("added user {} to group {}", username, group);
   }
 
   private static List<AttributeType> toAttributes(UserParams params) {
@@ -215,41 +223,5 @@ public class LocalDockerCognitoConfigurer {
 
   private static AttributeType emailVerifiedAttribute(boolean verified) {
     return AttributeType.builder().name("email_verified").value(Boolean.toString(verified)).build();
-  }
-
-  private static UserParams user1() {
-    return UserParams.builder()
-        .subject("707d9fa6-13dd-4985-93aa-a28f01e89a6b")
-        .username("user-1")
-        .password("pwd1")
-        .givenName("User")
-        .familyName("One")
-        .email("user-1@email.com")
-        .emailVerified(true)
-        .build();
-  }
-
-  private static UserParams user2() {
-    return UserParams.builder()
-        .subject("dadfde25-9924-4982-802d-dfd0bce2218d")
-        .username("user-2")
-        .password("pwd2")
-        .givenName("User")
-        .familyName("Two")
-        .email("user-2@email.com")
-        .emailVerified(true)
-        .build();
-  }
-
-  @Builder
-  @Data
-  public static class UserParams {
-    private final String username;
-    private final String password;
-    private final String subject;
-    private final String givenName;
-    private final String familyName;
-    private final String email;
-    private final boolean emailVerified;
   }
 }

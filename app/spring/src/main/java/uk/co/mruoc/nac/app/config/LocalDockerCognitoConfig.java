@@ -15,8 +15,11 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import uk.co.mruoc.nac.usecases.ExternalUserService;
 import uk.co.mruoc.nac.user.cognito.CognitoUserConverter;
+import uk.co.mruoc.nac.user.cognito.CognitoUserPoolCreator;
+import uk.co.mruoc.nac.user.cognito.CognitoUserPoolCreatorConfig;
+import uk.co.mruoc.nac.user.cognito.CognitoUserPoolCreatorConfigFactory;
+import uk.co.mruoc.nac.user.cognito.CognitoUserPoolIdPopulator;
 import uk.co.mruoc.nac.user.cognito.CognitoUserService;
-import uk.co.mruoc.nac.user.cognito.LocalDockerCognitoConfigurer;
 
 @ConditionalOnProperty(value = "aws.cognito.local.docker", havingValue = "true")
 @Configuration
@@ -27,8 +30,8 @@ public class LocalDockerCognitoConfig {
   public ExternalUserService localDockerCognitoUserProvider(
       CognitoIdentityProviderClient client,
       @Value("${aws.cognito.userPoolId:}") String initialUserPoolId,
-      LocalDockerCognitoConfigurer configurer) {
-    String userPoolId = configurer.configureAndReplacePoolIdIfRequired(initialUserPoolId);
+      CognitoUserPoolIdPopulator poolIdPopulator) {
+    String userPoolId = poolIdPopulator.replacePoolIdIfRequired(initialUserPoolId);
     log.info("configuring cognito user provider with user pool id {}", userPoolId);
     return CognitoUserService.builder()
         .client(client)
@@ -40,8 +43,8 @@ public class LocalDockerCognitoConfig {
   @Bean
   public JwtDecoder jwtDecoder(
       @Value("${auth.issuer.url}") String initialIssuerUrl,
-      LocalDockerCognitoConfigurer configurer) {
-    String issuerUrl = configurer.configureAndReplacePoolIdIfRequired(initialIssuerUrl);
+      CognitoUserPoolIdPopulator poolIdPopulator) {
+    String issuerUrl = poolIdPopulator.replacePoolIdIfRequired(initialIssuerUrl);
     log.info("configuring jwt decoder with issuer url {}", issuerUrl);
     NimbusJwtDecoder decoder = JwtDecoders.fromOidcIssuerLocation(issuerUrl);
     OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(issuerUrl);
@@ -51,9 +54,12 @@ public class LocalDockerCognitoConfig {
   }
 
   @Bean
-  public LocalDockerCognitoConfigurer localDockerUserPoolConfigurer(
-      CognitoIdentityProviderClient client) {
+  public CognitoUserPoolIdPopulator poolIdPopulator(CognitoIdentityProviderClient client) {
     log.warn("local docker cognito user pool should only be used for local development");
-    return LocalDockerCognitoConfigurer.builder().client(client).confirmationCode("9999").build();
+    CognitoUserPoolCreatorConfigFactory configFactory = new CognitoUserPoolCreatorConfigFactory();
+    CognitoUserPoolCreatorConfig config = configFactory.builder().client(client).build();
+    CognitoUserPoolCreator creator = new CognitoUserPoolCreator(config);
+    String poolId = creator.create().getPoolId();
+    return new CognitoUserPoolIdPopulator(poolId);
   }
 }
