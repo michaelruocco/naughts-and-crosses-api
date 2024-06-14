@@ -44,6 +44,7 @@ dependencies {
     implementation "com.github.michaelruocco:json-adapter:${jsonAdapterVersion}"
     implementation "io.projectreactor.netty:reactor-netty"
     implementation "io.netty:netty-all"
+    implementation "com.github.michaelruocco:cognito-user-pool-creator:${userPoolCreatorVersion}"
 
     integrationTestImplementation testFixtures(project(":api"))
     integrationTestImplementation project(":rest-client")
@@ -63,6 +64,7 @@ dependencies {
     testFixturesImplementation "org.testcontainers:activemq:${testContainersVersion}"
     testFixturesImplementation "org.postgresql:postgresql:${postgresqlVersion}"
     testFixturesImplementation "software.amazon.awssdk:cognitoidentityprovider:${cognitoVersion}"
+    testFixturesImplementation testFixtures("com.github.michaelruocco:cognito-user-pool-creator:${userPoolCreatorVersion}")
 }
 
 springBoot {

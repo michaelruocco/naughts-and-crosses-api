@@ -13,12 +13,10 @@ import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
+import uk.co.mruoc.cognito.CognitoUserPoolCreator;
+import uk.co.mruoc.cognito.CognitoUserPoolIdPopulator;
 import uk.co.mruoc.nac.usecases.ExternalUserService;
 import uk.co.mruoc.nac.user.cognito.CognitoUserConverter;
-import uk.co.mruoc.nac.user.cognito.CognitoUserPoolCreator;
-import uk.co.mruoc.nac.user.cognito.CognitoUserPoolCreatorConfig;
-import uk.co.mruoc.nac.user.cognito.CognitoUserPoolCreatorConfigFactory;
-import uk.co.mruoc.nac.user.cognito.CognitoUserPoolIdPopulator;
 import uk.co.mruoc.nac.user.cognito.CognitoUserService;
 
 @ConditionalOnProperty(value = "aws.cognito.local.docker", havingValue = "true")
@@ -56,9 +54,11 @@ public class LocalDockerCognitoConfig {
   @Bean
   public CognitoUserPoolIdPopulator poolIdPopulator(CognitoIdentityProviderClient client) {
     log.warn("local docker cognito user pool should only be used for local development");
-    CognitoUserPoolCreatorConfigFactory configFactory = new CognitoUserPoolCreatorConfigFactory();
-    CognitoUserPoolCreatorConfig config = configFactory.builder().client(client).build();
-    CognitoUserPoolCreator creator = new CognitoUserPoolCreator(config);
+    CognitoUserPoolCreator creator =
+        CognitoUserPoolCreator.builder()
+            .client(client)
+            .config(new LocalCognitoUserPoolConfig())
+            .build();
     String poolId = creator.create().getPoolId();
     return new CognitoUserPoolIdPopulator(poolId);
   }
