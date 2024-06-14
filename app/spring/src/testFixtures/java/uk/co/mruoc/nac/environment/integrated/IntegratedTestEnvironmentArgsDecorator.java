@@ -41,7 +41,6 @@ public class IntegratedTestEnvironmentArgsDecorator implements UnaryOperator<Str
         "--broker.system.login=artemis",
         "--broker.system.passcode=artemis",
         String.format("--auth.issuer.url=%s", authIssuerUrl),
-        "--aws.cognito.local.docker=false",
         "--aws.cognito.regionName=eu-central-1",
         String.format("--aws.cognito.userPoolId=%s", userPoolId),
         String.format("--aws.cognito.endpointOverride=%s", cognitoEndpointOverride),

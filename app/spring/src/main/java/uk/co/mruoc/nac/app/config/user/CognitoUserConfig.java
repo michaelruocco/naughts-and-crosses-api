@@ -39,9 +39,9 @@ public class CognitoUserConfig {
     return builder.build();
   }
 
-  @ConditionalOnProperty(value = "aws.cognito.local.docker", havingValue = "false")
+  @ConditionalOnProperty(value = "stub.user.provider", havingValue = "false", matchIfMissing = true)
   @Bean
-  public ExternalUserService cognitoUserProvider(
+  public ExternalUserService externalUserService(
       CognitoIdentityProviderClient client, @Value("${aws.cognito.userPoolId}") String userPoolId) {
     log.info("configuring cognito user provider with user pool id {}", userPoolId);
     return CognitoUserService.builder()
@@ -53,7 +53,7 @@ public class CognitoUserConfig {
 
   @ConditionalOnProperty(value = "stub.user.provider", havingValue = "true")
   @Bean
-  public ExternalUserService stubUserProvider() {
+  public ExternalUserService stubExternalUserService() {
     return new StubExternalUserService();
   }
 

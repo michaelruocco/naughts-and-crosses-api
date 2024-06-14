@@ -127,9 +127,8 @@ you can run:
     -Dbroker.client.passcode=artemis \
     -Dbroker.system.login=artemis \
     -Dbroker.system.passcode=artemis \
-    -Dauth.issuer.url=http://cognito:9229/%POOL_ID%  \
-    -Daws.cognito.local.docker=true \
-    -Daws.cognito.userPoolId=%POOL_ID% \
+    -Dauth.issuer.url=http://cognito:9229/local_4RsGXSAf \
+    -Daws.cognito.userPoolId=local_4RsGXSAf \
     -Daws.cognito.regionName=eu-central-1 \
     -Daws.cognito.endpointOverride=http://localhost:9229 \
     -Daws.cognito.accessKeyId=abc \
