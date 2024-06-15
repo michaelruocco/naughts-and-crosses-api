@@ -14,6 +14,6 @@ public class UserBatchExecutor {
     Runnable runnable = UserBatchRunnable.builder().batch(batch).creator(creator).build();
     Thread thread = new Thread(runnable);
     thread.start();
-    log.info("executing thread {} for user batch {}", thread.getId(), batch.getId());
+    log.info("executing thread {} for user batch {}", thread.getName(), batch.getId());
   }
 }

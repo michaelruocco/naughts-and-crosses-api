@@ -18,7 +18,8 @@ public class ReadUserDao {
 
   public Optional<User> findByUsername(Connection connection, String username) throws SQLException {
     try (PreparedStatement statement =
-        connection.prepareStatement("select * from user_record where username = ?::varchar;")) {
+        connection.prepareStatement(
+            "select user_json from user_record where username = ?::varchar;")) {
       statement.setString(1, username);
       return toUserIfPresent(statement);
     }
@@ -26,7 +27,7 @@ public class ReadUserDao {
 
   public Stream<User> getAll(Connection connection) throws SQLException {
     try (PreparedStatement statement =
-        connection.prepareStatement("select * from user_record order by username asc;")) {
+        connection.prepareStatement("select user_json from user_record order by username asc;")) {
       return toUsers(statement);
     }
   }

@@ -7,9 +7,11 @@ import uk.co.mruoc.nac.usecases.UserBatchRepository;
 public class PostgresUserBatchRepository implements UserBatchRepository {
   @Override
   public Optional<UserBatch> get(String id) {
-    return Optional.empty();
+    throw new UnsupportedOperationException();
   }
 
   @Override
-  public void save(UserBatch batch) {}
+  public void save(UserBatch batch) {
+    throw new UnsupportedOperationException();
+  }
 }
