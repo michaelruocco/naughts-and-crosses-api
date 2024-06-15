@@ -57,6 +57,11 @@ public class ApplicationConfig {
   }
 
   @Bean
+  public ApplicationStartupListener applicationStartupListener(ExternalUserSynchronizer synchronizer) {
+    return new ApplicationStartupListener(synchronizer);
+  }
+
+  @Bean
   public ExternalUserSynchronizer externalUserSynchronizer(
       ExternalUserService externalUserService, UserRepository repository) {
     return ExternalUserSynchronizer.builder()
