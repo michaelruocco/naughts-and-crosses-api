@@ -96,7 +96,7 @@ on a mac this can be found at `/etc/hosts` and you will need to map the domain n
 `cognito` to the local machine by adding the following line to the file:
 
 ```
-127.0.0.1	cognito
+127.0.0.1    cognito
 ```
 
 To run the API using the postgres database, kafka and cognito, you will need to start

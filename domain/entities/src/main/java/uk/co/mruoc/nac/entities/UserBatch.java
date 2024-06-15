@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Stream;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.With;
@@ -21,6 +22,7 @@ public class UserBatch {
   @With(AccessLevel.PRIVATE)
   private final Collection<Error> errors;
 
+  @Builder
   public UserBatch(String id, Collection<CreateUserRequest> requests) {
     this(id, requests, new ArrayList<>(), new ArrayList<>());
   }

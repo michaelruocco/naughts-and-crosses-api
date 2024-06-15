@@ -1,6 +1,7 @@
 package uk.co.mruoc.nac.app.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,8 @@ import uk.co.mruoc.nac.usecases.GameRepository;
 import uk.co.mruoc.nac.usecases.GameService;
 import uk.co.mruoc.nac.usecases.IdSupplier;
 import uk.co.mruoc.nac.usecases.PlayerFactory;
+import uk.co.mruoc.nac.usecases.UserBatchExecutor;
+import uk.co.mruoc.nac.usecases.UserBatchFactory;
 import uk.co.mruoc.nac.usecases.UserBatchRepository;
 import uk.co.mruoc.nac.usecases.UserBatchService;
 import uk.co.mruoc.nac.usecases.UserCreator;
@@ -47,8 +50,23 @@ public class ApplicationConfig {
   }
 
   @Bean
-  public UserBatchService userBatchService(UserBatchRepository repository, UserCreator creator) {
-    return UserBatchService.builder().repository(repository).creator(creator).build();
+  public UserBatchFactory userBatchFactory() {
+    return new UserBatchFactory(UUID::randomUUID);
+  }
+
+  @Bean
+  public UserBatchExecutor userBatchExecutor(UserCreator creator) {
+    return new UserBatchExecutor(creator);
+  }
+
+  @Bean
+  public UserBatchService userBatchService(
+      UserBatchFactory factory, UserBatchRepository repository, UserBatchExecutor executor) {
+    return UserBatchService.builder()
+        .factory(factory)
+        .repository(repository)
+        .executor(executor)
+        .build();
   }
 
   @Bean
