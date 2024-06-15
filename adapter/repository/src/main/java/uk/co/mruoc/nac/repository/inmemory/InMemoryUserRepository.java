@@ -5,9 +5,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.nac.entities.User;
 import uk.co.mruoc.nac.usecases.UserRepository;
 
+@Slf4j
 @RequiredArgsConstructor
 public class InMemoryUserRepository implements UserRepository {
 
@@ -19,6 +21,7 @@ public class InMemoryUserRepository implements UserRepository {
 
   @Override
   public Stream<User> getAll() {
+    log.info("returning all users {}", users);
     return users.values().stream();
   }
 

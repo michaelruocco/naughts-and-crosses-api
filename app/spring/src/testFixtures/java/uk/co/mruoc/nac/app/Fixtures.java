@@ -3,6 +3,7 @@ package uk.co.mruoc.nac.app;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.nac.api.dto.ApiCreateGameRequest;
+import uk.co.mruoc.nac.api.dto.ApiCreateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiGame;
 import uk.co.mruoc.nac.api.dto.ApiUser;
 import uk.co.mruoc.nac.api.factory.ApiCreateGameRequestFactory;
@@ -21,6 +22,18 @@ public class Fixtures {
   public ApiGame givenGameExists() {
     ApiCreateGameRequest request = buildCreateGameRequest();
     return client.createGame(request);
+  }
+
+  public ApiUser givenUserExists() {
+    ApiCreateUserRequest request =
+        ApiCreateUserRequest.builder()
+            .username("test-user")
+            .firstName("Test")
+            .lastName("User")
+            .email("test.user@email.com")
+            .emailVerified(true)
+            .build();
+    return client.createUser(request);
   }
 
   public ApiCreateGameRequest buildCreateGameRequest() {

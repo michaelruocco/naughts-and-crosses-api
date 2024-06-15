@@ -1,0 +1,9 @@
+{
+  "id": "${json-unit.any-string}",
+  "username": "user-1",
+  "firstName": "User",
+  "lastName": "One",
+  "fullName": "User One",
+  "email": "user-1@email.com",
+  "emailVerified": true
+}

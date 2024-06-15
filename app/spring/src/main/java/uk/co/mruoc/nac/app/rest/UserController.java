@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.co.mruoc.nac.api.converter.ApiUserConverter;
@@ -27,14 +28,15 @@ public class UserController {
   private final ApiUserConverter converter;
 
   @PostMapping
-  public ApiUser create(ApiCreateUserRequest apiRequest) {
+  public ApiUser create(@RequestBody ApiCreateUserRequest apiRequest) {
     CreateUserRequest request = converter.toCreateUserRequest(apiRequest);
     service.create(request);
     return converter.toApiUser(service.getByUsername(request.getUsername()));
   }
 
   @PutMapping("/{username}")
-  public ApiUser update(@PathVariable String username, ApiUpdateUserRequest apiRequest) {
+  public ApiUser update(
+      @PathVariable String username, @RequestBody ApiUpdateUserRequest apiRequest) {
     UpdateUserRequest request = converter.toUpdateUserRequest(username, apiRequest);
     service.update(request);
     return converter.toApiUser(service.getByUsername(request.getUsername()));

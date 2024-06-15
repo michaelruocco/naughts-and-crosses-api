@@ -31,6 +31,10 @@ public class UriFactory {
     return String.format("%s/v1/users", baseUrl);
   }
 
+  public String buildUserUri(String username) {
+    return String.format("%s/%s", buildUsersUri(), username);
+  }
+
   public String buildExternalUserSynchronizationsUri() {
     return String.format("%s/v1/external-user-synchronizations", baseUrl);
   }

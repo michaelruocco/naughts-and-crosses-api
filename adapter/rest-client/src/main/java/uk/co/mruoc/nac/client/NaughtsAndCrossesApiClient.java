@@ -11,8 +11,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import uk.co.mruoc.nac.api.dto.ApiCreateGameRequest;
+import uk.co.mruoc.nac.api.dto.ApiCreateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiGame;
 import uk.co.mruoc.nac.api.dto.ApiTurn;
+import uk.co.mruoc.nac.api.dto.ApiUpdateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiUser;
 
 @RequiredArgsConstructor
@@ -29,6 +31,26 @@ public class NaughtsAndCrossesApiClient {
 
   public NaughtsAndCrossesApiClient(String baseUrl, String token) {
     this(new UriFactory(baseUrl), new HttpEntityFactory(token), new RestTemplate());
+  }
+
+  public ApiUser createUser(ApiCreateUserRequest request) {
+    String uri = uriFactory.buildUsersUri();
+    return performPost(uri, entityFactory.buildRequest(request), ApiUser.class);
+  }
+
+  public ApiUser updateUser(String username, ApiUpdateUserRequest request) {
+    String uri = uriFactory.buildUserUri(username);
+    return performPut(uri, entityFactory.buildRequest(request), ApiUser.class);
+  }
+
+  public ApiUser getUser(String username) {
+    String uri = uriFactory.buildUserUri(username);
+    return performGet(uri, ApiUser.class);
+  }
+
+  public void deleteUser(String username) {
+    String uri = uriFactory.buildUserUri(username);
+    performDelete(uri);
   }
 
   public void synchronizeExternalUsers() {
@@ -93,8 +115,20 @@ public class NaughtsAndCrossesApiClient {
   }
 
   private ApiGame performPostGame(String uri, HttpEntity<?> request) {
-    ResponseEntity<ApiGame> response =
-        template.exchange(uri, HttpMethod.POST, request, ApiGame.class);
+    return performPost(uri, request, ApiGame.class);
+  }
+
+  private <T> T performPost(String uri, HttpEntity<?> request, Class<T> responseType) {
+    return performUpdate(uri, HttpMethod.POST, request, responseType);
+  }
+
+  private <T> T performPut(String uri, HttpEntity<?> request, Class<T> responseType) {
+    return performUpdate(uri, HttpMethod.PUT, request, responseType);
+  }
+
+  private <T> T performUpdate(
+      String uri, HttpMethod method, HttpEntity<?> request, Class<T> responseType) {
+    ResponseEntity<T> response = template.exchange(uri, method, request, responseType);
     return toBodyIfNotNull(response);
   }
 

@@ -27,6 +27,7 @@ import uk.co.mruoc.nac.usecases.UserBatchFactory;
 import uk.co.mruoc.nac.usecases.UserBatchRepository;
 import uk.co.mruoc.nac.usecases.UserBatchService;
 import uk.co.mruoc.nac.usecases.UserCreator;
+import uk.co.mruoc.nac.usecases.UserDeleter;
 import uk.co.mruoc.nac.usecases.UserRepository;
 import uk.co.mruoc.nac.usecases.UserService;
 import uk.co.mruoc.nac.usecases.UserUpdater;
@@ -50,6 +51,15 @@ public class ApplicationConfig {
   }
 
   @Bean
+  public UserDeleter userDeleter(
+      ExternalUserService externalUserService, UserRepository repository) {
+    return UserDeleter.builder()
+        .externalService(externalUserService)
+        .repository(repository)
+        .build();
+  }
+
+  @Bean
   public UserBatchFactory userBatchFactory() {
     return new UserBatchFactory(UUID::randomUUID);
   }
@@ -70,8 +80,14 @@ public class ApplicationConfig {
   }
 
   @Bean
-  public UserService userService(UserCreator creator, UserRepository repository) {
-    return UserService.builder().creator(creator).repository(repository).build();
+  public UserService userService(
+      UserCreator creator, UserUpdater updater, UserDeleter deleter, UserRepository repository) {
+    return UserService.builder()
+        .creator(creator)
+        .updater(updater)
+        .deleter(deleter)
+        .repository(repository)
+        .build();
   }
 
   @Bean

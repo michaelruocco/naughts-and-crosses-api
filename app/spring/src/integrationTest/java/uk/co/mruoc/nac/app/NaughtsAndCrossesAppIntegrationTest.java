@@ -12,9 +12,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.client.HttpServerErrorException;
 import uk.co.mruoc.nac.api.dto.ApiCreateGameRequest;
+import uk.co.mruoc.nac.api.dto.ApiCreateUserRequest;
+import uk.co.mruoc.nac.api.dto.ApiCreateUserRequestMother;
 import uk.co.mruoc.nac.api.dto.ApiGame;
 import uk.co.mruoc.nac.api.dto.ApiGameJsonMother;
 import uk.co.mruoc.nac.api.dto.ApiTurn;
+import uk.co.mruoc.nac.api.dto.ApiUpdateUserRequest;
+import uk.co.mruoc.nac.api.dto.ApiUser;
+import uk.co.mruoc.nac.api.dto.ApiUserJsonMother;
 import uk.co.mruoc.nac.client.DefaultGameUpdateListener;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClient;
 
@@ -29,6 +34,10 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     return getFixtures().givenGameExists();
   }
 
+  public ApiUser givenUserExists() {
+    return getFixtures().givenUserExists();
+  }
+
   public Fixtures getFixtures() {
     return new Fixtures(getAppClient());
   }
@@ -38,6 +47,59 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
   }
 
   public abstract NaughtsAndCrossesAppExtension getExtension();
+
+  @Test
+  public void shouldReturnAllUsers() {
+    NaughtsAndCrossesApiClient client = getAppClient();
+
+    Collection<ApiUser> users = client.getAllUsers();
+
+    assertThat(users).hasSize(2);
+  }
+
+  @Test
+  public void shouldGetUser() {
+    NaughtsAndCrossesApiClient client = getAppClient();
+
+    ApiUser user = client.getUser("user-1");
+
+    assertThatJson(user).isEqualTo(ApiUserJsonMother.user1());
+  }
+
+  @Test
+  public void shouldCreateUser() {
+    NaughtsAndCrossesApiClient client = getAppClient();
+    ApiCreateUserRequest request = ApiCreateUserRequestMother.joeBloggs();
+
+    try {
+      ApiUser user = client.createUser(request);
+
+      assertThatJson(user).isEqualTo(ApiUserJsonMother.joeBloggs());
+    } finally {
+      client.deleteUser(request.getUsername());
+    }
+  }
+
+  @Test
+  public void shouldUpdateUser() {
+    NaughtsAndCrossesApiClient client = getAppClient();
+    ApiUser originalUser = givenUserExists();
+
+    try {
+      ApiUpdateUserRequest request =
+          ApiUpdateUserRequest.builder()
+              .firstName("updated-first")
+              .lastName("updated-last")
+              .email("updated@email.com")
+              .emailVerified(false)
+              .build();
+      ApiUser user = client.updateUser(originalUser.getUsername(), request);
+
+      assertThatJson(user).isEqualTo(ApiUserJsonMother.testUserUpdated());
+    } finally {
+      client.deleteUser(originalUser.getUsername());
+    }
+  }
 
   @Test
   public void shouldReturnNoGamesInitially() {
