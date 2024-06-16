@@ -118,6 +118,9 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
           .atMost(Duration.ofSeconds(10))
           .pollInterval(Duration.ofMillis(250))
           .until(() -> batchUploadCompleteWithoutErrors(batch.getId()));
+
+      assertThat(client.getUser("jbloggs")).isNotNull();
+      assertThat(client.getUser("jdoe")).isNotNull();
     } finally {
       client.deleteUser("jbloggs");
       client.deleteUser("jdoe");

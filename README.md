@@ -13,8 +13,9 @@
 
 ## Overview
 
-This repo contains the backend API for a simple naughts and crosses (or tic-tac-toe) game.
-The accompanying UI that uses this API can be found [here](https://github.com/michaelruocco/naughts-and-crosses-ui)
+This repo contains the backend API for a simple naughts and crosses
+(or tic-tac-toe) game. The accompanying UI that uses this API can be
+found [here](https://github.com/michaelruocco/naughts-and-crosses-ui)
 
 ## Java Version
 
@@ -153,9 +154,9 @@ docker-compose --profile docker-api up -d
 
 ### Generating a bearer token from Cognito
 
-If you are running the API with oauth security enabled you will need to generate a
-bearer token that you can provide when calling the API. To do this you can run the
-following command:
+If you are running the API with oauth security enabled you will need
+to generate a bearer token that you can provide when calling the API.
+To do this you can run the following command:
 
 ```bash
 curl -X POST "http://localhost:9229/" \
@@ -190,9 +191,10 @@ curl -H 'Authorization:Bearer <token>' http://localhost:3002/v1/users
 
 ### Creating a game
 
-Once the API is running locally, to generate a game you can run, note - for this command
-and any of the subsequent ones listed, if authentication is enabled on the API then the
-bearer token needs to be supplied in an authorization header on the request
+Once the API is running locally, to generate a game you can run, note - for
+this command and any of the subsequent ones listed, if authentication is 
+enabled on the API then the bearer token needs to be supplied in an
+authorization header on the request
 
 ```bash
 curl -H "Content-Type: application/json" \
