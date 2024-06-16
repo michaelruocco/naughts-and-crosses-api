@@ -8,12 +8,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DeleteUserDao {
 
-  public void deleteAll(Connection connection) throws SQLException {
-    try (PreparedStatement statement = connection.prepareStatement("delete from user_record;")) {
-      statement.execute();
-    }
-  }
-
   public void delete(Connection connection, String username) throws SQLException {
     try (PreparedStatement statement =
         connection.prepareStatement("delete from user_record where username = ?::varchar;")) {

@@ -36,11 +36,6 @@ public class InMemoryUserRepository implements UserRepository {
   }
 
   @Override
-  public void deleteAll() {
-    users.clear();
-  }
-
-  @Override
   public void delete(String username) {
     users.remove(username);
   }

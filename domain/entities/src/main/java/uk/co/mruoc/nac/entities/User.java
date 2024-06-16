@@ -28,10 +28,6 @@ public class User {
     return String.join(" ", names);
   }
 
-  public boolean hasUsername(String otherUsername) {
-    return username.equals(otherUsername);
-  }
-
   public User update(UpdateUserRequest request) {
     return toBuilder()
         .firstName(request.getFirstName())

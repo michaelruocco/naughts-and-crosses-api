@@ -12,6 +12,10 @@ public class ApiUserJsonMother {
     return loadContentFromClasspath("user/joe-bloggs.json");
   }
 
+  public static String janeDoe() {
+    return loadContentFromClasspath("user/jane-doe.json");
+  }
+
   public static String testUserUpdated() {
     return loadContentFromClasspath("user/test-user-updated.json");
   }

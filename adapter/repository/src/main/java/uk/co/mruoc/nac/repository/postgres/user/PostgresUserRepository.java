@@ -89,19 +89,6 @@ public class PostgresUserRepository implements UserRepository {
   }
 
   @Override
-  public void deleteAll() {
-    Instant start = Instant.now();
-    try (var connection = dataSource.getConnection()) {
-      deleteDao.deleteAll(connection);
-    } catch (SQLException e) {
-      throw new UserRepositoryException(e);
-    } finally {
-      var duration = Duration.between(start, Instant.now());
-      log.info("delete all users took {}ms", duration.toMillis());
-    }
-  }
-
-  @Override
   public void delete(String username) {
     Instant start = Instant.now();
     try (var connection = dataSource.getConnection()) {

@@ -119,8 +119,8 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
           .pollInterval(Duration.ofMillis(250))
           .until(() -> batchUploadCompleteWithoutErrors(batch.getId()));
 
-      assertThat(client.getUser("jbloggs")).isNotNull();
-      assertThat(client.getUser("jdoe")).isNotNull();
+      assertThatJson(client.getUser("jbloggs")).isEqualTo(ApiUserJsonMother.joeBloggs());
+      assertThatJson(client.getUser("jdoe")).isEqualTo(ApiUserJsonMother.janeDoe());
     } finally {
       client.deleteUser("jbloggs");
       client.deleteUser("jdoe");
