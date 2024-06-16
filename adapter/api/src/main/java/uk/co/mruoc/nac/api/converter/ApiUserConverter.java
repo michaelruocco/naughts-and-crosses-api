@@ -51,6 +51,21 @@ public class ApiUserConverter {
         .build();
   }
 
+  public Collection<ApiCreateUserRequest> toApiCreateUserRequests(
+      Collection<CreateUserRequest> requests) {
+    return requests.stream().map(this::toApiCreateUserRequest).toList();
+  }
+
+  public ApiCreateUserRequest toApiCreateUserRequest(CreateUserRequest request) {
+    return ApiCreateUserRequest.builder()
+        .username(request.getUsername())
+        .firstName(request.getFirstName())
+        .lastName(request.getLastName())
+        .email(request.getEmail())
+        .emailVerified(request.isEmailVerified())
+        .build();
+  }
+
   public UpdateUserRequest toUpdateUserRequest(String username, ApiUpdateUserRequest apiRequest) {
     return UpdateUserRequest.builder()
         .username(username)

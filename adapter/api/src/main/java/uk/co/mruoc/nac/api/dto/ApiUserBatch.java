@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 
 @RequiredArgsConstructor
 @NoArgsConstructor(force = true)
@@ -13,9 +14,14 @@ import lombok.RequiredArgsConstructor;
 public class ApiUserBatch {
 
   private final String id;
-  private final int size;
+  private final Collection<ApiCreateUserRequest> requests;
   private final Collection<ApiUser> users;
   private final Collection<Error> errors;
+  private final boolean complete;
+
+  public boolean hasErrors() {
+    return CollectionUtils.isNotEmpty(errors);
+  }
 
   @RequiredArgsConstructor
   @NoArgsConstructor(force = true)

@@ -5,11 +5,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.awaitility.Awaitility.await;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.web.client.HttpServerErrorException;
 import uk.co.mruoc.nac.api.dto.ApiCreateGameRequest;
 import uk.co.mruoc.nac.api.dto.ApiCreateUserRequest;
@@ -19,6 +23,7 @@ import uk.co.mruoc.nac.api.dto.ApiGameJsonMother;
 import uk.co.mruoc.nac.api.dto.ApiTurn;
 import uk.co.mruoc.nac.api.dto.ApiUpdateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiUser;
+import uk.co.mruoc.nac.api.dto.ApiUserBatch;
 import uk.co.mruoc.nac.api.dto.ApiUserJsonMother;
 import uk.co.mruoc.nac.client.DefaultGameUpdateListener;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClient;
@@ -99,6 +104,36 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     } finally {
       client.deleteUser(originalUser.getUsername());
     }
+  }
+
+  @Test
+  public void shouldUploadBatchOfUsers() {
+    NaughtsAndCrossesApiClient client = getAppClient();
+    Resource resource = loadUsersCsv();
+
+    try {
+      ApiUserBatch batch = client.uploadUserBatch(resource);
+
+      await()
+          .atMost(Duration.ofSeconds(10))
+          .pollInterval(Duration.ofMillis(250))
+          .until(() -> batchUploadCompleteWithoutErrors(batch.getId()));
+    } finally {
+      client.deleteUser("jbloggs");
+      client.deleteUser("jdoe");
+    }
+  }
+
+  private Resource loadUsersCsv() {
+    Path path = Paths.get("src/testFixtures/resources/users/users.csv");
+    return new FileSystemResource(path.toFile());
+  }
+
+  private boolean batchUploadCompleteWithoutErrors(String id) {
+    NaughtsAndCrossesApiClient client = getAppClient();
+    ApiUserBatch batch = client.getUserBatch(id);
+    log.info("got api user batch {}", batch);
+    return batch.isComplete() && !batch.hasErrors();
   }
 
   @Test

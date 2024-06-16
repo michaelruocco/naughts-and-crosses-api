@@ -65,8 +65,8 @@ public class ApplicationConfig {
   }
 
   @Bean
-  public UserBatchExecutor userBatchExecutor(UserCreator creator) {
-    return new UserBatchExecutor(creator);
+  public UserBatchExecutor userBatchExecutor(UserCreator creator, UserBatchRepository repository) {
+    return UserBatchExecutor.builder().creator(creator).repository(repository).build();
   }
 
   @Bean

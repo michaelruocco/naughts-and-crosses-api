@@ -24,9 +24,10 @@ public class ApiUserBatchConverter {
   public ApiUserBatch toApiUserBatch(UserBatch batch) {
     return ApiUserBatch.builder()
         .id(batch.getId())
-        .size(batch.getSize())
+        .requests(userConverter.toApiCreateUserRequests(batch.getRequests()))
         .users(userConverter.toApiUsers(batch.getUsers()))
         .errors(toApiErrors(batch.getErrors()))
+        .complete(batch.isComplete())
         .build();
   }
 

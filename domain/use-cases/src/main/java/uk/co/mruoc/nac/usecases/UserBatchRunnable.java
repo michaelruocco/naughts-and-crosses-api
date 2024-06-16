@@ -11,12 +11,14 @@ public class UserBatchRunnable implements Runnable {
 
   private final UserBatch batch;
   private final UserCreator creator;
+  private final UserBatchRepository repository;
 
   @Override
   public void run() {
     UserBatch updatedBatch = batch;
     for (CreateUserRequest request : updatedBatch.getRequests()) {
       updatedBatch = updateBatch(updatedBatch, request);
+      repository.update(updatedBatch);
     }
   }
 

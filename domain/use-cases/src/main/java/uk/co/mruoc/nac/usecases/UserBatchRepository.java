@@ -7,5 +7,7 @@ public interface UserBatchRepository {
 
   Optional<UserBatch> get(String id);
 
-  void save(UserBatch batch);
+  void create(UserBatch batch);
+
+  void update(UserBatch batch);
 }

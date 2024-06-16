@@ -22,7 +22,16 @@ public class InMemoryUserBatchRepository implements UserBatchRepository {
   }
 
   @Override
-  public void save(UserBatch batch) {
+  public void create(UserBatch batch) {
+    save(batch);
+  }
+
+  @Override
+  public void update(UserBatch batch) {
+    save(batch);
+  }
+
+  private void save(UserBatch batch) {
     batches.put(batch.getId(), batch);
   }
 }

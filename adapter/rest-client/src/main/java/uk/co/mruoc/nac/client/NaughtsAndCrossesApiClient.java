@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import uk.co.mruoc.nac.api.dto.ApiGame;
 import uk.co.mruoc.nac.api.dto.ApiTurn;
 import uk.co.mruoc.nac.api.dto.ApiUpdateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiUser;
+import uk.co.mruoc.nac.api.dto.ApiUserBatch;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -51,6 +53,15 @@ public class NaughtsAndCrossesApiClient {
   public void deleteUser(String username) {
     String uri = uriFactory.buildUserUri(username);
     performDelete(uri);
+  }
+
+  public ApiUserBatch uploadUserBatch(Resource resource) {
+    return performPost(
+        uriFactory.buildUserBatchesUri(), entityFactory.buildRequest(resource), ApiUserBatch.class);
+  }
+
+  public ApiUserBatch getUserBatch(String id) {
+    return performGet(uriFactory.buildUserBatchUri(id), ApiUserBatch.class);
   }
 
   public void synchronizeExternalUsers() {

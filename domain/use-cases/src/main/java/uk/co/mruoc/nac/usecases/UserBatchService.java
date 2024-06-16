@@ -16,7 +16,7 @@ public class UserBatchService {
 
   public UserBatch create(Collection<CreateUserRequest> requests) {
     UserBatch batch = factory.build(requests);
-    repository.save(batch);
+    repository.create(batch);
     executor.execute(batch);
     return batch;
   }

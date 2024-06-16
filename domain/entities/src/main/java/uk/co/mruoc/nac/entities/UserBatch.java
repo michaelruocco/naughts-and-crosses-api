@@ -31,6 +31,10 @@ public class UserBatch {
     return requests.size();
   }
 
+  public boolean isComplete() {
+    return getSize() == (users.size() + errors.size());
+  }
+
   public UserBatch addUser(User user) {
     return withUsers(Stream.concat(users.stream(), Stream.of(user)).toList());
   }
