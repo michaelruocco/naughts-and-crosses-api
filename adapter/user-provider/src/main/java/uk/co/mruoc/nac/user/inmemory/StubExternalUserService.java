@@ -18,10 +18,10 @@ import uk.co.mruoc.nac.usecases.UsernameAlreadyExistsException;
 public class StubExternalUserService implements ExternalUserService {
 
   private final Map<String, User> users;
-  private final Supplier<UUID> idSupplier;
+  private final Supplier<UUID> uuidSupplier;
 
-  public StubExternalUserService() {
-    this(buildUsers(), UUID::randomUUID);
+  public StubExternalUserService(Supplier<UUID> uuidSupplier) {
+    this(buildUsers(), uuidSupplier);
   }
 
   @Override
@@ -61,7 +61,7 @@ public class StubExternalUserService implements ExternalUserService {
 
   private User toUser(CreateUserRequest request) {
     return User.builder()
-        .id(idSupplier.get().toString())
+        .id(uuidSupplier.get().toString())
         .username(request.getUsername())
         .email(request.getEmail())
         .firstName(request.getFirstName())

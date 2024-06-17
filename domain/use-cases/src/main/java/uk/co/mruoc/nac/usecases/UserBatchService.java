@@ -1,6 +1,7 @@
 package uk.co.mruoc.nac.usecases;
 
 import java.util.Collection;
+import java.util.stream.Stream;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.nac.entities.CreateUserRequest;
@@ -23,5 +24,13 @@ public class UserBatchService {
 
   public UserBatch get(String id) {
     return repository.get(id).orElseThrow(() -> new UserBatchNotFoundException(id));
+  }
+
+  public Stream<UserBatch> getAll() {
+    return repository.getAll();
+  }
+
+  public void deleteAll() {
+    repository.deleteAll();
   }
 }

@@ -12,9 +12,10 @@ public class ApiUserBatchConverter {
 
   private final ApiUserConverter userConverter;
   private final ApiCsvUserConverter csvConverter;
+  private final ApiUserBatchErrorConverter errorConverter;
 
   public ApiUserBatchConverter() {
-    this(new ApiUserConverter(), new ApiCsvUserConverter());
+    this(new ApiUserConverter(), new ApiCsvUserConverter(), new ApiUserBatchErrorConverter());
   }
 
   public Collection<CreateUserRequest> toCreateUserRequests(InputStream inputStream) {
@@ -26,16 +27,10 @@ public class ApiUserBatchConverter {
         .id(batch.getId())
         .requests(userConverter.toApiCreateUserRequests(batch.getRequests()))
         .users(userConverter.toApiUsers(batch.getUsers()))
-        .errors(toApiErrors(batch.getErrors()))
+        .errors(errorConverter.toApiErrors(batch.getErrors()))
+        .createdAt(batch.getCreatedAt())
+        .updatedAt(batch.getUpdatedAt())
         .complete(batch.isComplete())
         .build();
-  }
-
-  private static Collection<ApiUserBatch.Error> toApiErrors(Collection<UserBatch.Error> errors) {
-    return errors.stream().map(ApiUserBatchConverter::toApiError).toList();
-  }
-
-  private static ApiUserBatch.Error toApiError(UserBatch.Error error) {
-    return ApiUserBatch.Error.builder().username(error.username()).message(error.message()).build();
   }
 }

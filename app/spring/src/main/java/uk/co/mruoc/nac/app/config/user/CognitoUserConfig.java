@@ -2,6 +2,8 @@ package uk.co.mruoc.nac.app.config.user;
 
 import io.micrometer.common.util.StringUtils;
 import java.net.URI;
+import java.util.UUID;
+import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -53,8 +55,8 @@ public class CognitoUserConfig {
 
   @ConditionalOnProperty(value = "stub.user.provider", havingValue = "true")
   @Bean
-  public ExternalUserService stubExternalUserService() {
-    return new StubExternalUserService();
+  public ExternalUserService stubExternalUserService(Supplier<UUID> uuidSupplier) {
+    return new StubExternalUserService(uuidSupplier);
   }
 
   private static AwsCredentialsProvider toCredentialsProvider(

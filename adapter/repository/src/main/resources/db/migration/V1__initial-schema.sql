@@ -13,3 +13,11 @@ create table user_record(
 
     primary key(username)
 );
+
+create table user_batch(
+    id varchar(50) not null,
+    created_at timestamp not null,
+    batch_json jsonb,
+
+    primary key(id)
+);

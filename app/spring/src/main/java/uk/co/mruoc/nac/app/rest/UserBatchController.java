@@ -5,6 +5,7 @@ import java.io.UncheckedIOException;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,13 +22,13 @@ import uk.co.mruoc.nac.usecases.UserBatchService;
 @RestController
 @RequestMapping("/v1/users/batches")
 @RequiredArgsConstructor
-public class BatchUserController {
+public class UserBatchController {
 
   private final UserBatchService service;
   private final ApiUserBatchConverter converter;
 
   @PostMapping
-  public ResponseEntity<ApiUserBatch> batchCreateUsers(@RequestParam("data") MultipartFile csv) {
+  public ResponseEntity<ApiUserBatch> create(@RequestParam("data") MultipartFile csv) {
     try {
       Collection<CreateUserRequest> requests = converter.toCreateUserRequests(csv.getInputStream());
       UserBatch batch = service.create(requests);
@@ -38,7 +39,17 @@ public class BatchUserController {
   }
 
   @GetMapping("/{id}")
-  public ApiUserBatch getUser(@PathVariable String id) {
+  public ApiUserBatch get(@PathVariable String id) {
     return converter.toApiUserBatch(service.get(id));
+  }
+
+  @GetMapping
+  public Collection<ApiUserBatch> getAll() {
+    return service.getAll().map(converter::toApiUserBatch).toList();
+  }
+
+  @DeleteMapping
+  public void deleteAll() {
+    service.deleteAll();
   }
 }

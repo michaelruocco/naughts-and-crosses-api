@@ -1,8 +1,10 @@
 package uk.co.mruoc.nac.repository.inmemory;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.nac.entities.UserBatch;
 import uk.co.mruoc.nac.usecases.UserBatchRepository;
@@ -29,6 +31,16 @@ public class InMemoryUserBatchRepository implements UserBatchRepository {
   @Override
   public void update(UserBatch batch) {
     save(batch);
+  }
+
+  @Override
+  public Stream<UserBatch> getAll() {
+    return batches.values().stream().sorted(Comparator.comparing(UserBatch::getCreatedAt));
+  }
+
+  @Override
+  public void deleteAll() {
+    batches.clear();
   }
 
   private void save(UserBatch batch) {

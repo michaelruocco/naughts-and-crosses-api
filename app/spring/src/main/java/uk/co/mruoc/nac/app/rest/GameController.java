@@ -29,30 +29,30 @@ public class GameController {
   private final ApiConverter converter;
 
   @GetMapping
-  public Collection<ApiGame> getAllGames(
+  public Collection<ApiGame> getAll(
       @RequestParam(name = "minimal", required = false, defaultValue = "false") boolean minimal) {
     return facade.getAll().map(toGameConverter(minimal)).toList();
   }
 
   @DeleteMapping
-  public void deleteAllGames() {
+  public void deleteAll() {
     facade.deleteAll();
   }
 
   @GetMapping("/{id}")
-  public ApiGame getGame(
+  public ApiGame get(
       @PathVariable long id,
       @RequestParam(name = "minimal", required = false, defaultValue = "false") boolean minimal) {
     return toGameConverter(minimal).apply(facade.get(id));
   }
 
   @DeleteMapping("/{id}")
-  public void deleteGame(@PathVariable long id) {
+  public void delete(@PathVariable long id) {
     facade.delete(id);
   }
 
   @PostMapping
-  public ApiGame createGame(@RequestBody ApiCreateGameRequest apiRequest) {
+  public ApiGame create(@RequestBody ApiCreateGameRequest apiRequest) {
     CreateGameRequest request = converter.toCreateGameRequest(apiRequest);
     Game game = facade.createGame(request);
     return converter.toApiGame(game);

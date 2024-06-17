@@ -1,13 +1,11 @@
 package uk.co.mruoc.nac.usecases;
 
-import static uk.co.mruoc.nac.entities.UsersCollector.usersCollector;
-
+import java.util.stream.Stream;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.nac.entities.CreateUserRequest;
 import uk.co.mruoc.nac.entities.UpdateUserRequest;
 import uk.co.mruoc.nac.entities.User;
-import uk.co.mruoc.nac.entities.Users;
 
 @Builder
 @Slf4j
@@ -30,8 +28,8 @@ public class UserService {
     deleter.delete(username);
   }
 
-  public Users getAll() {
-    return repository.getAll().collect(usersCollector()).sortByUsername();
+  public Stream<User> getAll() {
+    return repository.getAll();
   }
 
   public User getByUsername(String username) {

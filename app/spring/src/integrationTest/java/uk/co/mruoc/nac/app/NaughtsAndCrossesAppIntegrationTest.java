@@ -124,6 +124,49 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     } finally {
       client.deleteUser("jbloggs");
       client.deleteUser("jdoe");
+      client.deleteAllUserBatches();
+    }
+  }
+
+  @Test
+  public void shouldReturnCreatedBatchOfUsers() {
+    NaughtsAndCrossesApiClient client = getAppClient();
+    Resource resource = loadUsersCsv();
+
+    try {
+      ApiUserBatch createdBatch = client.uploadUserBatch(resource);
+
+      ApiUserBatch returnedBatch = client.getUserBatch(createdBatch.getId());
+
+      assertThat(returnedBatch)
+          .usingRecursiveComparison()
+          .ignoringFields("createdAt", "updatedAt", "users", "errors", "complete")
+          .isEqualTo(createdBatch);
+    } finally {
+      client.deleteUser("jbloggs");
+      client.deleteUser("jdoe");
+      client.deleteAllUserBatches();
+    }
+  }
+
+  @Test
+  public void shouldReturnAllCreatedBatchesOfUsersOrderedByCreatedDate() {
+    NaughtsAndCrossesApiClient client = getAppClient();
+    Resource resource = loadUsersCsv();
+
+    try {
+      ApiUserBatch batch1 = client.uploadUserBatch(resource);
+      ApiUserBatch batch2 = client.uploadUserBatch(resource);
+
+      Collection<ApiUserBatch> batches = client.getAllUserBatches();
+
+      assertThat(batches)
+          .map(ApiUserBatch::getCreatedAt)
+          .containsExactly(batch1.getCreatedAt(), batch2.getCreatedAt());
+    } finally {
+      client.deleteUser("jbloggs");
+      client.deleteUser("jdoe");
+      client.deleteAllUserBatches();
     }
   }
 

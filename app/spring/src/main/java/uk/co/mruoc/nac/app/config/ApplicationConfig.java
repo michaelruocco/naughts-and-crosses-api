@@ -1,7 +1,9 @@
 package uk.co.mruoc.nac.app.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.time.Clock;
 import java.util.UUID;
+import java.util.function.Supplier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -60,13 +62,24 @@ public class ApplicationConfig {
   }
 
   @Bean
-  public UserBatchFactory userBatchFactory() {
-    return new UserBatchFactory(UUID::randomUUID);
+  public Supplier<UUID> randomUuidSupplier() {
+    return UUID::randomUUID;
   }
 
   @Bean
-  public UserBatchExecutor userBatchExecutor(UserCreator creator, UserBatchRepository repository) {
-    return UserBatchExecutor.builder().creator(creator).repository(repository).build();
+  public Clock clock() {
+    return Clock.systemUTC();
+  }
+
+  @Bean
+  public UserBatchFactory userBatchFactory(Supplier<UUID> uuidSupplier, Clock clock) {
+    return UserBatchFactory.builder().uuidSupplier(uuidSupplier).clock(clock).build();
+  }
+
+  @Bean
+  public UserBatchExecutor userBatchExecutor(
+      UserCreator creator, UserBatchRepository repository, Clock clock) {
+    return UserBatchExecutor.builder().creator(creator).repository(repository).clock(clock).build();
   }
 
   @Bean

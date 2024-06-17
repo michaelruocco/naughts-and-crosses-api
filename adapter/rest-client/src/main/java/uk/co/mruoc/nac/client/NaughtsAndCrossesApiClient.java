@@ -64,6 +64,15 @@ public class NaughtsAndCrossesApiClient {
     return performGet(uriFactory.buildUserBatchUri(id), ApiUserBatch.class);
   }
 
+  public Collection<ApiUserBatch> getAllUserBatches() {
+    ApiUserBatch[] batches = performGet(uriFactory.buildUserBatchesUri(), ApiUserBatch[].class);
+    return toCollection(batches);
+  }
+
+  public void deleteAllUserBatches() {
+    performDelete(uriFactory.buildUserBatchesUri());
+  }
+
   public void synchronizeExternalUsers() {
     String uri = uriFactory.buildExternalUserSynchronizationsUri();
     performPost(uri, entityFactory.buildRequest());

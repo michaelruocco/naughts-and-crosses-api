@@ -43,8 +43,8 @@ public class UserController {
   }
 
   @GetMapping
-  public Collection<ApiUser> getAllUsers() {
-    return service.getAll().stream().map(converter::toApiUser).toList();
+  public Collection<ApiUser> getAll() {
+    return service.getAll().map(converter::toApiUser).toList();
   }
 
   @GetMapping("/{username}")

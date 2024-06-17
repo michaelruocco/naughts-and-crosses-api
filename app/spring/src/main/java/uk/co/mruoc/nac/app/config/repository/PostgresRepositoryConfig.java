@@ -37,7 +37,8 @@ public class PostgresRepositoryConfig {
   }
 
   @Bean
-  public UserBatchRepository postgresUserBatchRepository() {
-    return new PostgresUserBatchRepository();
+  public UserBatchRepository postgresUserBatchRepository(
+      DataSource dataSource, ObjectMapper mapper) {
+    return new PostgresUserBatchRepository(dataSource, new JacksonJsonConverter(mapper));
   }
 }
