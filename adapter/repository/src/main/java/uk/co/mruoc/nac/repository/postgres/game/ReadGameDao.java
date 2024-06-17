@@ -18,7 +18,7 @@ public class ReadGameDao {
 
   public Optional<Game> findById(Connection connection, long id) throws SQLException {
     try (PreparedStatement statement =
-        connection.prepareStatement("select game from game where id = ?::bigint;")) {
+        connection.prepareStatement("select game_json from game where id = ?::bigint;")) {
       statement.setLong(1, id);
       return toGameIfPresent(statement);
     }
@@ -26,7 +26,7 @@ public class ReadGameDao {
 
   public Stream<Game> getAll(Connection connection) throws SQLException {
     try (PreparedStatement statement =
-        connection.prepareStatement("select game from game order by id asc;")) {
+        connection.prepareStatement("select game_json from game order by id asc;")) {
       return toGames(statement);
     }
   }
@@ -59,6 +59,6 @@ public class ReadGameDao {
   }
 
   private Game toGame(ResultSet resultSet) throws SQLException {
-    return gameConverter.toGame(resultSet.getString("game"));
+    return gameConverter.toGame(resultSet.getString("game_json"));
   }
 }

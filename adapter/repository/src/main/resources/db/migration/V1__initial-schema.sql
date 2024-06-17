@@ -1,6 +1,6 @@
 create table game(
 	id bigint not null,
-	game jsonb,
+	game_json jsonb,
 
 	primary key(id)
 );

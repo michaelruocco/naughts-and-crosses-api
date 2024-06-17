@@ -13,7 +13,8 @@ public class CreateGameDao {
 
   public void create(Connection connection, Game game) throws SQLException {
     try (PreparedStatement statement =
-        connection.prepareStatement("insert into game (id, game) values (?::bigint, ?::jsonb);")) {
+        connection.prepareStatement(
+            "insert into game (id, game_json) values (?::bigint, ?::jsonb);")) {
       statement.setLong(1, game.getId());
       statement.setString(2, gameConverter.toPostgresJson(game));
       statement.execute();

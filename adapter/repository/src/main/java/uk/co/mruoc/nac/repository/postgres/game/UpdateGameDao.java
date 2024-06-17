@@ -13,7 +13,7 @@ public class UpdateGameDao {
 
   public void update(Connection connection, Game game) throws SQLException {
     try (PreparedStatement statement =
-        connection.prepareStatement("update game set game = ?::jsonb where id = ?::bigint;")) {
+        connection.prepareStatement("update game set game_json = ?::jsonb where id = ?::bigint;")) {
       statement.setString(1, gameConverter.toPostgresJson(game));
       statement.setLong(2, game.getId());
       statement.execute();
