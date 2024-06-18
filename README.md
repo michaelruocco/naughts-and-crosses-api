@@ -192,7 +192,7 @@ curl -H 'Authorization:Bearer <token>' http://localhost:3002/v1/users
 ### Creating a game
 
 Once the API is running locally, to generate a game you can run, note - for
-this command and any of the subsequent ones listed, if authentication is 
+this command and any of the subsequent ones listed, if authentication is
 enabled on the API then the bearer token needs to be supplied in an
 authorization header on the request
 
