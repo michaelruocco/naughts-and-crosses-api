@@ -324,7 +324,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     log.info("got api user batch {}", batch);
     return batch.isComplete() && !batch.hasErrors();
   }
-  
+
   private static void awaitMostRecentGameUpdateEquals(
       GameEventSubscriber<ApiGame> listener, String json) {
     await()
