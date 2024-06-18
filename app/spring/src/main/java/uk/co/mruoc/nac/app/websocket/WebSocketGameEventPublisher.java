@@ -21,4 +21,10 @@ public class WebSocketGameEventPublisher implements GameEventPublisher {
     log.info("sending web socket update for game with id {}", game.getId());
     template.convertAndSend("/topic/game-update", apiGame);
   }
+
+  @Override
+  public void deleted(long id) {
+    log.info("sending web socket delete for game with id {}", id);
+    template.convertAndSend("/topic/game-delete", id);
+  }
 }

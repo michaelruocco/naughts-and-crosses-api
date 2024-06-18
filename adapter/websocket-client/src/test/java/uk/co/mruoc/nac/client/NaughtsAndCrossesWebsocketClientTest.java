@@ -18,13 +18,12 @@ class NaughtsAndCrossesWebsocketClientTest {
   private static final URI WEB_SOCKET_URI = URI.create("http://localhost:8080");
 
   private final WebSocketStompClient stompClient = mock(WebSocketStompClient.class);
-  private final GameUpdateStompSessionHandler sessionHandler =
-      mock(GameUpdateStompSessionHandler.class);
+  private final GameSessionHandler sessionHandler = mock(GameSessionHandler.class);
   private final StompHeaders connectHeaders = new StompHeaders();
 
   private final NaughtsAndCrossesWebsocketClient client =
       new NaughtsAndCrossesWebsocketClient(
-          WEB_SOCKET_URI, stompClient, sessionHandler, connectHeaders);
+          WEB_SOCKET_URI, stompClient, connectHeaders, sessionHandler);
 
   @Test
   void shouldThrowExceptionIfConnectionThrowsInterruptedException() {

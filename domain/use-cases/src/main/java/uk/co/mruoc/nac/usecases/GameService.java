@@ -40,11 +40,14 @@ public class GameService {
   }
 
   public void deleteAll() {
+    Stream<Game> games = getAll();
     repository.deleteAll();
+    games.forEach(game -> eventPublisher.deleted(game.getId()));
   }
 
   public void delete(long id) {
     repository.delete(id);
+    eventPublisher.deleted(id);
   }
 
   private void create(Game game) {

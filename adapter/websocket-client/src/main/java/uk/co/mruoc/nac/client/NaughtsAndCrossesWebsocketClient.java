@@ -2,7 +2,6 @@ package uk.co.mruoc.nac.client;
 
 import java.net.URI;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +13,7 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 import org.springframework.web.socket.sockjs.client.SockJsClient;
 import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
+import uk.co.mruoc.nac.api.dto.ApiGame;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -21,10 +21,8 @@ public class NaughtsAndCrossesWebsocketClient implements AutoCloseable {
 
   private final URI uri;
   private final WebSocketStompClient stompClient;
-  private final GameUpdateStompSessionHandler sessionHandler;
   private final StompHeaders connectHeaders;
-
-  private StompSession session;
+  private final GameSessionHandler sessionHandler;
 
   public NaughtsAndCrossesWebsocketClient(String baseUrl) {
     this(baseUrl, new StompHeaders());
@@ -35,18 +33,15 @@ public class NaughtsAndCrossesWebsocketClient implements AutoCloseable {
   }
 
   public NaughtsAndCrossesWebsocketClient(String baseUrl, StompHeaders connectHeaders) {
-    this(
-        toGameEventUri(baseUrl),
-        buildStompWebsocketClient(),
-        new GameUpdateStompSessionHandler(),
-        connectHeaders);
+    this(toUri(baseUrl), buildStompWebsocketClient(), connectHeaders, new GameSessionHandler());
   }
 
   public void connect() {
     try {
-      CompletableFuture<StompSession> future =
-          stompClient.connectAsync(uri, null, connectHeaders, sessionHandler);
-      session = future.get();
+      StompSession session =
+          stompClient.connectAsync(uri, null, connectHeaders, sessionHandler).get();
+      sessionHandler.setSession(session);
+      log.info("connected to session with id {}", session.getSessionId());
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
       throw new NaughtsAndCrossesWebsocketClientException(e);
@@ -55,17 +50,23 @@ public class NaughtsAndCrossesWebsocketClient implements AutoCloseable {
     }
   }
 
-  public void add(GameUpdateListener listener) {
-    sessionHandler.add(listener);
+  public GameEventSubscriber<ApiGame> subscribeToGameUpdateEvents() {
+    StompGameEventSubscriber<ApiGame> subscriber = new GameUpdateSubscriber();
+    sessionHandler.addSubscriber(subscriber);
+    return subscriber;
+  }
+
+  public GameEventSubscriber<Long> subscribeToGameDeleteEvents() {
+    StompGameEventSubscriber<Long> subscriber = new GameDeleteSubscriber();
+    sessionHandler.addSubscriber(subscriber);
+    return subscriber;
   }
 
   public void close() {
-    sessionHandler.unsubscribe();
-    log.debug("disconnecting session {}", session.getSessionId());
-    session.disconnect();
+    sessionHandler.close();
   }
 
-  private static URI toGameEventUri(String baseUrl) {
+  private static URI toUri(String baseUrl) {
     return URI.create(String.format("%s/v1/game-events", baseUrl));
   }
 

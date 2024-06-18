@@ -25,7 +25,7 @@ import uk.co.mruoc.nac.api.dto.ApiUpdateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiUser;
 import uk.co.mruoc.nac.api.dto.ApiUserBatch;
 import uk.co.mruoc.nac.api.dto.ApiUserJsonMother;
-import uk.co.mruoc.nac.client.DefaultGameUpdateListener;
+import uk.co.mruoc.nac.client.GameEventSubscriber;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClient;
 
 @Slf4j
@@ -170,18 +170,6 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     }
   }
 
-  private Resource loadUsersCsv() {
-    Path path = Paths.get("src/testFixtures/resources/users/users.csv");
-    return new FileSystemResource(path.toFile());
-  }
-
-  private boolean batchUploadCompleteWithoutErrors(String id) {
-    NaughtsAndCrossesApiClient client = getAppClient();
-    ApiUserBatch batch = client.getUserBatch(id);
-    log.info("got api user batch {}", batch);
-    return batch.isComplete() && !batch.hasErrors();
-  }
-
   @Test
   public void shouldReturnNoGamesInitially() {
     NaughtsAndCrossesApiClient client = getAppClient();
@@ -204,16 +192,17 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
   @Test
   public void shouldSendWebsocketGameEventWhenGameCreated() {
     NaughtsAndCrossesAppExtension extension = getExtension();
-    DefaultGameUpdateListener listener = extension.connectAndListenToWebsocket();
+    extension.connectToWebsocket();
     try {
+      GameEventSubscriber<ApiGame> subscriber = extension.subscribeToGameUpdateEvents();
       NaughtsAndCrossesApiClient client = getAppClient();
       ApiCreateGameRequest request = buildCreateGameRequest();
 
       client.createGame(request);
 
       String expectedJson = ApiGameJsonMother.initial();
-      awaitMostRecentGameUpdateEquals(listener, expectedJson);
-      assertThatJson(listener.forceGetMostRecentUpdate()).isEqualTo(expectedJson);
+      awaitMostRecentGameUpdateEquals(subscriber, expectedJson);
+      assertThatJson(subscriber.forceGetMostRecent()).isEqualTo(expectedJson);
     } finally {
       extension.disconnectWebsocket();
     }
@@ -244,16 +233,17 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
   @Test
   public void shouldSendWebsocketGameEventWhenTurnTaken() {
     NaughtsAndCrossesAppExtension extension = getExtension();
-    DefaultGameUpdateListener listener = extension.connectAndListenToWebsocket();
+    extension.connectToWebsocket();
     try {
+      GameEventSubscriber<ApiGame> subscriber = extension.subscribeToGameUpdateEvents();
       NaughtsAndCrossesApiClient client = getAppClient();
       ApiGame game = givenGameExists();
 
       client.takeTurn(game.getId(), new ApiTurn(0, 0, 'X'));
 
       String expectedJson = ApiGameJsonMother.xTurn();
-      awaitMostRecentGameUpdateEquals(listener, expectedJson);
-      assertThatJson(listener.forceGetMostRecentUpdate()).isEqualTo(expectedJson);
+      awaitMostRecentGameUpdateEquals(subscriber, expectedJson);
+      assertThatJson(subscriber.forceGetMostRecent()).isEqualTo(expectedJson);
     } finally {
       extension.disconnectWebsocket();
     }
@@ -304,21 +294,70 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     assertThat(error).isInstanceOf(HttpServerErrorException.InternalServerError.class);
   }
 
-  private void awaitMostRecentGameUpdateEquals(DefaultGameUpdateListener listener, String json) {
+  @Test
+  public void shouldSendWebsocketEventWhenGameDeleted() {
+    NaughtsAndCrossesAppExtension extension = getExtension();
+    extension.connectToWebsocket();
+    try {
+      GameEventSubscriber<Long> listener = extension.subscribeToGameDeleteEvents();
+      NaughtsAndCrossesApiClient client = getAppClient();
+      ApiGame game = givenGameExists();
+      long id = game.getId();
+
+      client.deleteGame(id);
+
+      awaitMostRecentGameDeleteIdEquals(listener, id);
+      assertThat(listener.forceGetMostRecent()).isEqualTo(id);
+    } finally {
+      extension.disconnectWebsocket();
+    }
+  }
+
+  private Resource loadUsersCsv() {
+    Path path = Paths.get("src/testFixtures/resources/users/users.csv");
+    return new FileSystemResource(path.toFile());
+  }
+
+  private boolean batchUploadCompleteWithoutErrors(String id) {
+    NaughtsAndCrossesApiClient client = getAppClient();
+    ApiUserBatch batch = client.getUserBatch(id);
+    log.info("got api user batch {}", batch);
+    return batch.isComplete() && !batch.hasErrors();
+  }
+  
+  private static void awaitMostRecentGameUpdateEquals(
+      GameEventSubscriber<ApiGame> listener, String json) {
     await()
         .atMost(Duration.ofSeconds(10))
         .pollInterval(Duration.ofMillis(250))
-        .ignoreExceptionsInstanceOf(NoSuchElementException.class)
         .until(() -> mostRecentUpdateEquals(listener, json));
   }
 
-  private boolean mostRecentUpdateEquals(DefaultGameUpdateListener listener, String json) {
+  private static boolean mostRecentUpdateEquals(
+      GameEventSubscriber<ApiGame> listener, String json) {
+    return listener.getMostRecent().map(update -> gameEqualsJson(update, json)).orElse(false);
+  }
+
+  private static boolean gameEqualsJson(ApiGame game, String json) {
     try {
-      assertThatJson(listener.forceGetMostRecentUpdate()).isEqualTo(json);
+      assertThatJson(game).isEqualTo(json);
       return true;
     } catch (AssertionError error) {
       log.debug(error.getMessage(), error);
       return false;
     }
+  }
+
+  private static void awaitMostRecentGameDeleteIdEquals(
+      GameEventSubscriber<Long> listener, long id) {
+    await()
+        .atMost(Duration.ofSeconds(10))
+        .pollInterval(Duration.ofMillis(250))
+        .ignoreExceptionsInstanceOf(NoSuchElementException.class)
+        .until(() -> mostRecentDeleteIdEquals(listener, id));
+  }
+
+  private static boolean mostRecentDeleteIdEquals(GameEventSubscriber<Long> listener, long id) {
+    return listener.getMostRecent().map(recentId -> recentId == id).orElse(false);
   }
 }
