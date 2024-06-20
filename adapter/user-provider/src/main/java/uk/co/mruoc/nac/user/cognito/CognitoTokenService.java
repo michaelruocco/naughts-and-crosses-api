@@ -1,4 +1,4 @@
-package uk.mruoc.nac.access;
+package uk.co.mruoc.nac.user.cognito;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -10,9 +10,12 @@ import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminInitia
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminInitiateAuthResponse;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AuthFlowType;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AuthenticationResultType;
+import uk.co.mruoc.nac.entities.CreateTokenRequest;
+import uk.co.mruoc.nac.entities.CreateTokenResponse;
+import uk.co.mruoc.nac.usecases.TokenService;
 
 @Builder
-public class CognitoAccessTokenClient implements AccessTokenClient {
+public class CognitoTokenService implements TokenService {
 
   private final CognitoIdentityProviderClient client;
   private final String userPoolId;
@@ -20,30 +23,35 @@ public class CognitoAccessTokenClient implements AccessTokenClient {
   private final Clock clock;
 
   @Override
-  public AccessToken generateToken(TokenCredentials credentials) {
+  public CreateTokenResponse create(CreateTokenRequest request) {
     AdminInitiateAuthRequest authRequest =
         AdminInitiateAuthRequest.builder()
             .clientId(clientId)
             .userPoolId(userPoolId)
-            .authParameters(toAuthParameters(credentials))
+            .authParameters(toAuthParameters(request))
             .authFlow(AuthFlowType.ADMIN_USER_PASSWORD_AUTH)
             .build();
     AdminInitiateAuthResponse response = client.adminInitiateAuth(authRequest);
     AuthenticationResultType type = response.authenticationResult();
-    return toAccessToken(type);
+    return toResponse(type);
   }
 
-  private AccessToken toAccessToken(AuthenticationResultType type) {
-    Instant expiry =
-        clock
-            .instant()
-            .plusSeconds(Optional.ofNullable(type.expiresIn()).orElse(Integer.MAX_VALUE));
-    return AccessToken.builder().type("Bearer").value(type.accessToken()).expiry(expiry).build();
+  private CreateTokenResponse toResponse(AuthenticationResultType type) {
+    return CreateTokenResponse.builder()
+        .accessToken(type.accessToken())
+        .expiry(toExpiry(type))
+        .build();
   }
 
-  private static Map<String, String> toAuthParameters(TokenCredentials credentials) {
+  private Instant toExpiry(AuthenticationResultType type) {
+    return clock
+        .instant()
+        .plusSeconds(Optional.ofNullable(type.expiresIn()).orElse(Integer.MAX_VALUE));
+  }
+
+  private static Map<String, String> toAuthParameters(CreateTokenRequest request) {
     return Map.of(
-        "USERNAME", credentials.getUsername(),
-        "PASSWORD", credentials.getPassword());
+        "USERNAME", request.getUsername(),
+        "PASSWORD", request.getPassword());
   }
 }

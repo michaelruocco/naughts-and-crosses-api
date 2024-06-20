@@ -19,6 +19,7 @@ public class IntegratedTestEnvironmentArgsDecorator implements UnaryOperator<Str
 
   private final String cognitoEndpointOverride;
   private final String userPoolId;
+  private final String userPoolClientId;
   private final String awsAccessKeyId;
   private final String awsSecretAccessKey;
 
@@ -43,6 +44,7 @@ public class IntegratedTestEnvironmentArgsDecorator implements UnaryOperator<Str
         String.format("--auth.issuer.url=%s", authIssuerUrl),
         "--aws.cognito.regionName=eu-central-1",
         String.format("--aws.cognito.userPoolId=%s", userPoolId),
+        String.format("--aws.cognito.userPoolClientId=%s", userPoolClientId),
         String.format("--aws.cognito.endpointOverride=%s", cognitoEndpointOverride),
         String.format("--aws.cognito.accessKeyId=%s", awsAccessKeyId),
         String.format("--aws.cognito.secretAccessKey=%s", awsSecretAccessKey));

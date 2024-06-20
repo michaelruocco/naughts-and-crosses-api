@@ -2,6 +2,7 @@ package uk.co.mruoc.nac.app.config.user;
 
 import io.micrometer.common.util.StringUtils;
 import java.net.URI;
+import java.time.Clock;
 import java.util.UUID;
 import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
@@ -17,9 +18,12 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClientBuilder;
 import uk.co.mruoc.nac.usecases.ExternalUserService;
+import uk.co.mruoc.nac.usecases.TokenService;
+import uk.co.mruoc.nac.user.cognito.CognitoTokenService;
 import uk.co.mruoc.nac.user.cognito.CognitoUserConverter;
 import uk.co.mruoc.nac.user.cognito.CognitoUserService;
 import uk.co.mruoc.nac.user.inmemory.StubExternalUserService;
+import uk.co.mruoc.nac.user.inmemory.StubTokenService;
 
 @Configuration
 @Slf4j
@@ -41,7 +45,34 @@ public class CognitoUserConfig {
     return builder.build();
   }
 
-  @ConditionalOnProperty(value = "stub.user.provider", havingValue = "false", matchIfMissing = true)
+  @ConditionalOnProperty(
+      value = "stub.token.service.enabled",
+      havingValue = "false",
+      matchIfMissing = true)
+  @Bean
+  public TokenService cognitoTokenService(
+      CognitoIdentityProviderClient client,
+      @Value("${aws.cognito.userPoolId}") String userPoolId,
+      @Value("${aws.cognito.userPoolClientId}") String userPoolClientId,
+      Clock clock) {
+    return CognitoTokenService.builder()
+        .client(client)
+        .userPoolId(userPoolId)
+        .clientId(userPoolClientId)
+        .clock(clock)
+        .build();
+  }
+
+  @ConditionalOnProperty(value = "stub.token.service.enabled", havingValue = "true")
+  @Bean
+  public TokenService stubTokenService(Clock clock) {
+    return new StubTokenService(clock);
+  }
+
+  @ConditionalOnProperty(
+      value = "stub.user.provider.enabled",
+      havingValue = "false",
+      matchIfMissing = true)
   @Bean
   public ExternalUserService externalUserService(
       CognitoIdentityProviderClient client, @Value("${aws.cognito.userPoolId}") String userPoolId) {
@@ -53,7 +84,7 @@ public class CognitoUserConfig {
         .build();
   }
 
-  @ConditionalOnProperty(value = "stub.user.provider", havingValue = "true")
+  @ConditionalOnProperty(value = "stub.user.provider.enabled", havingValue = "true")
   @Bean
   public ExternalUserService stubExternalUserService(Supplier<UUID> uuidSupplier) {
     return new StubExternalUserService(uuidSupplier);

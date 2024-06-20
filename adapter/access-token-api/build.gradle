@@ -1,5 +1,0 @@
-plugins {
-    id "naughts-and-crosses-api.java-conventions"
-}
-
-apply from: rootProject.file("publish.gradle")

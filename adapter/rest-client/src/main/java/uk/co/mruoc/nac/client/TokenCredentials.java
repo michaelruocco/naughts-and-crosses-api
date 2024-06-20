@@ -1,4 +1,4 @@
-package uk.mruoc.nac.access;
+package uk.co.mruoc.nac.client;
 
 public interface TokenCredentials {
 

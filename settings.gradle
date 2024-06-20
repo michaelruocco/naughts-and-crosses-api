@@ -18,12 +18,6 @@ project(":rest-client").projectDir = file("adapter/rest-client")
 include "websocket-client"
 project(":websocket-client").projectDir = file("adapter/websocket-client")
 
-include "access-token-api"
-project(":access-token-api").projectDir = file("adapter/access-token-api")
-
-include "access-token-client"
-project(":access-token-client").projectDir = file("adapter/access-token-client")
-
 include "user-provider"
 project(":user-provider").projectDir = file("adapter/user-provider")
 

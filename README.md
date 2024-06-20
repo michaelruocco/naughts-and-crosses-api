@@ -86,7 +86,8 @@ you can run:
     -Dcors.allowed.origins=http://localhost:3001 \
     -Drepository.in.memory.enabled=true \
     -Dbroker.in.memory.enabled=true \
-    -Dbroker.ssl.enabled=false \
+    -Dstub.user.provider.enabled=true \
+    -Dstub.token.service.enabled=true \
     -Dauth.security.enabled=false
 ```
 
@@ -130,6 +131,7 @@ you can run:
     -Dbroker.system.passcode=artemis \
     -Dauth.issuer.url=http://cognito:9229/local_4RsGXSAf \
     -Daws.cognito.userPoolId=local_4RsGXSAf \
+    -Daws.cognito.userPoolClientId=6b0j5hb1u25z290vv502lfl1c \
     -Daws.cognito.regionName=eu-central-1 \
     -Daws.cognito.endpointOverride=http://localhost:9229 \
     -Daws.cognito.accessKeyId=abc \
@@ -159,10 +161,9 @@ to generate a bearer token that you can provide when calling the API.
 To do this you can run the following command:
 
 ```bash
-curl -X POST "http://localhost:9229/" \
-  -H "Content-Type:application/x-amz-json-1.1" \
-  -H "X-Amz-Target:AWSCognitoIdentityProviderService.InitiateAuth" \
-  -d '{"AuthParameters":{"USERNAME":"user-1","PASSWORD":"pwd1"},"AuthFlow":"USER_PASSWORD_AUTH","ClientId":"38fdq0fmxashfmazwznm5b05b"}'
+curl -X POST "http://localhost:3002/v1/tokens" \
+  -H 'Content-Type:application/json' \
+  -d '{"username":"user-1","password":"pwd1"}'
 ```
 
 ### Creating users

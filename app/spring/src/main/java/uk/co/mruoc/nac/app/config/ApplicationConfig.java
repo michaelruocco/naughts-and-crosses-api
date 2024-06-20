@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import uk.co.mruoc.nac.api.converter.ApiConverter;
+import uk.co.mruoc.nac.api.converter.ApiTokenConverter;
 import uk.co.mruoc.nac.api.converter.ApiUserBatchConverter;
 import uk.co.mruoc.nac.api.converter.ApiUserConverter;
 import uk.co.mruoc.nac.app.config.security.CorsWebMvcConfigurer;
@@ -152,6 +153,11 @@ public class ApplicationConfig {
   @Bean
   public ApiUserBatchConverter apiUserBatchConverter() {
     return new ApiUserBatchConverter();
+  }
+
+  @Bean
+  public ApiTokenConverter apiTokenConverter() {
+    return new ApiTokenConverter();
   }
 
   @Bean

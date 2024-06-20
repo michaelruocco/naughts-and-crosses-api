@@ -1,7 +1,9 @@
 spring:
   application:
     name: naughts-and-crosses-api
-  security.oauth2.resourceserver.jwt.issuer-uri: ${auth.issuer.url:}
+  security.oauth2.resourceserver.jwt:
+    public-key-location: ${auth.issuer.public.key:}
+    issuer-uri: ${auth.issuer.url:}
   main:
     banner-mode: OFF
   datasource:
@@ -22,3 +24,5 @@ management:
     health:
       probes.enabled: true
       show-details: always
+
+logging.level.org.springframework.security: DEBUG

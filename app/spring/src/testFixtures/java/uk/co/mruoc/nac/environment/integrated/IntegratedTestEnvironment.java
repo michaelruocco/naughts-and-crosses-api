@@ -1,21 +1,14 @@
 package uk.co.mruoc.nac.environment.integrated;
 
 import java.net.SocketAddress;
-import java.time.Clock;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.nac.app.TestEnvironment;
-import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClient;
-import uk.co.mruoc.nac.client.NaughtsAndCrossesWebsocketClient;
 import uk.co.mruoc.nac.environment.LocalApp;
 import uk.co.mruoc.nac.environment.integrated.activemq.TestActiveMQContainer;
-import uk.co.mruoc.nac.environment.integrated.cognito.DefaultCognitoTokenCredentials;
 import uk.co.mruoc.nac.environment.integrated.cognito.TestCognitoContainer;
 import uk.co.mruoc.nac.environment.integrated.postgres.TestPostgresContainer;
-import uk.mruoc.nac.access.AccessToken;
-import uk.mruoc.nac.access.CognitoAccessTokenClient;
-import uk.mruoc.nac.access.TokenCredentials;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -59,6 +52,11 @@ public class IntegratedTestEnvironment implements TestEnvironment {
   }
 
   @Override
+  public String getAppUrl() {
+    return localApp.getUrl();
+  }
+
+  @Override
   public SocketAddress getAppSocketAddress() {
     return localApp.getSocketAddress();
   }
@@ -74,33 +72,11 @@ public class IntegratedTestEnvironment implements TestEnvironment {
         .authIssuerUrl(COGNITO.getIssuerUrl())
         .cognitoEndpointOverride(COGNITO.getBaseUri())
         .userPoolId(COGNITO.getUserPoolId())
+        .userPoolClientId(COGNITO.getUserPoolClientId())
         .awsAccessKeyId("abc")
         .awsSecretAccessKey("123")
         .build()
         .apply(Stream.of(localApp.getServerPortArg()))
         .toArray(String[]::new);
-  }
-
-  @Override
-  public NaughtsAndCrossesApiClient buildApiClient(TokenCredentials credentials) {
-    return new NaughtsAndCrossesApiClient(localApp.getUrl(), getAuthTokenValue(credentials));
-  }
-
-  @Override
-  public NaughtsAndCrossesWebsocketClient buildWebsocketClient() {
-    return new NaughtsAndCrossesWebsocketClient(
-        localApp.getUrl(), getAuthTokenValue(new DefaultCognitoTokenCredentials()));
-  }
-
-  private static String getAuthTokenValue(TokenCredentials credentials) {
-    CognitoAccessTokenClient client =
-        CognitoAccessTokenClient.builder()
-            .client(COGNITO.buildIdentityProviderClient())
-            .userPoolId(COGNITO.getUserPoolId())
-            .clientId(COGNITO.getUserPoolClientId())
-            .clock(Clock.systemUTC())
-            .build();
-    AccessToken token = client.generateToken(credentials);
-    return token.getValue();
   }
 }

@@ -1,6 +1,6 @@
 package uk.co.mruoc.nac.environment.integrated.cognito;
 
-import uk.mruoc.nac.access.TokenCredentials;
+import uk.co.mruoc.nac.client.TokenCredentials;
 
 public class DefaultCognitoTokenCredentials implements TokenCredentials {
 
