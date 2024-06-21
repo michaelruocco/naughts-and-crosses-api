@@ -17,10 +17,11 @@ public class IntegratedTestEnvironmentArgsDecorator implements UnaryOperator<Str
 
   private final String authIssuerUrl;
 
-  private final String keycloakAdminUrl;
-  private final String keycloakAdminRealm;
-  private final String keycloakAdminClientId;
-  private final String keycloakAdminClientSecret;
+  private final String cognitoEndpointOverride;
+  private final String userPoolId;
+  private final String userPoolClientId;
+  private final String awsAccessKeyId;
+  private final String awsSecretAccessKey;
 
   @Override
   public Stream<String> apply(Stream<String> args) {
@@ -41,8 +42,12 @@ public class IntegratedTestEnvironmentArgsDecorator implements UnaryOperator<Str
         "--broker.system.login=artemis",
         "--broker.system.passcode=artemis",
         String.format("--auth.issuer.url=%s", authIssuerUrl),
-        String.format("--keycloak.admin.client.id=%s", keycloakAdminClientId),
-        String.format("--keycloak.admin.client.secret=%s", keycloakAdminClientSecret));
+        "--aws.cognito.regionName=eu-central-1",
+        String.format("--aws.cognito.userPoolId=%s", userPoolId),
+        String.format("--aws.cognito.userPoolClientId=%s", userPoolClientId),
+        String.format("--aws.cognito.endpointOverride=%s", cognitoEndpointOverride),
+        String.format("--aws.cognito.accessKeyId=%s", awsAccessKeyId),
+        String.format("--aws.cognito.secretAccessKey=%s", awsSecretAccessKey));
   }
 
   private String buildJdbcUrl() {

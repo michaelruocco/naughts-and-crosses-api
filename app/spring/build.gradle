@@ -1,17 +1,17 @@
 buildscript {
     ext {
-        springBootVersion = "3.2.4"
+        springBootVersion = "3.3.0"
     }
 }
 
 plugins {
     id "naughts-and-crosses-api.java-conventions"
     id "org.springframework.boot" version "${springBootVersion}"
-    id "com.gorylenko.gradle-git-properties" version "2.4.1"
+    id "com.gorylenko.gradle-git-properties" version "2.4.2"
 }
 
 ext {
-    testContainersVersion = "1.19.7"
+    testContainersVersion = "1.19.8"
     awaitilityVersion = "4.2.1"
 }
 ext["junit-jupiter.version"] = "${junitVersion}"
@@ -29,7 +29,6 @@ dependencies {
     implementation project(":entities")
     implementation project(":rest-client")
     implementation project(":websocket-client")
-    implementation project(":access-token-client")
     implementation project(":user-provider")
     implementation platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
     implementation "org.springframework.boot:spring-boot-starter-web"
@@ -38,7 +37,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation "org.springframework.boot:spring-boot-starter-jdbc"
-    implementation "org.apache.commons:commons-text:1.11.0"
+    implementation "org.apache.commons:commons-text:1.12.0"
     implementation "org.postgresql:postgresql:${postgresqlVersion}"
     implementation "org.flywaydb:flyway-core:${flywayVersion}"
     implementation "com.github.michaelruocco:json-adapter:${jsonAdapterVersion}"
@@ -48,19 +47,19 @@ dependencies {
     integrationTestImplementation testFixtures(project(":api"))
     integrationTestImplementation project(":rest-client")
     integrationTestImplementation project(":websocket-client")
-    integrationTestImplementation project(":access-token-client")
     integrationTestImplementation "net.javacrumbs.json-unit:json-unit-assertj:3.2.7"
     integrationTestImplementation "org.awaitility:awaitility:${awaitilityVersion}"
 
     testFixturesImplementation project(":api")
     testFixturesImplementation project(":rest-client")
     testFixturesImplementation project(":websocket-client")
-    testFixturesImplementation project(":access-token-client")
+    testFixturesImplementation project(":user-provider")
     testFixturesImplementation "org.springframework.boot:spring-boot:${springBootVersion}"
     testFixturesImplementation "org.awaitility:awaitility:${awaitilityVersion}"
     testFixturesImplementation "org.testcontainers:postgresql:${testContainersVersion}"
     testFixturesImplementation "org.testcontainers:activemq:${testContainersVersion}"
     testFixturesImplementation "org.postgresql:postgresql:${postgresqlVersion}"
+    testFixturesImplementation "software.amazon.awssdk:cognitoidentityprovider:${cognitoVersion}"
 }
 
 springBoot {

@@ -16,4 +16,5 @@ public class DbUser {
   private final String firstName;
   private final String lastName;
   private final String email;
+  private final boolean emailVerified;
 }

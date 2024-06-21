@@ -2,7 +2,7 @@ package uk.co.mruoc.nac.usecases;
 
 public class UserNotFoundException extends RuntimeException {
 
-  public UserNotFoundException(String id) {
-    super(String.format("user with id %s not found", id));
+  public UserNotFoundException(String username) {
+    super(String.format("user with username %s not found", username));
   }
 }

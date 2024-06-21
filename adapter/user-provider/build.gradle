@@ -3,9 +3,12 @@ plugins {
 }
 
 dependencies {
+    runtimeOnly "org.slf4j:slf4j-simple:${slf4jVersion}"
+    api "software.amazon.awssdk:cognitoidentityprovider:${cognitoVersion}"
     implementation project(":use-cases")
     implementation project(":entities")
-    api "org.keycloak:keycloak-admin-client:24.0.2"
+    implementation "com.auth0:java-jwt:4.4.0"
+    implementation "commons-io:commons-io:2.16.1"
 }
 
 apply from: rootProject.file("publish.gradle")

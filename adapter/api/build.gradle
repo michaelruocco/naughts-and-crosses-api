@@ -4,6 +4,8 @@ plugins {
 
 dependencies {
     implementation project(":entities")
+    implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-csv:${jacksonVersion}"
+    implementation "org.apache.commons:commons-collections4:4.4"
 
     testFixturesImplementation "com.github.michaelruocco:file-loader:7.0.2"
 }

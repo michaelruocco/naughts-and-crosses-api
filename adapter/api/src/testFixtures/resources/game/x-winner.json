@@ -85,7 +85,8 @@
         "firstName": "User",
         "lastName": "One",
         "fullName": "User One",
-        "email": "user-1@email.com"
+        "email": "user-1@email.com",
+        "emailVerified": true
       },
       "token": "X"
     },
@@ -96,7 +97,8 @@
         "firstName": "User",
         "lastName": "Two",
         "fullName": "User Two",
-        "email": "user-2@email.com"
+        "email": "user-2@email.com",
+        "emailVerified": true
       },
       "token": "O"
     }

@@ -14,7 +14,7 @@ public class IdController {
   private final IdSupplier idSupplier;
 
   @DeleteMapping
-  public void resetIds() {
+  public void reset() {
     idSupplier.reset();
   }
 }

@@ -106,13 +106,13 @@ class GameTest {
   }
 
   private void givenDrawGameTurnTaken() {
-    Board board = givenGameEndingTurnTaken();
-    when(board.hasWinner(turn.getToken())).thenReturn(false);
+    Board gameEndingTurnBoard = givenGameEndingTurnTaken();
+    when(gameEndingTurnBoard.hasWinner(turn.getToken())).thenReturn(false);
   }
 
   private void givenWinningTurnTaken() {
-    Board board = givenGameEndingTurnTaken();
-    when(board.hasWinner(turn.getToken())).thenReturn(true);
+    Board gameEndingTurnBoard = givenGameEndingTurnTaken();
+    when(gameEndingTurnBoard.hasWinner(turn.getToken())).thenReturn(true);
   }
 
   private Board givenGameEndingTurnTaken() {

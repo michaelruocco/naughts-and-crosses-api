@@ -13,8 +13,9 @@
 
 ## Overview
 
-This repo contains the backend API for a simple naughts and crosses (or tic-tac-toe) game.
-The accompanying UI that uses this API can be found [here](https://github.com/michaelruocco/naughts-and-crosses-ui)
+This repo contains the backend API for a simple naughts and crosses
+(or tic-tac-toe) game. The accompanying UI that uses this API can be
+found [here](https://github.com/michaelruocco/naughts-and-crosses-ui)
 
 ## Java Version
 
@@ -85,21 +86,22 @@ you can run:
     -Dcors.allowed.origins=http://localhost:3001 \
     -Drepository.in.memory.enabled=true \
     -Dbroker.in.memory.enabled=true \
-    -Dbroker.ssl.enabled=false \
+    -Dstub.user.provider.enabled=true \
+    -Dstub.token.service.enabled=true \
     -Dauth.security.enabled=false
 ```
 
-### Running the API locally with a postgres database repository, kafka and keycloak
+### Running the API locally with a postgres database repository, kafka and cognito
 
-Note - for keycloak to work correctly you will also need to update your hosts file,
+Note - for cognito to work correctly you will also need to update your hosts file,
 on a mac this can be found at `/etc/hosts` and you will need to map the domain name
-`keycloak` to the local machine by adding the following line to the file:
+`cognito` to the local machine by adding the following line to the file:
 
 ```
-127.0.0.1	keycloak
+127.0.0.1    cognito
 ```
 
-To run the API using the postgres database, kafka and keycloak, you will need to start
+To run the API using the postgres database, kafka and cognito, you will need to start
 an instance of each of those systems running in docker by running
 
 ```bash
@@ -107,9 +109,9 @@ docker-compose up -d
 ```
 
 This will start an instance of postgres running on port 5433, kafka running on 9094
-and keycloak running on 4012.
+and cognito running on 9229.
 
-To start the app running on a port 3002 and connecting to postgres, kafka and keycloak
+To start the app running on a port 3002 and connecting to postgres, kafka and cognito
 you can run:
 
 ```gradle
@@ -127,9 +129,13 @@ you can run:
     -Dbroker.client.passcode=artemis \
     -Dbroker.system.login=artemis \
     -Dbroker.system.passcode=artemis \
-    -Dauth.issuer.url=http://keycloak:4021/realms/naughts-and-crosses-local \
-    -Dkeycloak.admin.client.id=naughts-and-crosses-api \
-    -Dkeycloak.admin.client.secret=naughts-and-crosses-api-secret
+    -Dauth.issuer.url=http://cognito:9229/local_4RsGXSAf \
+    -Daws.cognito.userPoolId=local_4RsGXSAf \
+    -Daws.cognito.userPoolClientId=6b0j5hb1u25z290vv502lfl1c \
+    -Daws.cognito.regionName=eu-central-1 \
+    -Daws.cognito.endpointOverride=http://localhost:9229 \
+    -Daws.cognito.accessKeyId=abc \
+    -Daws.cognito.secretAccessKey=123
 ```
 
 ### Running the API as a docker container with a postgres database repository, and kafka
@@ -148,17 +154,28 @@ you can run:
 docker-compose --profile docker-api up -d
 ```
 
-### Generating a bearer token from Keycloak
+### Generating a bearer token from Cognito
 
-If you are running the API with oauth security enabled you will need to generate a
-bearer token that you can provide when calling the API. To do this you can run the
-following command:
+If you are running the API with oauth security enabled you will need
+to generate a bearer token that you can provide when calling the API.
+To do this you can run the following command:
 
 ```bash
-curl "http://keycloak:4021/realms/naughts-and-crosses-local/protocol/openid-connect/token" \
-        -d "client_id=naughts-and-crosses-api" \
-        -d "client_secret=naughts-and-crosses-api-secret" \
-        -d "grant_type=client_credentials"
+curl -X POST "http://localhost:3002/v1/tokens" \
+  -H 'Content-Type:application/json' \
+  -d '{"username":"user-1","password":"pwd1"}'
+```
+
+### Creating users
+
+You can create users by uploading a csv file using the following command:
+
+```bash
+curl -X POST \
+    -H 'Authorization:Bearer <token>' \
+    -F "data=@./app/spring/src/testFixtures/resources/users/users.csv;type=text/csv" \
+    -F "name=users.csv" \
+    http://localhost:3002/v1/users
 ```
 
 ### Getting users
@@ -170,14 +187,15 @@ curl http://localhost:3002/v1/users
 or with a bearer token:
 
 ```bash
-curl -H 'Authorization:Bearer <token-value>' http://localhost:3002/v1/users
+curl -H 'Authorization:Bearer <token>' http://localhost:3002/v1/users
 ```
 
 ### Creating a game
 
-Once the API is running locally, to generate a game you can run, note - for this command
-and any of the subsequent ones listed, if authentication is enabled on the API then the
-bearer token needs to be supplied in an authorization header on the request
+Once the API is running locally, to generate a game you can run, note - for
+this command and any of the subsequent ones listed, if authentication is
+enabled on the API then the bearer token needs to be supplied in an
+authorization header on the request
 
 ```bash
 curl -H "Content-Type: application/json" \

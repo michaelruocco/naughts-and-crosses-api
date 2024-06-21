@@ -6,14 +6,18 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import uk.co.mruoc.nac.api.dto.ApiCreateGameRequest;
+import uk.co.mruoc.nac.api.dto.ApiCreateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiGame;
 import uk.co.mruoc.nac.api.dto.ApiTurn;
+import uk.co.mruoc.nac.api.dto.ApiUpdateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiUser;
+import uk.co.mruoc.nac.api.dto.ApiUserBatch;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -31,6 +35,49 @@ public class NaughtsAndCrossesApiClient {
     this(new UriFactory(baseUrl), new HttpEntityFactory(token), new RestTemplate());
   }
 
+  public ApiUser createUser(ApiCreateUserRequest request) {
+    String uri = uriFactory.buildUsersUri();
+    return performPost(uri, entityFactory.buildRequest(request), ApiUser.class);
+  }
+
+  public ApiUser updateUser(String username, ApiUpdateUserRequest request) {
+    String uri = uriFactory.buildUserUri(username);
+    return performPut(uri, entityFactory.buildRequest(request), ApiUser.class);
+  }
+
+  public ApiUser getUser(String username) {
+    String uri = uriFactory.buildUserUri(username);
+    return performGet(uri, ApiUser.class);
+  }
+
+  public void deleteUser(String username) {
+    String uri = uriFactory.buildUserUri(username);
+    performDelete(uri);
+  }
+
+  public ApiUserBatch uploadUserBatch(Resource resource) {
+    return performPost(
+        uriFactory.buildUserBatchesUri(), entityFactory.buildRequest(resource), ApiUserBatch.class);
+  }
+
+  public ApiUserBatch getUserBatch(String id) {
+    return performGet(uriFactory.buildUserBatchUri(id), ApiUserBatch.class);
+  }
+
+  public Collection<ApiUserBatch> getAllUserBatches() {
+    ApiUserBatch[] batches = performGet(uriFactory.buildUserBatchesUri(), ApiUserBatch[].class);
+    return toCollection(batches);
+  }
+
+  public void deleteAllUserBatches() {
+    performDelete(uriFactory.buildUserBatchesUri());
+  }
+
+  public void synchronizeExternalUsers() {
+    String uri = uriFactory.buildExternalUserSynchronizationsUri();
+    performPost(uri, entityFactory.buildRequest());
+  }
+
   public Collection<ApiUser> getAllUsers() {
     ApiUser[] users = performGet(uriFactory.buildUsersUri(), ApiUser[].class);
     return toCollection(users);
@@ -42,12 +89,12 @@ public class NaughtsAndCrossesApiClient {
   }
 
   public ApiGame createGame(ApiCreateGameRequest request) {
-    return performPost(uriFactory.buildGamesUri(), entityFactory.buildRequest(request));
+    return performPostGame(uriFactory.buildGamesUri(), entityFactory.buildRequest(request));
   }
 
   public ApiGame takeTurn(long gameId, ApiTurn turn) {
     HttpEntity<ApiTurn> request = entityFactory.buildRequest(turn);
-    return performPost(uriFactory.buildTakeTurnUri(gameId), request);
+    return performPostGame(uriFactory.buildTakeTurnUri(gameId), request);
   }
 
   public ApiGame getGame(long gameId) {
@@ -80,9 +127,28 @@ public class NaughtsAndCrossesApiClient {
     return toBodyIfNotNull(response);
   }
 
-  private ApiGame performPost(String uri, HttpEntity<?> request) {
-    ResponseEntity<ApiGame> response =
-        template.exchange(uri, HttpMethod.POST, request, ApiGame.class);
+  private void performPost(String uri, HttpEntity<?> request) {
+    ResponseEntity<Void> response = template.exchange(uri, HttpMethod.POST, request, Void.class);
+    if (!response.getStatusCode().is2xxSuccessful()) {
+      throw new NaughtsAndCrossesApiClientException(response.getStatusCode().toString());
+    }
+  }
+
+  private ApiGame performPostGame(String uri, HttpEntity<?> request) {
+    return performPost(uri, request, ApiGame.class);
+  }
+
+  private <T> T performPost(String uri, HttpEntity<?> request, Class<T> responseType) {
+    return performUpdate(uri, HttpMethod.POST, request, responseType);
+  }
+
+  private <T> T performPut(String uri, HttpEntity<?> request, Class<T> responseType) {
+    return performUpdate(uri, HttpMethod.PUT, request, responseType);
+  }
+
+  private <T> T performUpdate(
+      String uri, HttpMethod method, HttpEntity<?> request, Class<T> responseType) {
+    ResponseEntity<T> response = template.exchange(uri, method, request, responseType);
     return toBodyIfNotNull(response);
   }
 

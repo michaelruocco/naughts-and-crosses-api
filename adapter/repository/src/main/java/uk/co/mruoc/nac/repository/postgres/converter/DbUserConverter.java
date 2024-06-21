@@ -1,7 +1,6 @@
 package uk.co.mruoc.nac.repository.postgres.converter;
 
 import java.util.Collection;
-import java.util.List;
 import uk.co.mruoc.nac.entities.User;
 import uk.co.mruoc.nac.repository.postgres.dto.DbUser;
 
@@ -18,10 +17,11 @@ public class DbUserConverter {
         .firstName(user.getFirstName())
         .lastName(user.getLastName())
         .email(user.getEmail())
+        .emailVerified(user.isEmailVerified())
         .build();
   }
 
-  public List<User> toUsers(Collection<DbUser> dbUsers) {
+  public Collection<User> toUsers(Collection<DbUser> dbUsers) {
     return dbUsers.stream().map(this::toUser).toList();
   }
 
@@ -32,6 +32,7 @@ public class DbUserConverter {
         .firstName(dbUser.getFirstName())
         .lastName(dbUser.getLastName())
         .email(dbUser.getEmail())
+        .emailVerified(dbUser.isEmailVerified())
         .build();
   }
 }

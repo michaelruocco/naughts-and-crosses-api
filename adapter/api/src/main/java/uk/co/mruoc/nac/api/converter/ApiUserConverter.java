@@ -1,11 +1,13 @@
 package uk.co.mruoc.nac.api.converter;
 
 import java.util.Collection;
-import lombok.RequiredArgsConstructor;
+import uk.co.mruoc.nac.api.dto.ApiCreateUserRequest;
+import uk.co.mruoc.nac.api.dto.ApiUpdateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiUser;
+import uk.co.mruoc.nac.entities.CreateUserRequest;
+import uk.co.mruoc.nac.entities.UpdateUserRequest;
 import uk.co.mruoc.nac.entities.User;
 
-@RequiredArgsConstructor
 public class ApiUserConverter {
 
   public Collection<ApiUser> toApiUsers(Collection<User> users) {
@@ -20,6 +22,7 @@ public class ApiUserConverter {
         .lastName(user.getLastName())
         .fullName(user.getFullName())
         .email(user.getEmail())
+        .emailVerified(user.isEmailVerified())
         .build();
   }
 
@@ -34,6 +37,42 @@ public class ApiUserConverter {
         .firstName(apiUser.getFirstName())
         .lastName(apiUser.getLastName())
         .email(apiUser.getEmail())
+        .emailVerified(apiUser.isEmailVerified())
+        .build();
+  }
+
+  public CreateUserRequest toCreateUserRequest(ApiCreateUserRequest apiRequest) {
+    return CreateUserRequest.builder()
+        .username(apiRequest.getUsername())
+        .firstName(apiRequest.getFirstName())
+        .lastName(apiRequest.getLastName())
+        .email(apiRequest.getEmail())
+        .emailVerified(apiRequest.isEmailVerified())
+        .build();
+  }
+
+  public Collection<ApiCreateUserRequest> toApiCreateUserRequests(
+      Collection<CreateUserRequest> requests) {
+    return requests.stream().map(this::toApiCreateUserRequest).toList();
+  }
+
+  public ApiCreateUserRequest toApiCreateUserRequest(CreateUserRequest request) {
+    return ApiCreateUserRequest.builder()
+        .username(request.getUsername())
+        .firstName(request.getFirstName())
+        .lastName(request.getLastName())
+        .email(request.getEmail())
+        .emailVerified(request.isEmailVerified())
+        .build();
+  }
+
+  public UpdateUserRequest toUpdateUserRequest(String username, ApiUpdateUserRequest apiRequest) {
+    return UpdateUserRequest.builder()
+        .username(username)
+        .firstName(apiRequest.getFirstName())
+        .lastName(apiRequest.getLastName())
+        .email(apiRequest.getEmail())
+        .emailVerified(apiRequest.isEmailVerified())
         .build();
   }
 }

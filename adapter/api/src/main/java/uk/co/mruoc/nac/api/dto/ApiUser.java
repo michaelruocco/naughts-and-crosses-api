@@ -17,4 +17,5 @@ public class ApiUser {
   private final String lastName;
   private final String fullName;
   private final String email;
+  private final boolean emailVerified;
 }

@@ -6,9 +6,13 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.co.mruoc.json.jackson.JacksonJsonConverter;
-import uk.co.mruoc.nac.repository.postgres.PostgresGameRepository;
 import uk.co.mruoc.nac.repository.postgres.PostgresIdSupplier;
+import uk.co.mruoc.nac.repository.postgres.game.PostgresGameRepository;
+import uk.co.mruoc.nac.repository.postgres.user.PostgresUserBatchRepository;
+import uk.co.mruoc.nac.repository.postgres.user.PostgresUserRepository;
 import uk.co.mruoc.nac.usecases.IdSupplier;
+import uk.co.mruoc.nac.usecases.UserBatchRepository;
+import uk.co.mruoc.nac.usecases.UserRepository;
 
 @Configuration
 @ConditionalOnProperty(
@@ -25,5 +29,16 @@ public class PostgresRepositoryConfig {
   @Bean
   public PostgresGameRepository postgresGameRepository(DataSource dataSource, ObjectMapper mapper) {
     return new PostgresGameRepository(dataSource, new JacksonJsonConverter(mapper));
+  }
+
+  @Bean
+  public UserRepository postgresUserRepository(DataSource dataSource, ObjectMapper mapper) {
+    return new PostgresUserRepository(dataSource, new JacksonJsonConverter(mapper));
+  }
+
+  @Bean
+  public UserBatchRepository postgresUserBatchRepository(
+      DataSource dataSource, ObjectMapper mapper) {
+    return new PostgresUserBatchRepository(dataSource, new JacksonJsonConverter(mapper));
   }
 }

@@ -1,8 +1,6 @@
 package uk.co.mruoc.nac.app;
 
 import java.net.SocketAddress;
-import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClient;
-import uk.co.mruoc.nac.client.NaughtsAndCrossesWebsocketClient;
 
 public interface TestEnvironment {
 
@@ -12,11 +10,9 @@ public interface TestEnvironment {
 
   int getAppPort();
 
+  String getAppUrl();
+
   SocketAddress getAppSocketAddress();
 
   String[] getAppArgs();
-
-  NaughtsAndCrossesApiClient buildApiClient();
-
-  NaughtsAndCrossesWebsocketClient buildWebsocketClient();
 }
