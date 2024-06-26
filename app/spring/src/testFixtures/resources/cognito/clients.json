@@ -12,6 +12,19 @@
         "RefreshToken": "days"
       },
       "UserPoolId": "local_4RsGXSAf"
+    },
+    "cetmfyu3fkyiakptw061wj4is": {
+      "AccessTokenValidity": 1,
+      "ClientId": "cetmfyu3fkyiakptw061wj4is",
+      "ClientName": "demo-user-pool-client",
+      "CreationDate": "2024-06-26T19:16:44.178Z",
+      "LastModifiedDate": "2024-06-26T19:16:44.178Z",
+      "TokenValidityUnits": {
+        "AccessToken": "hours",
+        "IdToken": "minutes",
+        "RefreshToken": "days"
+      },
+      "UserPoolId": "local_5fnDt7am"
     }
   }
 }

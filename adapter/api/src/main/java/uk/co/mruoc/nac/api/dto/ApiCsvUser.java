@@ -10,11 +10,12 @@ import lombok.RequiredArgsConstructor;
 @NoArgsConstructor(force = true)
 @Builder
 @Data
-@JsonPropertyOrder({"username", "firstName", "lastName", "email", "emailVerified"})
+@JsonPropertyOrder({"username", "firstName", "lastName", "email", "emailVerified", "groups"})
 public class ApiCsvUser {
   private final String username;
   private final String firstName;
   private final String lastName;
   private final String email;
   private final boolean emailVerified;
+  private final String groups;
 }

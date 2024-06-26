@@ -18,6 +18,7 @@ public class DbCreateUserRequestConverter {
         .lastName(request.getLastName())
         .email(request.getEmail())
         .emailVerified(request.isEmailVerified())
+        .groups(request.getGroups())
         .build();
   }
 
@@ -33,6 +34,7 @@ public class DbCreateUserRequestConverter {
         .lastName(dbRequest.getLastName())
         .email(dbRequest.getEmail())
         .emailVerified(dbRequest.isEmailVerified())
+        .groups(dbRequest.getGroups())
         .build();
   }
 }

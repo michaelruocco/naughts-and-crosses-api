@@ -1,5 +1,6 @@
 package uk.co.mruoc.nac.usecases;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Stream;
 import uk.co.mruoc.nac.entities.CreateUserRequest;
@@ -13,7 +14,9 @@ public interface ExternalUserService {
 
   void delete(String id);
 
-  Stream<User> getAll();
+  Stream<User> getAllUsers();
 
   Optional<User> getByUsername(String id);
+
+  Collection<String> getAllGroups();
 }

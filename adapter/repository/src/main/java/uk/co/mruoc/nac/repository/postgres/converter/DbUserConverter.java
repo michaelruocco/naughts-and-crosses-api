@@ -18,6 +18,8 @@ public class DbUserConverter {
         .lastName(user.getLastName())
         .email(user.getEmail())
         .emailVerified(user.isEmailVerified())
+        .status(user.getStatus())
+        .groups(user.getGroups())
         .build();
   }
 
@@ -33,6 +35,8 @@ public class DbUserConverter {
         .lastName(dbUser.getLastName())
         .email(dbUser.getEmail())
         .emailVerified(dbUser.isEmailVerified())
+        .status(dbUser.getStatus())
+        .groups(dbUser.getGroups())
         .build();
   }
 }

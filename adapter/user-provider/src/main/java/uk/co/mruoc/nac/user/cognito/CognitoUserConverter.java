@@ -1,6 +1,7 @@
 package uk.co.mruoc.nac.user.cognito;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -21,7 +22,11 @@ public class CognitoUserConverter {
     return String.format("username = \"%s\"", username);
   }
 
-  public User toUser(UserType user) {
+  public User toUser(UserType user, Map<String, Collection<String>> usernamesAndGroups) {
+    return toUser(user, usernamesAndGroups.getOrDefault(user.username(), Collections.emptySet()));
+  }
+
+  public User toUser(UserType user, Collection<String> groups) {
     Map<String, String> attributes = toMap(user.attributes());
     return User.builder()
         .id(attributes.get(SUB))
@@ -30,6 +35,8 @@ public class CognitoUserConverter {
         .lastName(attributes.get(FAMILY_NAME))
         .email(attributes.get(EMAIL))
         .emailVerified(Boolean.parseBoolean(attributes.get(EMAIL_VERIFIED)))
+        .groups(groups)
+        .status(user.userStatusAsString())
         .build();
   }
 

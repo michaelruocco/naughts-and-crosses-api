@@ -26,7 +26,7 @@ public class SecurityConfig {
             auth ->
                 auth.requestMatchers(HttpMethod.OPTIONS)
                     .permitAll()
-                    .requestMatchers("/v1/tokens", "/v1/game-events/**")
+                    .requestMatchers("/v1/tokens", "/v1/game-events/**", "/actuator/info")
                     .permitAll()
                     .anyRequest()
                     .authenticated())

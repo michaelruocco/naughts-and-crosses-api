@@ -5,5 +5,7 @@
   "lastName": "One",
   "fullName": "User One",
   "email": "user-1@email.com",
-  "emailVerified": true
+  "emailVerified": true,
+  "status": "CONFIRMED",
+  "groups": [ "player" ]
 }

@@ -25,14 +25,7 @@
       ],
       "Enabled": true,
       "Password": "pwd1",
-      "RefreshTokens": [
-        "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2duaXRvOnVzZXJuYW1lIjoidXNlci0xIiwiZW1haWwiOiJ1c2VyLTFAZW1haWwuY29tIiwiaWF0IjoxNzE4OTE5MTM4LCJqdGkiOiI3MDg0NzJmOC04ODJmLTRjOGItODc1ZC03ZjYyYjc2NmVmZDUiLCJleHAiOjE3MTk1MjM5MzgsImlzcyI6Imh0dHA6Ly9jb2duaXRvOjkyMjkvbG9jYWxfNFJzR1hTQWYifQ.O_DPfP1NAlpCDV29YVHFUW5_7IvzfnTwkVr32Cgiuv6hV2KzAmRI5Ms42H3MxzESFLCxJd581lCX-ZZAmroV96XroLS4i1nN6u9ywE43GHQFXhXUJct27ffCpwLAZnXfxuHpbvmPo0zVFxnfR4_5XkuvkuRdZLWGTkR4KpFEOMhvs5X0M79mCCpnUlgLiXHZJGBe3Fd6FORrqUP7vAuXUfqv1oNRPnKi8slYKSrWzP_zolWGdUD-GOU59W3__v8HJPbAHnBOJt7zFeUCyfOefmjd5zdEsXJHvm8DhkpBwIEb_ElW3oyH-bkrQTY3h8Erhnyb2VQTvDhqXAk5hGu7_Q",
-        "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2duaXRvOnVzZXJuYW1lIjoidXNlci0xIiwiZW1haWwiOiJ1c2VyLTFAZW1haWwuY29tIiwiaWF0IjoxNzE4OTE5NzU5LCJqdGkiOiI4ZjBjNjFkZC01Yjg3LTQ2MjMtYmRlMC00ZjdjODBlZmU5N2QiLCJleHAiOjE3MTk1MjQ1NTksImlzcyI6Imh0dHA6Ly9jb2duaXRvOjkyMjkvbG9jYWxfNFJzR1hTQWYifQ.y7njOGNjGIb4wz-vWgIDytcxqJ0XoRVyiDA7G-4NT541yLyjL1qyoGKIZAcdaVz7CRpWc81SqNGefAaIzHLXZLZzGBZ9GJiKqwofag8WF4LSZn6yclGWGhoamoQSSvmzO6i9aWmjrs_AdJs_iHflmENDusuAReQfuDJE3maVWz_Q4FPCKNGeV1gkQaAAw8acnDmS8s7PFabnDw7syDXHvR1LD92Z4hoVvR2D2tHZPgiZr9OvfNGMGqoyTKxmVu6CZkGna0QWKQW-rPHgIOf4bdKGc5gwZjDjGVno-XeRFftT9WBPi7MX7tqzIwBoQQZtxDAH9RJFjc4omjNZNIt19g",
-        "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2duaXRvOnVzZXJuYW1lIjoidXNlci0xIiwiZW1haWwiOiJ1c2VyLTFAZW1haWwuY29tIiwiaWF0IjoxNzE4OTE5OTU4LCJqdGkiOiI0NTZiNDMxNC1hMjNlLTQzNDQtOTA1Yy05NzM3ZmI4MGU1MWQiLCJleHAiOjE3MTk1MjQ3NTgsImlzcyI6Imh0dHA6Ly9jb2duaXRvOjkyMjkvbG9jYWxfNFJzR1hTQWYifQ.aQODK2O0Ffr-rvRoySbP0pGLfVNQmiUbV1nKwOVpalLyDGLAqJNCFxcmkJCvw2uj8uHZ3XZM6IavjEhXMdihAgycbDWfvQC6jPXS3lh13B4EoASs2O5kQyM7iZMFqPcw9oHL1fUosrurezfh6xjek4laovc8dmFnlw4wHYL_AZmWbzV5ZyO-HfX0mRb0a_OBBsCsKoclDQM1afpMsxNCzYMZqat7GhbYNq74-UBuaRXDu39awzl8Lw7qMdkSBktHJhMhNXX3_MQ7YlxA81naqXcjOvQfLZNkxfUMlA0hN53TCCXXNihVVTxZVeqScED58LqKupHWkL_IrgR6fmHILQ",
-        "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2duaXRvOnVzZXJuYW1lIjoidXNlci0xIiwiZW1haWwiOiJ1c2VyLTFAZW1haWwuY29tIiwiaWF0IjoxNzE4OTIwNjcyLCJqdGkiOiI5MWIwMzA4OC1lNTM2LTRkNWYtODRjMy1lYjZiZDcyMzI2ZmMiLCJleHAiOjE3MTk1MjU0NzIsImlzcyI6Imh0dHA6Ly9jb2duaXRvOjkyMjkvbG9jYWxfNFJzR1hTQWYifQ.Fz05IENEt8PEHdL3kL1iT4Q5GRxNawvoXXb1F15syCF-W2gXdGkN_oPnY_547ZVgG_T3WnpbScyLEa1WoWDzvvM5GrKBNYJ9ak1U7gfzpWtLe4H82MrM_d3R0F14Yx3mVU0rEPNEKQc9xod-D-62L8M-Dldtt-mh3FONEdJaB2SC-86uWUW-qKgtMLKxv6hByo8wwLdBmGb8ZiuRmgWHH44IA-1CYGze2u2lbKTYs2WkVT0bkDkKSnuQhbr41AVII7D8_1DR02ZfygPkK3BHvmkGrjx8_xjRHKLa0W3w-qymoBWDf0zLlyh40xVytJeyi8pe-Qq4ibuc-_BRq3VizA",
-        "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2duaXRvOnVzZXJuYW1lIjoidXNlci0xIiwiZW1haWwiOiJ1c2VyLTFAZW1haWwuY29tIiwiaWF0IjoxNzE4OTIwNjg4LCJqdGkiOiI0MGQ0ZTJhYy1hNmYyLTQ2MTgtOWJiMC00MTdmNDQxNzQwZmYiLCJleHAiOjE3MTk1MjU0ODgsImlzcyI6Imh0dHA6Ly9jb2duaXRvOjkyMjkvbG9jYWxfNFJzR1hTQWYifQ.0bjdT-MOMnWd37PuaBFgHkSA_clhG_MRAleuRcx5jmnbh4fJmqKCj1gtx94A_bcEUPbV5pZVa5vMeA9JzdKoFdwnUJVawSOygwTn__EsrRlL4Gh60YGWi4JyJmfgIEOLeTMpwoz3kAQQomfDYIedTVKIlRfJ8av_ifqLPMClytWeWTc7KFdHnIj-FCaOeJjw9Jtq2Dc6P62xqUyOyipHHOnN2XuzjVdIYacV0eNbHxUwbiMgBqyoV3t1COVOBCsJ5-IXIBnxfPzSQc-WLpzQgrcLsPnsn9yiVqRYx3GeixQhpLcHu11F8Jz2_qi2eKTDrFiAub50f_oiVb6dwkAJzw",
-        "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2duaXRvOnVzZXJuYW1lIjoidXNlci0xIiwiZW1haWwiOiJ1c2VyLTFAZW1haWwuY29tIiwiaWF0IjoxNzE4OTIwNzM3LCJqdGkiOiJlMGQ1MDFkYy1jYzA2LTQyMGItODViYy1iZTg2NzdkMDg2MzMiLCJleHAiOjE3MTk1MjU1MzcsImlzcyI6Imh0dHA6Ly9jb2duaXRvOjkyMjkvbG9jYWxfNFJzR1hTQWYifQ.ndItna4jruqY4HagzIpkmn5yxxaEFLqqYXa0O_wsjcqbRLw0eMTOog94stpSaAF5Is5iXsnxaiI_j-ebsRNxQ3rTuraLfd-ypMCEwd98Ncry-nraYhzXAWiz34HC5yGNNQP7oq78jS-Q2VXOz4wmC6xo60lguPS3tAnxCuYgT3xjYw9pvXt7QY80Fgjomnf0p5oJJPsz8aDRbRFYGnCPBEoVf-tDijKatbX6HeJ0pDC53jfVfdyKDZ68txonTR6tkpAwBDuB1jbb1MtQrDYFBnaSjOfXSCZMjuJCQDtqI8O7EUqe4GnRyazdJ239LRIQkLcKPrBYEsmCu9NlkM2VSQ"
-      ],
+      "RefreshTokens": [],
       "UserCreateDate": "2024-06-14T19:50:27.097Z",
       "UserLastModifiedDate": "2024-06-14T19:50:27.176Z",
       "Username": "user-1",
@@ -315,5 +308,22 @@
     "Id": "local_4RsGXSAf",
     "LastModifiedDate": "2024-06-14T19:50:26.765Z",
     "Name": "nac-user-pool"
+  },
+  "Groups": {
+    "player": {
+      "CreationDate": "2024-06-26T19:16:44.322Z",
+      "GroupName": "player",
+      "LastModifiedDate": "2024-06-26T19:16:44.531Z",
+      "members": [
+        "user-1",
+        "user-2"
+      ]
+    },
+    "admin": {
+      "CreationDate": "2024-06-26T19:16:44.352Z",
+      "GroupName": "admin",
+      "LastModifiedDate": "2024-06-26T19:16:44.555Z",
+      "members": [ ]
+    }
   }
 }

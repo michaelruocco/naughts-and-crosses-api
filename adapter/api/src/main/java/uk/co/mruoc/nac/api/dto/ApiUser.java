@@ -1,5 +1,6 @@
 package uk.co.mruoc.nac.api.dto;
 
+import java.util.Collection;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,4 +19,6 @@ public class ApiUser {
   private final String fullName;
   private final String email;
   private final boolean emailVerified;
+  private final String status;
+  private final Collection<String> groups;
 }

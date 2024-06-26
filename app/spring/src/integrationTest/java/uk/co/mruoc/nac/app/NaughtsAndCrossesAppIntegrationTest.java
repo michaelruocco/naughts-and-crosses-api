@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.FileSystemResource;
@@ -52,6 +53,15 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
   }
 
   public abstract NaughtsAndCrossesAppExtension getExtension();
+
+  @Test
+  public void shouldReturnAllUserGroups() {
+    NaughtsAndCrossesApiClient client = getAppClient();
+
+    Collection<String> groups = client.getUserGroups();
+
+    assertThat(groups).containsExactlyInAnyOrder("player", "admin");
+  }
 
   @Test
   public void shouldReturnAllUsers() {
@@ -97,6 +107,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
               .lastName("updated-last")
               .email("updated@email.com")
               .emailVerified(false)
+              .groups(Set.of("player"))
               .build();
       ApiUser user = client.updateUser(originalUser.getUsername(), request);
 

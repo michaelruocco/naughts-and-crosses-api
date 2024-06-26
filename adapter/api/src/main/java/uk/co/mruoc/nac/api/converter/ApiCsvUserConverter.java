@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.util.Collection;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.nac.api.dto.ApiCsvUser;
 import uk.co.mruoc.nac.entities.CreateUserRequest;
@@ -46,6 +47,7 @@ public class ApiCsvUserConverter {
         .lastName(line.getLastName())
         .email(line.getEmail())
         .emailVerified(line.isEmailVerified())
+        .groups(Set.of(line.getGroups().split("~")))
         .build();
   }
 }

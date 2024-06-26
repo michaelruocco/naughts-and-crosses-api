@@ -5,5 +5,7 @@
   "lastName": "Bloggs",
   "fullName": "Joe Bloggs",
   "email": "joe.bloggs@hotmail.com",
-  "emailVerified": true
+  "emailVerified": true,
+  "status": "FORCE_CHANGE_PASSWORD",
+  "groups": [ "player" ]
 }

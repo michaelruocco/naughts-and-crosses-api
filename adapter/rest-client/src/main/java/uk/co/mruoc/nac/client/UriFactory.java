@@ -27,6 +27,10 @@ public class UriFactory {
     return String.format("%s/v1/ids", baseUrl);
   }
 
+  public String buildUserGroupsUri() {
+    return String.format("%s/v1/user-groups", baseUrl);
+  }
+
   public String buildUsersUri() {
     return String.format("%s/v1/users", baseUrl);
   }

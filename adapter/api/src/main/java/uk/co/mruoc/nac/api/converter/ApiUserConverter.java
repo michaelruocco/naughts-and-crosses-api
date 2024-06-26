@@ -1,6 +1,8 @@
 package uk.co.mruoc.nac.api.converter;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
 import uk.co.mruoc.nac.api.dto.ApiCreateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiUpdateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiUser;
@@ -23,21 +25,8 @@ public class ApiUserConverter {
         .fullName(user.getFullName())
         .email(user.getEmail())
         .emailVerified(user.isEmailVerified())
-        .build();
-  }
-
-  public Collection<User> toUsers(Collection<ApiUser> apiUsers) {
-    return apiUsers.stream().map(this::toUser).toList();
-  }
-
-  public User toUser(ApiUser apiUser) {
-    return User.builder()
-        .id(apiUser.getId())
-        .username(apiUser.getUsername())
-        .firstName(apiUser.getFirstName())
-        .lastName(apiUser.getLastName())
-        .email(apiUser.getEmail())
-        .emailVerified(apiUser.isEmailVerified())
+        .status(user.getStatus())
+        .groups(user.getGroups())
         .build();
   }
 
@@ -48,6 +37,7 @@ public class ApiUserConverter {
         .lastName(apiRequest.getLastName())
         .email(apiRequest.getEmail())
         .emailVerified(apiRequest.isEmailVerified())
+        .groups(apiRequest.getGroups())
         .build();
   }
 
@@ -63,6 +53,7 @@ public class ApiUserConverter {
         .lastName(request.getLastName())
         .email(request.getEmail())
         .emailVerified(request.isEmailVerified())
+        .groups(request.getGroups())
         .build();
   }
 
@@ -73,6 +64,7 @@ public class ApiUserConverter {
         .lastName(apiRequest.getLastName())
         .email(apiRequest.getEmail())
         .emailVerified(apiRequest.isEmailVerified())
+        .groups(Optional.ofNullable(apiRequest.getGroups()).orElse(Collections.emptySet()))
         .build();
   }
 }
