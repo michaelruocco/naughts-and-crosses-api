@@ -5,5 +5,7 @@
   "lastName": "updated-last",
   "fullName": "updated-first updated-last",
   "email": "updated@email.com",
-  "emailVerified": false
+  "emailVerified": false,
+  "status": "FORCE_CHANGE_PASSWORD",
+  "groups": [ "player" ]
 }

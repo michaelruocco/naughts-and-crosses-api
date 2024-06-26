@@ -1,7 +1,9 @@
 package uk.co.mruoc.nac.user.inmemory;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -16,6 +18,9 @@ import uk.co.mruoc.nac.usecases.UsernameAlreadyExistsException;
 
 @RequiredArgsConstructor
 public class StubExternalUserService implements ExternalUserService {
+
+  private static final String PLAYER_GROUP = "player";
+  private static final String CONFIRMED_STATUS = "CONFIRMED";
 
   private final Map<String, User> users;
   private final Supplier<UUID> uuidSupplier;
@@ -50,13 +55,18 @@ public class StubExternalUserService implements ExternalUserService {
   }
 
   @Override
-  public Stream<User> getAll() {
+  public Stream<User> getAllUsers() {
     return users.values().stream();
   }
 
   @Override
   public Optional<User> getByUsername(String username) {
     return Optional.ofNullable(users.get(username));
+  }
+
+  @Override
+  public Collection<String> getAllGroups() {
+    return Set.of("admin", PLAYER_GROUP);
   }
 
   private User toUser(CreateUserRequest request) {
@@ -67,6 +77,8 @@ public class StubExternalUserService implements ExternalUserService {
         .firstName(request.getFirstName())
         .lastName(request.getLastName())
         .emailVerified(request.isEmailVerified())
+        .status("FORCE_CHANGE_PASSWORD")
+        .groups(request.getGroups())
         .build();
   }
 
@@ -83,6 +95,8 @@ public class StubExternalUserService implements ExternalUserService {
         .emailVerified(true)
         .firstName("User")
         .lastName("One")
+        .status(CONFIRMED_STATUS)
+        .groups(Set.of(PLAYER_GROUP))
         .build();
   }
 
@@ -94,6 +108,8 @@ public class StubExternalUserService implements ExternalUserService {
         .emailVerified(true)
         .firstName("User")
         .lastName("Two")
+        .status(CONFIRMED_STATUS)
+        .groups(Set.of(PLAYER_GROUP))
         .build();
   }
 }

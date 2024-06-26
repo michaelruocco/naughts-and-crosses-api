@@ -11,7 +11,7 @@ public class ExternalUserSynchronizer {
   private final UserRepository repository;
 
   public void synchronize() {
-    externalUserService.getAll().forEach(repository::upsert);
+    externalUserService.getAllUsers().forEach(repository::upsert);
     repository.getAll().forEach(this::deleteIfNotPresentInExternalUsers);
   }
 

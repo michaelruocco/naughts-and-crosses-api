@@ -16,6 +16,8 @@ public class User {
   private final String lastName;
   private final String email;
   private final boolean emailVerified;
+  private final Collection<String> groups;
+  private final String status;
 
   public String getFullName() {
     Collection<String> names = new ArrayList<>();
@@ -34,6 +36,7 @@ public class User {
         .lastName(request.getLastName())
         .email(request.getEmail())
         .emailVerified(request.isEmailVerified())
+        .groups(request.getGroups())
         .build();
   }
 }

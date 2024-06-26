@@ -1,5 +1,6 @@
 package uk.co.mruoc.nac.repository.postgres.dto;
 
+import java.util.Collection;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,4 +16,5 @@ public class DbCreateUserRequest {
   private final String lastName;
   private final String email;
   private final boolean emailVerified;
+  private final Collection<String> groups;
 }

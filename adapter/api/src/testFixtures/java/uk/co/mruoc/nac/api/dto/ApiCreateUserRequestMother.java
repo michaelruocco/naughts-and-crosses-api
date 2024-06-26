@@ -1,5 +1,6 @@
 package uk.co.mruoc.nac.api.dto;
 
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ public class ApiCreateUserRequestMother {
         .lastName("Bloggs")
         .email("joe.bloggs@hotmail.com")
         .emailVerified(true)
+        .groups(Set.of("player"))
         .build();
   }
 }

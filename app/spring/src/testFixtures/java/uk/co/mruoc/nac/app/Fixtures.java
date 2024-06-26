@@ -1,6 +1,7 @@
 package uk.co.mruoc.nac.app;
 
 import java.util.Collection;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.nac.api.dto.ApiCreateGameRequest;
 import uk.co.mruoc.nac.api.dto.ApiCreateUserRequest;
@@ -32,6 +33,7 @@ public class Fixtures {
             .lastName("User")
             .email("test.user@email.com")
             .emailVerified(true)
+            .groups(Set.of())
             .build();
     return client.createUser(request);
   }
