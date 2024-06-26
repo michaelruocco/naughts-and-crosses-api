@@ -1,6 +1,8 @@
 package uk.co.mruoc.nac.api.converter;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
 import uk.co.mruoc.nac.api.dto.ApiCreateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiUpdateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiUser;
@@ -62,7 +64,7 @@ public class ApiUserConverter {
         .lastName(apiRequest.getLastName())
         .email(apiRequest.getEmail())
         .emailVerified(apiRequest.isEmailVerified())
-        .groups(apiRequest.getGroups())
+        .groups(Optional.ofNullable(apiRequest.getGroups()).orElse(Collections.emptySet()))
         .build();
   }
 }

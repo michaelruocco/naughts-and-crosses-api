@@ -23,7 +23,7 @@ public class CognitoUserConverter {
   }
 
   public User toUser(UserType user, Map<String, Collection<String>> usernamesAndGroups) {
-    return toUser(user, usernamesAndGroups.getOrDefault(user.username(), Collections.emptyList()));
+    return toUser(user, usernamesAndGroups.getOrDefault(user.username(), Collections.emptySet()));
   }
 
   public User toUser(UserType user, Collection<String> groups) {
