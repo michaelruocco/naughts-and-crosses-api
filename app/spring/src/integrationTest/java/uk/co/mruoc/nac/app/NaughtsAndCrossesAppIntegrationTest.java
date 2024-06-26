@@ -55,6 +55,15 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
   public abstract NaughtsAndCrossesAppExtension getExtension();
 
   @Test
+  public void shouldReturnAllUserGroups() {
+    NaughtsAndCrossesApiClient client = getAppClient();
+
+    Collection<String> groups = client.getUserGroups();
+
+    assertThat(groups).containsExactlyInAnyOrder("player", "admin");
+  }
+
+  @Test
   public void shouldReturnAllUsers() {
     NaughtsAndCrossesApiClient client = getAppClient();
 

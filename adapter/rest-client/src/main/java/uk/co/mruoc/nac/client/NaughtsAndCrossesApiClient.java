@@ -35,6 +35,12 @@ public class NaughtsAndCrossesApiClient {
     this(new UriFactory(baseUrl), new HttpEntityFactory(token), new RestTemplate());
   }
 
+  public Collection<String> getUserGroups() {
+    String uri = uriFactory.buildUserGroupsUri();
+    String[] groups = performGet(uri, String[].class);
+    return toCollection(groups);
+  }
+
   public ApiUser createUser(ApiCreateUserRequest request) {
     String uri = uriFactory.buildUsersUri();
     return performPost(uri, entityFactory.buildRequest(request), ApiUser.class);
