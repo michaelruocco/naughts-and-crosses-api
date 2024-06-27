@@ -33,6 +33,7 @@ subprojects {
         springVersion = "6.1.8"
         jacksonVersion = "2.17.1"
         cognitoVersion = "2.25.69"
+        commonsCollectionsVersion = "4.4"
 
         junitVersion = "5.10.2"
 

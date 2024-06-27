@@ -6,8 +6,7 @@ import java.util.Optional;
 import uk.co.mruoc.nac.api.dto.ApiCreateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiUpdateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiUser;
-import uk.co.mruoc.nac.entities.CreateUserRequest;
-import uk.co.mruoc.nac.entities.UpdateUserRequest;
+import uk.co.mruoc.nac.entities.UpsertUserRequest;
 import uk.co.mruoc.nac.entities.User;
 
 public class ApiUserConverter {
@@ -30,8 +29,8 @@ public class ApiUserConverter {
         .build();
   }
 
-  public CreateUserRequest toCreateUserRequest(ApiCreateUserRequest apiRequest) {
-    return CreateUserRequest.builder()
+  public UpsertUserRequest toCreateUserRequest(ApiCreateUserRequest apiRequest) {
+    return UpsertUserRequest.builder()
         .username(apiRequest.getUsername())
         .firstName(apiRequest.getFirstName())
         .lastName(apiRequest.getLastName())
@@ -42,11 +41,11 @@ public class ApiUserConverter {
   }
 
   public Collection<ApiCreateUserRequest> toApiCreateUserRequests(
-      Collection<CreateUserRequest> requests) {
+      Collection<UpsertUserRequest> requests) {
     return requests.stream().map(this::toApiCreateUserRequest).toList();
   }
 
-  public ApiCreateUserRequest toApiCreateUserRequest(CreateUserRequest request) {
+  public ApiCreateUserRequest toApiCreateUserRequest(UpsertUserRequest request) {
     return ApiCreateUserRequest.builder()
         .username(request.getUsername())
         .firstName(request.getFirstName())
@@ -57,8 +56,8 @@ public class ApiUserConverter {
         .build();
   }
 
-  public UpdateUserRequest toUpdateUserRequest(String username, ApiUpdateUserRequest apiRequest) {
-    return UpdateUserRequest.builder()
+  public UpsertUserRequest toUpsertUserRequest(String username, ApiUpdateUserRequest apiRequest) {
+    return UpsertUserRequest.builder()
         .username(username)
         .firstName(apiRequest.getFirstName())
         .lastName(apiRequest.getLastName())

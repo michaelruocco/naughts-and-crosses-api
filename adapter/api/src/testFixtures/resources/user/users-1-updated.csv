@@ -1,0 +1,3 @@
+username,firstName,lastName,email,emailVerified,groups
+jdoe,Jane1,Doe1,jane.doe.1@hotmail.com,false,admin
+jbloggs,Joe1,Bloggs1,joe.bloggs.1@hotmail.com,false,admin

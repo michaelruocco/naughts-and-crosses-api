@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AttributeType;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.UserType;
-import uk.co.mruoc.nac.entities.CreateUserRequest;
+import uk.co.mruoc.nac.entities.UpsertUserRequest;
 import uk.co.mruoc.nac.entities.User;
 
 public class CognitoUserConverter {
@@ -40,7 +40,7 @@ public class CognitoUserConverter {
         .build();
   }
 
-  public Collection<AttributeType> toAttributes(CreateUserRequest request) {
+  public Collection<AttributeType> toAttributes(UpsertUserRequest request) {
     return List.of(
         toGivenNameAttribute(request.getFirstName()),
         toFamilyNameAttribute(request.getLastName()),

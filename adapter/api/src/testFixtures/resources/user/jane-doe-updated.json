@@ -1,0 +1,11 @@
+{
+  "id": "${json-unit.any-string}",
+  "username": "jdoe",
+  "firstName": "Jane1",
+  "lastName": "Doe1",
+  "fullName": "Jane1 Doe1",
+  "email": "jane.doe.1@hotmail.com",
+  "emailVerified": false,
+  "status": "FORCE_CHANGE_PASSWORD",
+  "groups": [ "admin" ]
+}

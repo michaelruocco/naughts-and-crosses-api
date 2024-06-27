@@ -1,0 +1,10 @@
+[
+  {
+    "username": "jdoe",
+    "message": "user jdoe already exists"
+  },
+  {
+    "username": "jbloggs",
+    "message": "user jbloggs already exists"
+  }
+]

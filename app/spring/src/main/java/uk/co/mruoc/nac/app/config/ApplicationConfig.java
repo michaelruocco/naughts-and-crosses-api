@@ -31,9 +31,11 @@ import uk.co.mruoc.nac.usecases.UserBatchRepository;
 import uk.co.mruoc.nac.usecases.UserBatchService;
 import uk.co.mruoc.nac.usecases.UserCreator;
 import uk.co.mruoc.nac.usecases.UserDeleter;
+import uk.co.mruoc.nac.usecases.UserFinder;
 import uk.co.mruoc.nac.usecases.UserRepository;
 import uk.co.mruoc.nac.usecases.UserService;
 import uk.co.mruoc.nac.usecases.UserUpdater;
+import uk.co.mruoc.nac.usecases.UserUpserter;
 
 @Configuration
 public class ApplicationConfig {
@@ -79,8 +81,22 @@ public class ApplicationConfig {
 
   @Bean
   public UserBatchExecutor userBatchExecutor(
-      UserCreator creator, UserBatchRepository repository, Clock clock) {
-    return UserBatchExecutor.builder().creator(creator).repository(repository).clock(clock).build();
+      UserUpserter upserter, UserBatchRepository repository, Clock clock) {
+    return UserBatchExecutor.builder()
+        .upserter(upserter)
+        .repository(repository)
+        .clock(clock)
+        .build();
+  }
+
+  @Bean
+  public UserFinder userFinder(UserRepository repository) {
+    return new UserFinder(repository);
+  }
+
+  @Bean
+  public UserUpserter userUpserter(UserFinder finder, UserCreator creator, UserUpdater updater) {
+    return UserUpserter.builder().finder(finder).creator(creator).updater(updater).build();
   }
 
   @Bean
@@ -95,12 +111,12 @@ public class ApplicationConfig {
 
   @Bean
   public UserService userService(
-      UserCreator creator, UserUpdater updater, UserDeleter deleter, UserRepository repository) {
+      UserCreator creator, UserUpdater updater, UserDeleter deleter, UserFinder finder) {
     return UserService.builder()
         .creator(creator)
         .updater(updater)
         .deleter(deleter)
-        .repository(repository)
+        .finder(finder)
         .build();
   }
 

@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.nac.api.dto.ApiUserBatch;
-import uk.co.mruoc.nac.entities.CreateUserRequest;
+import uk.co.mruoc.nac.entities.UpsertUserRequest;
 import uk.co.mruoc.nac.entities.UserBatch;
 
 @RequiredArgsConstructor
@@ -18,7 +18,7 @@ public class ApiUserBatchConverter {
     this(new ApiUserConverter(), new ApiCsvUserConverter(), new ApiUserBatchErrorConverter());
   }
 
-  public Collection<CreateUserRequest> toCreateUserRequests(InputStream inputStream) {
+  public Collection<UpsertUserRequest> toCreateUserRequests(InputStream inputStream) {
     return csvConverter.toCreateUserRequests(inputStream);
   }
 

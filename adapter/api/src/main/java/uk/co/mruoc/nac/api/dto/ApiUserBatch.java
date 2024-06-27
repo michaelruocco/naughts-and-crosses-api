@@ -22,6 +22,11 @@ public class ApiUserBatch {
   private final Instant updatedAt;
   private final boolean complete;
 
+  public boolean isCompleteWithoutErrors() {
+    System.out.println("this batch " + this);
+    return complete && !hasErrors();
+  }
+
   public boolean hasErrors() {
     return CollectionUtils.isNotEmpty(errors);
   }

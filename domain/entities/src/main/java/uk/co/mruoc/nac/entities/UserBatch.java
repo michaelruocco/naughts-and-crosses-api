@@ -15,7 +15,7 @@ import lombok.With;
 public class UserBatch {
 
   private final String id;
-  private final Collection<CreateUserRequest> requests;
+  private final Collection<UpsertUserRequest> requests;
 
   @With(AccessLevel.PRIVATE)
   private final Collection<User> users;

@@ -3,8 +3,7 @@ package uk.co.mruoc.nac.usecases;
 import java.util.stream.Stream;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
-import uk.co.mruoc.nac.entities.CreateUserRequest;
-import uk.co.mruoc.nac.entities.UpdateUserRequest;
+import uk.co.mruoc.nac.entities.UpsertUserRequest;
 import uk.co.mruoc.nac.entities.User;
 
 @Builder
@@ -14,13 +13,13 @@ public class UserService {
   private final UserCreator creator;
   private final UserUpdater updater;
   private final UserDeleter deleter;
-  private final UserRepository repository;
+  private final UserFinder finder;
 
-  public void create(CreateUserRequest request) {
+  public void create(UpsertUserRequest request) {
     creator.create(request);
   }
 
-  public void update(UpdateUserRequest request) {
+  public void update(UpsertUserRequest request) {
     updater.update(request);
   }
 
@@ -29,12 +28,10 @@ public class UserService {
   }
 
   public Stream<User> getAll() {
-    return repository.getAll();
+    return finder.getAll();
   }
 
   public User getByUsername(String username) {
-    return repository
-        .getByUsername(username)
-        .orElseThrow(() -> new UserNotFoundException(username));
+    return finder.forceGetByUsername(username);
   }
 }

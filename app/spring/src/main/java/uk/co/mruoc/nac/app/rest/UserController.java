@@ -15,8 +15,7 @@ import uk.co.mruoc.nac.api.converter.ApiUserConverter;
 import uk.co.mruoc.nac.api.dto.ApiCreateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiUpdateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiUser;
-import uk.co.mruoc.nac.entities.CreateUserRequest;
-import uk.co.mruoc.nac.entities.UpdateUserRequest;
+import uk.co.mruoc.nac.entities.UpsertUserRequest;
 import uk.co.mruoc.nac.usecases.UserService;
 
 @RestController
@@ -29,7 +28,7 @@ public class UserController {
 
   @PostMapping
   public ApiUser create(@RequestBody ApiCreateUserRequest apiRequest) {
-    CreateUserRequest request = converter.toCreateUserRequest(apiRequest);
+    UpsertUserRequest request = converter.toCreateUserRequest(apiRequest);
     service.create(request);
     return converter.toApiUser(service.getByUsername(request.getUsername()));
   }
@@ -37,7 +36,7 @@ public class UserController {
   @PutMapping("/{username}")
   public ApiUser update(
       @PathVariable String username, @RequestBody ApiUpdateUserRequest apiRequest) {
-    UpdateUserRequest request = converter.toUpdateUserRequest(username, apiRequest);
+    UpsertUserRequest request = converter.toUpsertUserRequest(username, apiRequest);
     service.update(request);
     return converter.toApiUser(service.getByUsername(request.getUsername()));
   }

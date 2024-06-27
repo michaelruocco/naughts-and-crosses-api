@@ -35,6 +35,10 @@ public class Fixtures {
             .emailVerified(true)
             .groups(Set.of())
             .build();
+    return givenUserExists(request);
+  }
+
+  public ApiUser givenUserExists(ApiCreateUserRequest request) {
     return client.createUser(request);
   }
 

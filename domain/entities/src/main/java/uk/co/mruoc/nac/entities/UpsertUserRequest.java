@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Builder
 @Data
-public class CreateUserRequest {
+public class UpsertUserRequest {
   private final String username;
   private final String firstName;
   private final String lastName;
