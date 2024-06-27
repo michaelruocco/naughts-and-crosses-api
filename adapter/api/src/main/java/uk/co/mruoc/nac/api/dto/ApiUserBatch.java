@@ -23,7 +23,6 @@ public class ApiUserBatch {
   private final boolean complete;
 
   public boolean isCompleteWithoutErrors() {
-    System.out.println("this batch " + this);
     return complete && !hasErrors();
   }
 
