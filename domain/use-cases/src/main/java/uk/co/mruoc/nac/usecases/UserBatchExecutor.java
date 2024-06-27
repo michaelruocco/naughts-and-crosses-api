@@ -9,14 +9,14 @@ import uk.co.mruoc.nac.entities.UserBatch;
 @Slf4j
 public class UserBatchExecutor {
 
-  private final UserCreator creator;
+  private final UserUpserter upserter;
   private final UserBatchRepository repository;
   private final Clock clock;
 
   public void execute(UserBatch batch) {
     Runnable runnable =
         UserBatchRunnable.builder()
-            .creator(creator)
+            .upserter(upserter)
             .repository(repository)
             .clock(clock)
             .batch(batch)

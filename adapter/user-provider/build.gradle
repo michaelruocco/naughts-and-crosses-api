@@ -9,6 +9,7 @@ dependencies {
     implementation project(":entities")
     implementation "com.auth0:java-jwt:4.4.0"
     implementation "commons-io:commons-io:2.16.1"
+    implementation "org.apache.commons:commons-collections4:${commonsCollectionsVersion}"
 }
 
 apply from: rootProject.file("publish.gradle")

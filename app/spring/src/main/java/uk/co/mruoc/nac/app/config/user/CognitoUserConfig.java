@@ -19,6 +19,7 @@ import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityPr
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClientBuilder;
 import uk.co.mruoc.nac.usecases.ExternalUserService;
 import uk.co.mruoc.nac.usecases.TokenService;
+import uk.co.mruoc.nac.user.cognito.CognitoGroupService;
 import uk.co.mruoc.nac.user.cognito.CognitoTokenService;
 import uk.co.mruoc.nac.user.cognito.CognitoUserConverter;
 import uk.co.mruoc.nac.user.cognito.CognitoUserService;
@@ -77,10 +78,13 @@ public class CognitoUserConfig {
   public ExternalUserService externalUserService(
       CognitoIdentityProviderClient client, @Value("${aws.cognito.userPoolId}") String userPoolId) {
     log.info("configuring cognito user provider with user pool id {}", userPoolId);
+    CognitoGroupService groupService =
+        CognitoGroupService.builder().client(client).userPoolId(userPoolId).build();
     return CognitoUserService.builder()
         .client(client)
         .userPoolId(userPoolId)
         .converter(new CognitoUserConverter())
+        .groupService(groupService)
         .build();
   }
 

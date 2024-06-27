@@ -10,11 +10,11 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
-import uk.co.mruoc.nac.entities.CreateUserRequest;
+import uk.co.mruoc.nac.entities.UpsertUserRequest;
 import uk.co.mruoc.nac.entities.User;
 import uk.co.mruoc.nac.usecases.ExternalUserService;
+import uk.co.mruoc.nac.usecases.UserAlreadyExistsException;
 import uk.co.mruoc.nac.usecases.UserNotFoundException;
-import uk.co.mruoc.nac.usecases.UsernameAlreadyExistsException;
 
 @RequiredArgsConstructor
 public class StubExternalUserService implements ExternalUserService {
@@ -30,11 +30,11 @@ public class StubExternalUserService implements ExternalUserService {
   }
 
   @Override
-  public User create(CreateUserRequest request) {
+  public User create(UpsertUserRequest request) {
     User user = toUser(request);
     String username = user.getUsername();
     if (users.containsKey(username)) {
-      throw new UsernameAlreadyExistsException(username);
+      throw new UserAlreadyExistsException(username);
     }
     users.put(username, user);
     return user;
@@ -69,7 +69,7 @@ public class StubExternalUserService implements ExternalUserService {
     return Set.of("admin", PLAYER_GROUP);
   }
 
-  private User toUser(CreateUserRequest request) {
+  private User toUser(UpsertUserRequest request) {
     return User.builder()
         .id(uuidSupplier.get().toString())
         .username(request.getUsername())

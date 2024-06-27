@@ -1,0 +1,3 @@
+username,firstName,lastName,email,emailVerified,groups
+batch-test-1,Batch,Test-One,batch.test.one@hotmail.com,false,player
+batch-test-2,Batch,Test-Two,batch.test.two@hotmail.com,false,player~admin

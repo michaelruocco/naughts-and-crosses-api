@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.stream.Stream;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
-import uk.co.mruoc.nac.entities.CreateUserRequest;
+import uk.co.mruoc.nac.entities.UpsertUserRequest;
 import uk.co.mruoc.nac.entities.UserBatch;
 
 @Builder
@@ -15,7 +15,7 @@ public class UserBatchService {
   private final UserBatchRepository repository;
   private final UserBatchExecutor executor;
 
-  public UserBatch create(Collection<CreateUserRequest> requests) {
+  public UserBatch create(Collection<UpsertUserRequest> requests) {
     UserBatch batch = factory.build(requests);
     repository.create(batch);
     executor.execute(batch);

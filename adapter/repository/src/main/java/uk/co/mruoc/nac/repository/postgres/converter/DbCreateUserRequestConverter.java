@@ -1,17 +1,17 @@
 package uk.co.mruoc.nac.repository.postgres.converter;
 
 import java.util.Collection;
-import uk.co.mruoc.nac.entities.CreateUserRequest;
+import uk.co.mruoc.nac.entities.UpsertUserRequest;
 import uk.co.mruoc.nac.repository.postgres.dto.DbCreateUserRequest;
 
 public class DbCreateUserRequestConverter {
 
   public Collection<DbCreateUserRequest> toDbCreateUserRequests(
-      Collection<CreateUserRequest> requests) {
+      Collection<UpsertUserRequest> requests) {
     return requests.stream().map(this::toDbCreateUserRequest).toList();
   }
 
-  public DbCreateUserRequest toDbCreateUserRequest(CreateUserRequest request) {
+  public DbCreateUserRequest toDbCreateUserRequest(UpsertUserRequest request) {
     return DbCreateUserRequest.builder()
         .username(request.getUsername())
         .firstName(request.getFirstName())
@@ -22,13 +22,13 @@ public class DbCreateUserRequestConverter {
         .build();
   }
 
-  public Collection<CreateUserRequest> toCreateUserRequests(
+  public Collection<UpsertUserRequest> toCreateUserRequests(
       Collection<DbCreateUserRequest> dbRequests) {
     return dbRequests.stream().map(this::toCreateUserRequest).toList();
   }
 
-  public CreateUserRequest toCreateUserRequest(DbCreateUserRequest dbRequest) {
-    return CreateUserRequest.builder()
+  public UpsertUserRequest toCreateUserRequest(DbCreateUserRequest dbRequest) {
+    return UpsertUserRequest.builder()
         .username(dbRequest.getUsername())
         .firstName(dbRequest.getFirstName())
         .lastName(dbRequest.getLastName())

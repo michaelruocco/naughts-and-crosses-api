@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.UUID;
 import java.util.function.Supplier;
 import lombok.Builder;
-import uk.co.mruoc.nac.entities.CreateUserRequest;
+import uk.co.mruoc.nac.entities.UpsertUserRequest;
 import uk.co.mruoc.nac.entities.UserBatch;
 
 @Builder
@@ -16,7 +16,7 @@ public class UserBatchFactory {
   private final Clock clock;
   private final Supplier<UUID> uuidSupplier;
 
-  public UserBatch build(Collection<CreateUserRequest> requests) {
+  public UserBatch build(Collection<UpsertUserRequest> requests) {
     Instant now = clock.instant();
     return UserBatch.builder()
         .id(uuidSupplier.get().toString())

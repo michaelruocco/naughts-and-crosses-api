@@ -5,15 +5,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.awaitility.Awaitility.await;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.function.Predicate;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.client.HttpServerErrorException;
 import uk.co.mruoc.nac.api.dto.ApiCreateGameRequest;
@@ -23,14 +22,21 @@ import uk.co.mruoc.nac.api.dto.ApiGame;
 import uk.co.mruoc.nac.api.dto.ApiGameJsonMother;
 import uk.co.mruoc.nac.api.dto.ApiTurn;
 import uk.co.mruoc.nac.api.dto.ApiUpdateUserRequest;
+import uk.co.mruoc.nac.api.dto.ApiUpdateUserRequestMother;
 import uk.co.mruoc.nac.api.dto.ApiUser;
 import uk.co.mruoc.nac.api.dto.ApiUserBatch;
 import uk.co.mruoc.nac.api.dto.ApiUserJsonMother;
 import uk.co.mruoc.nac.client.GameEventSubscriber;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClient;
+import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClientException;
 
 @Slf4j
 abstract class NaughtsAndCrossesAppIntegrationTest {
+
+  private static final char X = 'X';
+  private static final char O = 'O';
+  private static final String JBLOGGS = "jbloggs";
+  private static final String JDOE = "jdoe";
 
   public ApiCreateGameRequest buildCreateGameRequest() {
     return getFixtures().buildCreateGameRequest();
@@ -42,6 +48,10 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
   public ApiUser givenUserExists() {
     return getFixtures().givenUserExists();
+  }
+
+  public void givenUserExists(ApiCreateUserRequest request) {
+    getFixtures().givenUserExists(request);
   }
 
   public Fixtures getFixtures() {
@@ -96,19 +106,29 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
   }
 
   @Test
+  public void shouldReturnErrorIfAttemptToCreateUserThatAlreadyExists() {
+    NaughtsAndCrossesApiClient client = getAppClient();
+    ApiCreateUserRequest request = ApiCreateUserRequestMother.joeBloggs();
+    givenUserExists(request);
+
+    try {
+      Throwable error = catchThrowable(() -> client.createUser(request));
+
+      assertThat(error)
+          .isInstanceOf(NaughtsAndCrossesApiClientException.class)
+          .hasMessage("409 : \"user jbloggs already exists\"");
+    } finally {
+      client.deleteUser(request.getUsername());
+    }
+  }
+
+  @Test
   public void shouldUpdateUser() {
     NaughtsAndCrossesApiClient client = getAppClient();
     ApiUser originalUser = givenUserExists();
 
     try {
-      ApiUpdateUserRequest request =
-          ApiUpdateUserRequest.builder()
-              .firstName("updated-first")
-              .lastName("updated-last")
-              .email("updated@email.com")
-              .emailVerified(false)
-              .groups(Set.of("player"))
-              .build();
+      ApiUpdateUserRequest request = ApiUpdateUserRequestMother.updatedUser();
       ApiUser user = client.updateUser(originalUser.getUsername(), request);
 
       assertThatJson(user).isEqualTo(ApiUserJsonMother.testUserUpdated());
@@ -118,34 +138,60 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
   }
 
   @Test
+  public void shouldReturnErrorIfAttemptToUpdateUserThatDoesNotExist() {
+    NaughtsAndCrossesApiClient client = getAppClient();
+    ApiUpdateUserRequest request = ApiUpdateUserRequestMother.updatedUser();
+
+    Throwable error = catchThrowable(() -> client.updateUser("non-existent-user", request));
+
+    assertThat(error)
+        .isInstanceOf(NaughtsAndCrossesApiClientException.class)
+        .hasMessage("404 : \"user non-existent-user not found\"");
+  }
+
+  @Test
   public void shouldUploadBatchOfUsers() {
     NaughtsAndCrossesApiClient client = getAppClient();
-    Resource resource = loadUsersCsv();
+    Resource resource = loadUsers1Csv();
 
     try {
       ApiUserBatch batch = client.uploadUserBatch(resource);
 
-      await()
-          .atMost(Duration.ofSeconds(10))
-          .pollInterval(Duration.ofMillis(250))
-          .until(() -> batchUploadCompleteWithoutErrors(batch.getId()));
+      awaitBatchUploadCompleteWithoutErrors(batch.getId());
 
-      assertThatJson(client.getUser("jbloggs")).isEqualTo(ApiUserJsonMother.joeBloggs());
-      assertThatJson(client.getUser("jdoe")).isEqualTo(ApiUserJsonMother.janeDoe());
+      assertThatJson(client.getUser(JBLOGGS)).isEqualTo(ApiUserJsonMother.joeBloggs());
+      assertThatJson(client.getUser(JDOE)).isEqualTo(ApiUserJsonMother.janeDoe());
     } finally {
-      client.deleteUser("jbloggs");
-      client.deleteUser("jdoe");
-      client.deleteAllUserBatches();
+      cleanUpUsersAndBatches();
+    }
+  }
+
+  @Test
+  public void userBatchShouldUpdateUsersIfUsersAlreadyExists() {
+    NaughtsAndCrossesApiClient client = getAppClient();
+
+    try {
+      ApiUserBatch batch = client.uploadUserBatch(loadUsers1Csv());
+      awaitBatchUploadCompleteWithoutErrors(batch.getId());
+
+      ApiUserBatch updatedBatch = client.uploadUserBatch(loadUsers1UpdatedCsv());
+      awaitBatchUploadCompleteWithoutErrors(updatedBatch.getId());
+
+      assertThatJson(client.getUser(JBLOGGS)).isEqualTo(ApiUserJsonMother.joeBloggsUpdated());
+      assertThatJson(client.getUser(JDOE)).isEqualTo(ApiUserJsonMother.janeDoeUpdated());
+    } finally {
+      cleanUpUsersAndBatches();
     }
   }
 
   @Test
   public void shouldReturnCreatedBatchOfUsers() {
     NaughtsAndCrossesApiClient client = getAppClient();
-    Resource resource = loadUsersCsv();
+    Resource resource = loadUsers1Csv();
 
     try {
       ApiUserBatch createdBatch = client.uploadUserBatch(resource);
+      awaitBatchUploadCompleteWithoutErrors(createdBatch.getId());
 
       ApiUserBatch returnedBatch = client.getUserBatch(createdBatch.getId());
 
@@ -154,20 +200,20 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
           .ignoringFields("createdAt", "updatedAt", "users", "errors", "complete")
           .isEqualTo(createdBatch);
     } finally {
-      client.deleteUser("jbloggs");
-      client.deleteUser("jdoe");
-      client.deleteAllUserBatches();
+      cleanUpUsersAndBatches();
     }
   }
 
   @Test
   public void shouldReturnAllCreatedBatchesOfUsersOrderedByCreatedDate() {
     NaughtsAndCrossesApiClient client = getAppClient();
-    Resource resource = loadUsersCsv();
 
     try {
-      ApiUserBatch batch1 = client.uploadUserBatch(resource);
-      ApiUserBatch batch2 = client.uploadUserBatch(resource);
+      ApiUserBatch batch1 = client.uploadUserBatch(loadUsers1Csv());
+      awaitBatchUploadCompleteWithoutErrors(batch1.getId());
+
+      ApiUserBatch batch2 = client.uploadUserBatch(loadUsers2Csv());
+      awaitBatchUploadCompleteWithoutErrors(batch2.getId());
 
       Collection<ApiUserBatch> batches = client.getAllUserBatches();
 
@@ -175,9 +221,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
           .map(ApiUserBatch::getCreatedAt)
           .containsExactly(batch1.getCreatedAt(), batch2.getCreatedAt());
     } finally {
-      client.deleteUser("jbloggs");
-      client.deleteUser("jdoe");
-      client.deleteAllUserBatches();
+      cleanUpUsersAndBatches(JBLOGGS, JDOE, "batch-test-1", "batch-test-2");
     }
   }
 
@@ -250,7 +294,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
       NaughtsAndCrossesApiClient client = getAppClient();
       ApiGame game = givenGameExists();
 
-      client.takeTurn(game.getId(), new ApiTurn(0, 0, 'X'));
+      client.takeTurn(game.getId(), new ApiTurn(0, 0, X));
 
       String expectedJson = ApiGameJsonMother.xTurn();
       awaitMostRecentGameUpdateEquals(subscriber, expectedJson);
@@ -266,11 +310,11 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     ApiGame game = givenGameExists();
     long id = game.getId();
 
-    client.takeTurn(id, new ApiTurn(0, 0, 'X'));
-    client.takeTurn(id, new ApiTurn(0, 1, 'O'));
-    client.takeTurn(id, new ApiTurn(1, 0, 'X'));
-    client.takeTurn(id, new ApiTurn(1, 1, 'O'));
-    ApiGame updatedGame = client.takeTurn(id, new ApiTurn(2, 0, 'X'));
+    client.takeTurn(id, new ApiTurn(0, 0, X));
+    client.takeTurn(id, new ApiTurn(0, 1, O));
+    client.takeTurn(id, new ApiTurn(1, 0, X));
+    client.takeTurn(id, new ApiTurn(1, 1, O));
+    ApiGame updatedGame = client.takeTurn(id, new ApiTurn(2, 0, X));
 
     assertThatJson(updatedGame).isEqualTo(ApiGameJsonMother.xWinner());
   }
@@ -281,15 +325,15 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     ApiGame game = givenGameExists();
     long id = game.getId();
 
-    client.takeTurn(id, new ApiTurn(0, 0, 'X'));
-    client.takeTurn(id, new ApiTurn(1, 1, 'O'));
-    client.takeTurn(id, new ApiTurn(0, 2, 'X'));
-    client.takeTurn(id, new ApiTurn(1, 0, 'O'));
-    client.takeTurn(id, new ApiTurn(1, 2, 'X'));
-    client.takeTurn(id, new ApiTurn(0, 1, 'O'));
-    client.takeTurn(id, new ApiTurn(2, 1, 'X'));
-    client.takeTurn(id, new ApiTurn(2, 2, 'O'));
-    ApiGame updatedGame = client.takeTurn(id, new ApiTurn(2, 0, 'X'));
+    client.takeTurn(id, new ApiTurn(0, 0, X));
+    client.takeTurn(id, new ApiTurn(1, 1, O));
+    client.takeTurn(id, new ApiTurn(0, 2, X));
+    client.takeTurn(id, new ApiTurn(1, 0, O));
+    client.takeTurn(id, new ApiTurn(1, 2, X));
+    client.takeTurn(id, new ApiTurn(0, 1, O));
+    client.takeTurn(id, new ApiTurn(2, 1, X));
+    client.takeTurn(id, new ApiTurn(2, 2, O));
+    ApiGame updatedGame = client.takeTurn(id, new ApiTurn(2, 0, X));
 
     assertThatJson(updatedGame).isEqualTo(ApiGameJsonMother.draw());
   }
@@ -324,16 +368,47 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     }
   }
 
-  private Resource loadUsersCsv() {
-    Path path = Paths.get("src/testFixtures/resources/users/users.csv");
-    return new FileSystemResource(path.toFile());
+  private Resource loadUsers1Csv() {
+    return loadUsersCsv("users-1.csv");
   }
 
-  private boolean batchUploadCompleteWithoutErrors(String id) {
+  private Resource loadUsers1UpdatedCsv() {
+    return loadUsersCsv("users-1-updated.csv");
+  }
+
+  private Resource loadUsers2Csv() {
+    return loadUsersCsv("users-2.csv");
+  }
+
+  private Resource loadUsersCsv(String filename) {
+    return new ClassPathResource(String.format("user/%s", filename));
+  }
+
+  private void cleanUpUsersAndBatches() {
+    cleanUpUsersAndBatches(JBLOGGS, JDOE);
+  }
+
+  private void cleanUpUsersAndBatches(String... usernames) {
+    NaughtsAndCrossesApiClient client = getAppClient();
+    Arrays.stream(usernames).forEach(client::deleteUser);
+    client.deleteAllUserBatches();
+  }
+
+  private void awaitBatchUploadCompleteWithoutErrors(String id) {
+    waitUntilBatchUpload(id, ApiUserBatch::isCompleteWithoutErrors);
+  }
+
+  private void waitUntilBatchUpload(String id, Predicate<ApiUserBatch> predicate) {
+    await()
+        .atMost(Duration.ofSeconds(10))
+        .pollInterval(Duration.ofMillis(250))
+        .until(() -> batchUploadComplete(id, predicate));
+  }
+
+  private boolean batchUploadComplete(String id, Predicate<ApiUserBatch> predicate) {
     NaughtsAndCrossesApiClient client = getAppClient();
     ApiUserBatch batch = client.getUserBatch(id);
-    log.info("got api user batch {}", batch);
-    return batch.isComplete() && !batch.hasErrors();
+    return predicate.test(batch);
   }
 
   private static void awaitMostRecentGameUpdateEquals(

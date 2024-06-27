@@ -10,6 +10,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import uk.co.mruoc.nac.api.dto.ApiCreateGameRequest;
 import uk.co.mruoc.nac.api.dto.ApiCreateUserRequest;
@@ -26,10 +27,6 @@ public class NaughtsAndCrossesApiClient {
   private final UriFactory uriFactory;
   private final HttpEntityFactory entityFactory;
   private final RestTemplate template;
-
-  public NaughtsAndCrossesApiClient(String baseUrl) {
-    this(baseUrl, null);
-  }
 
   public NaughtsAndCrossesApiClient(String baseUrl, String token) {
     this(new UriFactory(baseUrl), new HttpEntityFactory(token), new RestTemplate());
@@ -48,7 +45,7 @@ public class NaughtsAndCrossesApiClient {
 
   public ApiUser updateUser(String username, ApiUpdateUserRequest request) {
     String uri = uriFactory.buildUserUri(username);
-    return performPut(uri, entityFactory.buildRequest(request), ApiUser.class);
+    return performPut(uri, entityFactory.buildRequest(request));
   }
 
   public ApiUser getUser(String username) {
@@ -134,10 +131,7 @@ public class NaughtsAndCrossesApiClient {
   }
 
   private void performPost(String uri, HttpEntity<?> request) {
-    ResponseEntity<Void> response = template.exchange(uri, HttpMethod.POST, request, Void.class);
-    if (!response.getStatusCode().is2xxSuccessful()) {
-      throw new NaughtsAndCrossesApiClientException(response.getStatusCode().toString());
-    }
+    template.exchange(uri, HttpMethod.POST, request, Void.class);
   }
 
   private ApiGame performPostGame(String uri, HttpEntity<?> request) {
@@ -148,14 +142,18 @@ public class NaughtsAndCrossesApiClient {
     return performUpdate(uri, HttpMethod.POST, request, responseType);
   }
 
-  private <T> T performPut(String uri, HttpEntity<?> request, Class<T> responseType) {
-    return performUpdate(uri, HttpMethod.PUT, request, responseType);
+  private ApiUser performPut(String uri, HttpEntity<?> request) {
+    return performUpdate(uri, HttpMethod.PUT, request, ApiUser.class);
   }
 
   private <T> T performUpdate(
       String uri, HttpMethod method, HttpEntity<?> request, Class<T> responseType) {
-    ResponseEntity<T> response = template.exchange(uri, method, request, responseType);
-    return toBodyIfNotNull(response);
+    try {
+      ResponseEntity<T> response = template.exchange(uri, method, request, responseType);
+      return toBodyIfNotNull(response);
+    } catch (HttpClientErrorException e) {
+      throw new NaughtsAndCrossesApiClientException(e.getMessage());
+    }
   }
 
   private void performDelete(String uri) {

@@ -30,7 +30,7 @@ public class User {
     return String.join(" ", names);
   }
 
-  public User update(UpdateUserRequest request) {
+  public User update(UpsertUserRequest request) {
     return toBuilder()
         .firstName(request.getFirstName())
         .lastName(request.getLastName())

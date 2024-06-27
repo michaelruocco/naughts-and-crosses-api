@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.nac.api.dto.ApiCsvUser;
-import uk.co.mruoc.nac.entities.CreateUserRequest;
+import uk.co.mruoc.nac.entities.UpsertUserRequest;
 
 @RequiredArgsConstructor
 public class ApiCsvUserConverter {
@@ -21,7 +21,7 @@ public class ApiCsvUserConverter {
     this(new CsvMapper());
   }
 
-  public Collection<CreateUserRequest> toCreateUserRequests(InputStream inputStream) {
+  public Collection<UpsertUserRequest> toCreateUserRequests(InputStream inputStream) {
     return toCreateUserRequests(toCsvUsers(inputStream));
   }
 
@@ -36,12 +36,12 @@ public class ApiCsvUserConverter {
     }
   }
 
-  private static Collection<CreateUserRequest> toCreateUserRequests(Collection<ApiCsvUser> lines) {
+  private static Collection<UpsertUserRequest> toCreateUserRequests(Collection<ApiCsvUser> lines) {
     return lines.stream().map(ApiCsvUserConverter::toCreateUserRequest).toList();
   }
 
-  private static CreateUserRequest toCreateUserRequest(ApiCsvUser line) {
-    return CreateUserRequest.builder()
+  private static UpsertUserRequest toCreateUserRequest(ApiCsvUser line) {
+    return UpsertUserRequest.builder()
         .username(line.getUsername())
         .firstName(line.getFirstName())
         .lastName(line.getLastName())

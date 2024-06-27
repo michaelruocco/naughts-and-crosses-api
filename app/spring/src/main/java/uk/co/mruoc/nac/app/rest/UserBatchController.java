@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import uk.co.mruoc.nac.api.converter.ApiUserBatchConverter;
 import uk.co.mruoc.nac.api.dto.ApiUserBatch;
-import uk.co.mruoc.nac.entities.CreateUserRequest;
+import uk.co.mruoc.nac.entities.UpsertUserRequest;
 import uk.co.mruoc.nac.entities.UserBatch;
 import uk.co.mruoc.nac.usecases.UserBatchService;
 
@@ -30,7 +30,7 @@ public class UserBatchController {
   @PostMapping
   public ResponseEntity<ApiUserBatch> create(@RequestParam("data") MultipartFile csv) {
     try {
-      Collection<CreateUserRequest> requests = converter.toCreateUserRequests(csv.getInputStream());
+      Collection<UpsertUserRequest> requests = converter.toCreateUserRequests(csv.getInputStream());
       UserBatch batch = service.create(requests);
       return ResponseEntity.accepted().body(converter.toApiUserBatch(batch));
     } catch (IOException e) {
