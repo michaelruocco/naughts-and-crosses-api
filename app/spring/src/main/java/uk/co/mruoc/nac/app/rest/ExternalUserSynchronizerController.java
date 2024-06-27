@@ -17,6 +17,6 @@ public class ExternalUserSynchronizerController {
   @PostMapping
   public ResponseEntity<Void> synchronize() {
     synchronizer.synchronize();
-    return ResponseEntity.ok().build();
+    return ResponseEntity.noContent().build();
   }
 }
