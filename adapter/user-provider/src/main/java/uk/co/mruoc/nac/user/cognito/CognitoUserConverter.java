@@ -51,7 +51,7 @@ public class CognitoUserConverter {
   public Collection<AttributeType> toAttributes(User user) {
     return List.of(
         toGivenNameAttribute(user.getFirstName()),
-        toFamilyNameAttribute(user.getFirstName()),
+        toFamilyNameAttribute(user.getLastName()),
         toEmailAttribute(user.getEmail()),
         toEmailVerifiedAttribute(user.isEmailVerified()));
   }
