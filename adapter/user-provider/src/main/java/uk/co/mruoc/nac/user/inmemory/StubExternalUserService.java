@@ -83,18 +83,31 @@ public class StubExternalUserService implements ExternalUserService {
   }
 
   private static Map<String, User> buildUsers() {
-    return Stream.of(user1(), user2())
+    return Stream.of(admin(), user1(), user2())
         .collect(Collectors.toMap(User::getUsername, Function.identity()));
+  }
+
+  private static User admin() {
+    return User.builder()
+        .username("admin")
+        .id("42bfdad9-c66a-4d5a-aa48-a97d6d3574af")
+        .firstName("Admin")
+        .lastName("User")
+        .email("admin@email.com")
+        .emailVerified(true)
+        .status(CONFIRMED_STATUS)
+        .groups(Set.of("admin"))
+        .build();
   }
 
   private static User user1() {
     return User.builder()
-        .id("707d9fa6-13dd-4985-93aa-a28f01e89a6b")
         .username("user-1")
-        .email("user-1@email.com")
-        .emailVerified(true)
+        .id("707d9fa6-13dd-4985-93aa-a28f01e89a6b")
         .firstName("User")
         .lastName("One")
+        .email("user-1@email.com")
+        .emailVerified(true)
         .status(CONFIRMED_STATUS)
         .groups(Set.of(PLAYER_GROUP))
         .build();
@@ -102,12 +115,12 @@ public class StubExternalUserService implements ExternalUserService {
 
   private static User user2() {
     return User.builder()
-        .id("dadfde25-9924-4982-802d-dfd0bce2218d")
         .username("user-2")
-        .email("user-2@email.com")
-        .emailVerified(true)
+        .id("dadfde25-9924-4982-802d-dfd0bce2218d")
         .firstName("User")
         .lastName("Two")
+        .email("user-2@email.com")
+        .emailVerified(true)
         .status(CONFIRMED_STATUS)
         .groups(Set.of(PLAYER_GROUP))
         .build();

@@ -10,8 +10,8 @@ import lombok.Data;
 @Data
 public class User {
 
-  private final String id;
   private final String username;
+  private final String id;
   private final String firstName;
   private final String lastName;
   private final String email;
@@ -38,5 +38,9 @@ public class User {
         .emailVerified(request.isEmailVerified())
         .groups(request.getGroups())
         .build();
+  }
+
+  public boolean isMemberOfAtLeastOneGroup(Collection<String> groupsToCheck) {
+    return groupsToCheck.stream().anyMatch(groups::contains);
   }
 }

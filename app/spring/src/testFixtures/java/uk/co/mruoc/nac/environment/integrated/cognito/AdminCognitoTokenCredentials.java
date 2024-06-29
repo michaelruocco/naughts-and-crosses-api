@@ -2,15 +2,15 @@ package uk.co.mruoc.nac.environment.integrated.cognito;
 
 import uk.co.mruoc.nac.client.TokenCredentials;
 
-public class DefaultCognitoTokenCredentials implements TokenCredentials {
+public class AdminCognitoTokenCredentials implements TokenCredentials {
 
   @Override
   public String getUsername() {
-    return "user-1";
+    return "admin";
   }
 
   @Override
   public String getPassword() {
-    return "pwd1";
+    return "pwd";
   }
 }
