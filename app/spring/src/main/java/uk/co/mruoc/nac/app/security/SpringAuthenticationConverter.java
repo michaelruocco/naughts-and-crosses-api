@@ -21,8 +21,6 @@ public class SpringAuthenticationConverter {
   }
 
   private User toUser(JwtAuthenticationToken jwtAuth) {
-    System.out.println("jwt name " + jwtAuth.getName());
-    System.out.println("jwt attributes " + jwtAuth.getTokenAttributes());
     Map<String, Object> attributes = jwtAuth.getTokenAttributes();
     String username = attributes.get("username").toString();
     return userFinder.forceGetByUsername(username);
