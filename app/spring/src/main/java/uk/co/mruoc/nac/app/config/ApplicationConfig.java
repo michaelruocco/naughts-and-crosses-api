@@ -15,6 +15,7 @@ import uk.co.mruoc.nac.api.converter.ApiUserBatchConverter;
 import uk.co.mruoc.nac.api.converter.ApiUserConverter;
 import uk.co.mruoc.nac.app.config.security.CorsWebMvcConfigurer;
 import uk.co.mruoc.nac.app.config.websocket.BrokerConfig;
+import uk.co.mruoc.nac.usecases.AuthenticatedUserSupplier;
 import uk.co.mruoc.nac.usecases.AuthenticatedUserValidator;
 import uk.co.mruoc.nac.usecases.BoardFormatter;
 import uk.co.mruoc.nac.usecases.ExternalUserService;
@@ -26,6 +27,7 @@ import uk.co.mruoc.nac.usecases.GameRepository;
 import uk.co.mruoc.nac.usecases.GameService;
 import uk.co.mruoc.nac.usecases.IdSupplier;
 import uk.co.mruoc.nac.usecases.PlayerFactory;
+import uk.co.mruoc.nac.usecases.TurnTaker;
 import uk.co.mruoc.nac.usecases.UserBatchExecutor;
 import uk.co.mruoc.nac.usecases.UserBatchFactory;
 import uk.co.mruoc.nac.usecases.UserBatchRepository;
@@ -159,10 +161,21 @@ public class ApplicationConfig {
   }
 
   @Bean
+  public TurnTaker turnTaker(AuthenticatedUserSupplier userSupplier) {
+    return new TurnTaker(userSupplier);
+  }
+
+  @Bean
   public GameService gameService(
-      GameFactory gameFactory, GameRepository repository, GameEventPublisher publisher) {
+      AuthenticatedUserValidator userValidator,
+      GameFactory gameFactory,
+      TurnTaker turnTaker,
+      GameRepository repository,
+      GameEventPublisher publisher) {
     return GameService.builder()
+        .userValidator(userValidator)
         .factory(gameFactory)
+        .turnTaker(turnTaker)
         .formatter(new BoardFormatter())
         .repository(repository)
         .eventPublisher(publisher)

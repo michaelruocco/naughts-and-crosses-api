@@ -31,7 +31,7 @@ class GameTest {
   @Test
   void shouldThrowErrorIfNotPlayersTurn() {
     Throwable expectedError = new NotPlayersTurnException(turn.getToken());
-    doThrow(expectedError).when(status).validateIsTurn(turn.getToken());
+    doThrow(expectedError).when(status).validatePlayerTurn(turn);
 
     Throwable error = catchThrowable(() -> game.take(turn));
 

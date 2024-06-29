@@ -20,7 +20,9 @@ import uk.co.mruoc.nac.entities.Turn;
 
 class GameServiceTest {
 
+  private final AuthenticatedUserValidator userValidator = mock(AuthenticatedUserValidator.class);
   private final GameFactory factory = mock(GameFactory.class);
+  private final TurnTaker turnTaker = mock(TurnTaker.class);
   private final GameRepository repository = mock(GameRepository.class);
   private final BoardFormatter formatter = mock(BoardFormatter.class);
   private final GameEventPublisher eventPublisher = mock(GameEventPublisher.class);
@@ -28,7 +30,9 @@ class GameServiceTest {
 
   private final GameService service =
       GameService.builder()
+          .userValidator(userValidator)
           .factory(factory)
+          .turnTaker(turnTaker)
           .repository(repository)
           .formatter(formatter)
           .eventPublisher(eventPublisher)
@@ -82,7 +86,7 @@ class GameServiceTest {
     long id = 2;
     Turn turn = mock(Turn.class);
     Game game = givenGameFound(id);
-    Game expectedGame = givenGameUpdated(game, turn);
+    Game expectedGame = givenTurnTaken(game, turn);
 
     Game updatedGame = service.takeTurn(id, turn);
 
@@ -94,7 +98,7 @@ class GameServiceTest {
     long id = 3;
     Turn turn = mock(Turn.class);
     Game game = givenGameFound(id);
-    Game expectedGame = givenGameUpdated(game, turn);
+    Game expectedGame = givenTurnTaken(game, turn);
 
     service.takeTurn(id, turn);
 
@@ -108,7 +112,7 @@ class GameServiceTest {
     long id = 4;
     Turn turn = mock(Turn.class);
     Game game = givenGameFound(id);
-    Game expectedGame = givenGameUpdated(game, turn);
+    Game expectedGame = givenTurnTaken(game, turn);
 
     service.takeTurn(id, turn);
 
@@ -180,9 +184,9 @@ class GameServiceTest {
     return game;
   }
 
-  private static Game givenGameUpdated(Game game, Turn turn) {
+  private Game givenTurnTaken(Game game, Turn turn) {
     Game updated = mock(Game.class);
-    when(game.take(turn)).thenReturn(updated);
+    when(turnTaker.takeTurn(game, turn)).thenReturn(updated);
     return updated;
   }
 
