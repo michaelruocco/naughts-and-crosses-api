@@ -79,7 +79,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
     Collection<ApiUser> users = client.getAllUsers();
 
-    assertThat(users).hasSize(2);
+    assertThat(users).hasSize(3);
   }
 
   @Test

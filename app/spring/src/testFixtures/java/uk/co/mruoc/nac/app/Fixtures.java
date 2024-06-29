@@ -43,7 +43,8 @@ public class Fixtures {
   }
 
   public ApiCreateGameRequest buildCreateGameRequest() {
-    Collection<ApiUser> users = client.getAllUsers();
+    Collection<ApiUser> users =
+        client.getAllUsers().stream().filter(user -> user.getGroups().contains("player")).toList();
     return requestFactory.build(users);
   }
 }

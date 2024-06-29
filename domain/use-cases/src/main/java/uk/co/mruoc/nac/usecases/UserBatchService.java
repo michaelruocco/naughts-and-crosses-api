@@ -11,11 +11,13 @@ import uk.co.mruoc.nac.entities.UserBatch;
 @Slf4j
 public class UserBatchService {
 
+  private final AuthenticatedUserValidator userValidator;
   private final UserBatchFactory factory;
   private final UserBatchRepository repository;
   private final UserBatchExecutor executor;
 
   public UserBatch create(Collection<UpsertUserRequest> requests) {
+    userValidator.validateIsAdmin();
     UserBatch batch = factory.build(requests);
     repository.create(batch);
     executor.execute(batch);

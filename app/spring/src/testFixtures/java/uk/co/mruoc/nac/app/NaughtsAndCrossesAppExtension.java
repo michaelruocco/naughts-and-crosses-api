@@ -15,7 +15,7 @@ import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClient;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesApiTokenClient;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesWebsocketClient;
 import uk.co.mruoc.nac.client.TokenCredentials;
-import uk.co.mruoc.nac.environment.integrated.cognito.DefaultCognitoTokenCredentials;
+import uk.co.mruoc.nac.environment.integrated.cognito.AdminCognitoTokenCredentials;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -63,7 +63,7 @@ public class NaughtsAndCrossesAppExtension
   }
 
   public NaughtsAndCrossesApiClient getRestClient() {
-    return getRestClient(new DefaultCognitoTokenCredentials());
+    return getRestClient(new AdminCognitoTokenCredentials());
   }
 
   public NaughtsAndCrossesApiClient getRestClient(TokenCredentials credentials) {
@@ -71,7 +71,7 @@ public class NaughtsAndCrossesAppExtension
   }
 
   public void connectToWebsocket() {
-    connectToWebsocket(new DefaultCognitoTokenCredentials());
+    connectToWebsocket(new AdminCognitoTokenCredentials());
   }
 
   public void connectToWebsocket(TokenCredentials credentials) {

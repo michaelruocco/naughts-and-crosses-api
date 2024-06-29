@@ -15,6 +15,7 @@ import uk.co.mruoc.nac.api.converter.ApiUserBatchConverter;
 import uk.co.mruoc.nac.api.converter.ApiUserConverter;
 import uk.co.mruoc.nac.app.config.security.CorsWebMvcConfigurer;
 import uk.co.mruoc.nac.app.config.websocket.BrokerConfig;
+import uk.co.mruoc.nac.usecases.AuthenticatedUserValidator;
 import uk.co.mruoc.nac.usecases.BoardFormatter;
 import uk.co.mruoc.nac.usecases.ExternalUserService;
 import uk.co.mruoc.nac.usecases.ExternalUserSynchronizer;
@@ -101,8 +102,12 @@ public class ApplicationConfig {
 
   @Bean
   public UserBatchService userBatchService(
-      UserBatchFactory factory, UserBatchRepository repository, UserBatchExecutor executor) {
+      AuthenticatedUserValidator userValidator,
+      UserBatchFactory factory,
+      UserBatchRepository repository,
+      UserBatchExecutor executor) {
     return UserBatchService.builder()
+        .userValidator(userValidator)
         .factory(factory)
         .repository(repository)
         .executor(executor)
@@ -111,8 +116,13 @@ public class ApplicationConfig {
 
   @Bean
   public UserService userService(
-      UserCreator creator, UserUpdater updater, UserDeleter deleter, UserFinder finder) {
+      AuthenticatedUserValidator userValidator,
+      UserCreator creator,
+      UserUpdater updater,
+      UserDeleter deleter,
+      UserFinder finder) {
     return UserService.builder()
+        .userValidator(userValidator)
         .creator(creator)
         .updater(updater)
         .deleter(deleter)
@@ -128,8 +138,11 @@ public class ApplicationConfig {
 
   @Bean
   public ExternalUserSynchronizer externalUserSynchronizer(
-      ExternalUserService externalUserService, UserRepository repository) {
+      AuthenticatedUserValidator userValidator,
+      ExternalUserService externalUserService,
+      UserRepository repository) {
     return ExternalUserSynchronizer.builder()
+        .userValidator(userValidator)
         .externalUserService(externalUserService)
         .repository(repository)
         .build();

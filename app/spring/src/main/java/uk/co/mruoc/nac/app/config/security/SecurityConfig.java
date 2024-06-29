@@ -13,6 +13,10 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.web.SecurityFilterChain;
 import uk.co.mruoc.nac.app.config.websocket.AuthChannelInterceptor;
 import uk.co.mruoc.nac.app.config.websocket.DefaultAuthChannelInterceptor;
+import uk.co.mruoc.nac.app.security.SpringAuthenticatedUserSupplier;
+import uk.co.mruoc.nac.usecases.AuthenticatedUserSupplier;
+import uk.co.mruoc.nac.usecases.AuthenticatedUserValidator;
+import uk.co.mruoc.nac.usecases.UserFinder;
 
 @Configuration
 @EnableMethodSecurity
@@ -39,5 +43,15 @@ public class SecurityConfig {
   @Bean
   public AuthChannelInterceptor authChannelInterceptor(JwtDecoder jwtDecoder) {
     return new DefaultAuthChannelInterceptor(jwtDecoder);
+  }
+
+  @Bean
+  public AuthenticatedUserSupplier authenticatedUserSupplier(UserFinder userFinder) {
+    return new SpringAuthenticatedUserSupplier(userFinder);
+  }
+
+  @Bean
+  public AuthenticatedUserValidator authenticatedUserValidator(AuthenticatedUserSupplier supplier) {
+    return new AuthenticatedUserValidator(supplier);
   }
 }

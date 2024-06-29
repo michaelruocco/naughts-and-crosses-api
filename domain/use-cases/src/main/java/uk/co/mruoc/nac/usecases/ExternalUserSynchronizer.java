@@ -7,8 +7,14 @@ import uk.co.mruoc.nac.entities.User;
 @Builder
 public class ExternalUserSynchronizer {
 
+  private final AuthenticatedUserValidator userValidator;
   private final ExternalUserService externalUserService;
   private final UserRepository repository;
+
+  public void adminOnlySynchronize() {
+    userValidator.validateIsAdmin();
+    synchronize();
+  }
 
   public void synchronize() {
     externalUserService.getAllUsers().forEach(repository::upsert);
