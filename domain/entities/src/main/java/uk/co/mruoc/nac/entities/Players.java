@@ -39,22 +39,18 @@ public class Players {
     return chars.stream().filter(i -> Collections.frequency(chars, i) > 1).distinct().toList();
   }
 
-  public void validateIsTurn(char token) {
-    if (!isTurn(token)) {
-      throw new NotPlayersTurnException(token);
+  public void validatePlayerTurn(Turn turn) {
+    Player currentPlayer = getCurrentPlayer().orElseThrow(() -> new NotPlayersTurnException(turn));
+    if (!currentPlayer.hasUsername(turn.getUsername())) {
+      throw new NotPlayersTurnException(turn.getUsername());
     }
-  }
-
-  public boolean isTurn(char token) {
-    return getCurrentPlayerToken().map(currentToken -> currentToken == token).orElse(false);
+    if (!currentPlayer.hasToken(turn.getToken())) {
+      throw new NotPlayersTurnException(turn.getToken());
+    }
   }
 
   public Optional<Character> getCurrentPlayerToken() {
-    if (currentIndex < 0) {
-      return Optional.empty();
-    }
-    Player player = values.get(currentIndex);
-    return Optional.of(player.getToken());
+    return getCurrentPlayer().map(Player::getToken);
   }
 
   public Players clearCurrentPlayer() {
@@ -63,6 +59,14 @@ public class Players {
 
   public Players updateCurrentPlayer() {
     return toBuilder().currentIndex(nextTurnIndex()).build();
+  }
+
+  private Optional<Player> getCurrentPlayer() {
+    if (currentIndex < 0) {
+      return Optional.empty();
+    }
+    Player player = values.get(currentIndex);
+    return Optional.of(player);
   }
 
   private int nextTurnIndex() {

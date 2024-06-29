@@ -55,18 +55,26 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
   }
 
   public Fixtures getFixtures() {
-    return new Fixtures(getAppClient());
+    return new Fixtures(getAdminAppClient());
   }
 
-  public NaughtsAndCrossesApiClient getAppClient() {
-    return getExtension().getRestClient();
+  public NaughtsAndCrossesApiClient getAdminAppClient() {
+    return getExtension().getAdminRestClient();
+  }
+
+  public NaughtsAndCrossesApiClient getUser1AppClient() {
+    return getExtension().getUser1RestClient();
+  }
+
+  public NaughtsAndCrossesApiClient getUser2AppClient() {
+    return getExtension().getUser2RestClient();
   }
 
   public abstract NaughtsAndCrossesAppExtension getExtension();
 
   @Test
   public void shouldReturnAllUserGroups() {
-    NaughtsAndCrossesApiClient client = getAppClient();
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
 
     Collection<String> groups = client.getUserGroups();
 
@@ -75,7 +83,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
   @Test
   public void shouldReturnAllUsers() {
-    NaughtsAndCrossesApiClient client = getAppClient();
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
 
     Collection<ApiUser> users = client.getAllUsers();
 
@@ -84,7 +92,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
   @Test
   public void shouldGetUser() {
-    NaughtsAndCrossesApiClient client = getAppClient();
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
 
     ApiUser user = client.getUser("user-1");
 
@@ -93,7 +101,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
   @Test
   public void shouldCreateUser() {
-    NaughtsAndCrossesApiClient client = getAppClient();
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
     ApiCreateUserRequest request = ApiCreateUserRequestMother.joeBloggs();
 
     try {
@@ -107,7 +115,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
   @Test
   public void shouldReturnErrorIfAttemptToCreateUserThatAlreadyExists() {
-    NaughtsAndCrossesApiClient client = getAppClient();
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
     ApiCreateUserRequest request = ApiCreateUserRequestMother.joeBloggs();
     givenUserExists(request);
 
@@ -124,7 +132,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
   @Test
   public void shouldUpdateUser() {
-    NaughtsAndCrossesApiClient client = getAppClient();
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
     ApiUser originalUser = givenUserExists();
 
     try {
@@ -139,7 +147,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
   @Test
   public void shouldReturnErrorIfAttemptToUpdateUserThatDoesNotExist() {
-    NaughtsAndCrossesApiClient client = getAppClient();
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
     ApiUpdateUserRequest request = ApiUpdateUserRequestMother.updatedUser();
 
     Throwable error = catchThrowable(() -> client.updateUser("non-existent-user", request));
@@ -151,7 +159,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
   @Test
   public void shouldUploadBatchOfUsers() {
-    NaughtsAndCrossesApiClient client = getAppClient();
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
     Resource resource = loadUsers1Csv();
 
     try {
@@ -168,7 +176,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
   @Test
   public void userBatchShouldUpdateUsersIfUsersAlreadyExists() {
-    NaughtsAndCrossesApiClient client = getAppClient();
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
 
     try {
       ApiUserBatch batch = client.uploadUserBatch(loadUsers1Csv());
@@ -186,7 +194,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
   @Test
   public void shouldReturnCreatedBatchOfUsers() {
-    NaughtsAndCrossesApiClient client = getAppClient();
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
     Resource resource = loadUsers1Csv();
 
     try {
@@ -206,7 +214,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
   @Test
   public void shouldReturnAllCreatedBatchesOfUsersOrderedByCreatedDate() {
-    NaughtsAndCrossesApiClient client = getAppClient();
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
 
     try {
       ApiUserBatch batch1 = client.uploadUserBatch(loadUsers1Csv());
@@ -227,7 +235,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
   @Test
   public void shouldReturnNoGamesInitially() {
-    NaughtsAndCrossesApiClient client = getAppClient();
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
 
     Collection<ApiGame> games = client.getAllGames();
 
@@ -236,7 +244,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
   @Test
   public void shouldCreateGame() {
-    NaughtsAndCrossesApiClient client = getAppClient();
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
     ApiCreateGameRequest request = buildCreateGameRequest();
 
     ApiGame game = client.createGame(request);
@@ -250,7 +258,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     extension.connectToWebsocket();
     try {
       GameEventSubscriber<ApiGame> subscriber = extension.subscribeToGameUpdateEvents();
-      NaughtsAndCrossesApiClient client = getAppClient();
+      NaughtsAndCrossesApiClient client = getAdminAppClient();
       ApiCreateGameRequest request = buildCreateGameRequest();
 
       client.createGame(request);
@@ -265,7 +273,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
   @Test
   public void shouldReturnGame() {
-    NaughtsAndCrossesApiClient client = getAppClient();
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
     ApiGame createdGame = givenGameExists();
 
     ApiGame game = client.getGame(createdGame.getId());
@@ -275,7 +283,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
   @Test
   public void shouldReturnMinimalGame() {
-    NaughtsAndCrossesApiClient client = getAppClient();
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
     ApiGame createdGame = givenGameExists();
 
     ApiGame game = client.getMinimalGame(createdGame.getId());
@@ -291,7 +299,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     extension.connectToWebsocket();
     try {
       GameEventSubscriber<ApiGame> subscriber = extension.subscribeToGameUpdateEvents();
-      NaughtsAndCrossesApiClient client = getAppClient();
+      NaughtsAndCrossesApiClient client = getUser1AppClient();
       ApiGame game = givenGameExists();
 
       client.takeTurn(game.getId(), new ApiTurn(0, 0, X));
@@ -306,41 +314,43 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
   @Test
   public void gameShouldCompleteWithXWinner() {
-    NaughtsAndCrossesApiClient client = getAppClient();
+    NaughtsAndCrossesApiClient user1Client = getUser1AppClient();
+    NaughtsAndCrossesApiClient user2Client = getUser2AppClient();
     ApiGame game = givenGameExists();
     long id = game.getId();
 
-    client.takeTurn(id, new ApiTurn(0, 0, X));
-    client.takeTurn(id, new ApiTurn(0, 1, O));
-    client.takeTurn(id, new ApiTurn(1, 0, X));
-    client.takeTurn(id, new ApiTurn(1, 1, O));
-    ApiGame updatedGame = client.takeTurn(id, new ApiTurn(2, 0, X));
+    user1Client.takeTurn(id, new ApiTurn(0, 0, X));
+    user2Client.takeTurn(id, new ApiTurn(0, 1, O));
+    user1Client.takeTurn(id, new ApiTurn(1, 0, X));
+    user2Client.takeTurn(id, new ApiTurn(1, 1, O));
+    ApiGame updatedGame = user1Client.takeTurn(id, new ApiTurn(2, 0, X));
 
     assertThatJson(updatedGame).isEqualTo(ApiGameJsonMother.xWinner());
   }
 
   @Test
   public void gameShouldCompleteWithDraw() {
-    NaughtsAndCrossesApiClient client = getAppClient();
+    NaughtsAndCrossesApiClient user1Client = getUser1AppClient();
+    NaughtsAndCrossesApiClient user2Client = getUser2AppClient();
     ApiGame game = givenGameExists();
     long id = game.getId();
 
-    client.takeTurn(id, new ApiTurn(0, 0, X));
-    client.takeTurn(id, new ApiTurn(1, 1, O));
-    client.takeTurn(id, new ApiTurn(0, 2, X));
-    client.takeTurn(id, new ApiTurn(1, 0, O));
-    client.takeTurn(id, new ApiTurn(1, 2, X));
-    client.takeTurn(id, new ApiTurn(0, 1, O));
-    client.takeTurn(id, new ApiTurn(2, 1, X));
-    client.takeTurn(id, new ApiTurn(2, 2, O));
-    ApiGame updatedGame = client.takeTurn(id, new ApiTurn(2, 0, X));
+    user1Client.takeTurn(id, new ApiTurn(0, 0, X));
+    user2Client.takeTurn(id, new ApiTurn(1, 1, O));
+    user1Client.takeTurn(id, new ApiTurn(0, 2, X));
+    user2Client.takeTurn(id, new ApiTurn(1, 0, O));
+    user1Client.takeTurn(id, new ApiTurn(1, 2, X));
+    user2Client.takeTurn(id, new ApiTurn(0, 1, O));
+    user1Client.takeTurn(id, new ApiTurn(2, 1, X));
+    user2Client.takeTurn(id, new ApiTurn(2, 2, O));
+    ApiGame updatedGame = user1Client.takeTurn(id, new ApiTurn(2, 0, X));
 
     assertThatJson(updatedGame).isEqualTo(ApiGameJsonMother.draw());
   }
 
   @Test
   public void shouldDeleteGame() {
-    NaughtsAndCrossesApiClient client = getAppClient();
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
     ApiGame createdGame = givenGameExists();
 
     client.deleteGame(createdGame.getId());
@@ -355,7 +365,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     extension.connectToWebsocket();
     try {
       GameEventSubscriber<Long> listener = extension.subscribeToGameDeleteEvents();
-      NaughtsAndCrossesApiClient client = getAppClient();
+      NaughtsAndCrossesApiClient client = getAdminAppClient();
       ApiGame game = givenGameExists();
       long id = game.getId();
 
@@ -389,7 +399,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
   }
 
   private void cleanUpUsersAndBatches(String... usernames) {
-    NaughtsAndCrossesApiClient client = getAppClient();
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
     Arrays.stream(usernames).forEach(client::deleteUser);
     client.deleteAllUserBatches();
   }
@@ -406,7 +416,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
   }
 
   private boolean batchUploadComplete(String id, Predicate<ApiUserBatch> predicate) {
-    NaughtsAndCrossesApiClient client = getAppClient();
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
     ApiUserBatch batch = client.getUserBatch(id);
     return predicate.test(batch);
   }

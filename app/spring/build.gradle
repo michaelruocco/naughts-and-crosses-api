@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = "3.3.0"
+        springBootVersion = "3.3.1"
     }
 }
 
@@ -47,7 +47,7 @@ dependencies {
     integrationTestImplementation testFixtures(project(":api"))
     integrationTestImplementation project(":rest-client")
     integrationTestImplementation project(":websocket-client")
-    integrationTestImplementation "net.javacrumbs.json-unit:json-unit-assertj:3.2.7"
+    integrationTestImplementation "net.javacrumbs.json-unit:json-unit-assertj:3.3.0"
     integrationTestImplementation "org.awaitility:awaitility:${awaitilityVersion}"
 
     testFixturesImplementation project(":api")

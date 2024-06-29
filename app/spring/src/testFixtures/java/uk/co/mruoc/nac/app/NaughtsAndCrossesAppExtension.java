@@ -16,6 +16,8 @@ import uk.co.mruoc.nac.client.NaughtsAndCrossesApiTokenClient;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesWebsocketClient;
 import uk.co.mruoc.nac.client.TokenCredentials;
 import uk.co.mruoc.nac.environment.integrated.cognito.AdminCognitoTokenCredentials;
+import uk.co.mruoc.nac.environment.integrated.cognito.User1CognitoTokenCredentials;
+import uk.co.mruoc.nac.environment.integrated.cognito.User2CognitoTokenCredentials;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -40,14 +42,14 @@ public class NaughtsAndCrossesAppExtension
       appRunner.startIfNotStarted(environment);
       log.info("extension startup complete");
       started = true;
-      NaughtsAndCrossesApiClient client = getRestClient();
+      NaughtsAndCrossesApiClient client = getAdminRestClient();
       client.synchronizeExternalUsers();
     }
   }
 
   @Override
   public void beforeEach(ExtensionContext extensionContext) {
-    NaughtsAndCrossesApiClient client = getRestClient();
+    NaughtsAndCrossesApiClient client = getAdminRestClient();
     client.deleteAllGames();
     client.resetIds();
   }
@@ -62,11 +64,19 @@ public class NaughtsAndCrossesAppExtension
     shutdown();
   }
 
-  public NaughtsAndCrossesApiClient getRestClient() {
-    return getRestClient(new AdminCognitoTokenCredentials());
+  public NaughtsAndCrossesApiClient getAdminRestClient() {
+    return getAdminRestClient(new AdminCognitoTokenCredentials());
   }
 
-  public NaughtsAndCrossesApiClient getRestClient(TokenCredentials credentials) {
+  public NaughtsAndCrossesApiClient getUser1RestClient() {
+    return getAdminRestClient(new User1CognitoTokenCredentials());
+  }
+
+  public NaughtsAndCrossesApiClient getUser2RestClient() {
+    return getAdminRestClient(new User2CognitoTokenCredentials());
+  }
+
+  public NaughtsAndCrossesApiClient getAdminRestClient(TokenCredentials credentials) {
     return new NaughtsAndCrossesApiClient(environment.getAppUrl(), generateToken(credentials));
   }
 

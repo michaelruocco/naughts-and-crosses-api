@@ -11,7 +11,9 @@ import uk.co.mruoc.nac.entities.Turn;
 @Builder
 public class GameService {
 
+  private final AuthenticatedUserValidator userValidator;
   private final GameFactory factory;
+  private final TurnTaker turnTaker;
   private final GameRepository repository;
   private final BoardFormatter formatter;
   private final GameEventPublisher eventPublisher;
@@ -23,9 +25,8 @@ public class GameService {
   }
 
   public Game takeTurn(long id, Turn turn) {
-    log.info("taking turn for game with id {} {}", id, turn);
     Game game = get(id);
-    Game updatedGame = game.take(turn);
+    Game updatedGame = turnTaker.takeTurn(game, turn);
     update(updatedGame);
     log.info("game {} board\n{}", id, formatter.format(updatedGame.getBoard()));
     return updatedGame;
@@ -40,12 +41,14 @@ public class GameService {
   }
 
   public void deleteAll() {
+    userValidator.validateIsAdmin();
     Stream<Game> games = getAll();
     repository.deleteAll();
     games.forEach(game -> eventPublisher.deleted(game.getId()));
   }
 
   public void delete(long id) {
+    userValidator.validateIsAdmin();
     repository.delete(id);
     eventPublisher.deleted(id);
   }

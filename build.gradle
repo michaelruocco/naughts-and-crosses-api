@@ -25,17 +25,17 @@ subprojects {
 
     ext {
         slf4jVersion = "2.0.13"
-        lombokVersion = "1.18.32"
+        lombokVersion = "1.18.34"
         postgresqlVersion = "42.7.3"
-        flywayVersion = "10.14.0"
+        flywayVersion = "10.15.0"
         jsonAdapterVersion = "1.0.4"
         springKafkaVersion = "3.1.0"
-        springVersion = "6.1.8"
+        springVersion = "6.1.10"
         jacksonVersion = "2.17.1"
-        cognitoVersion = "2.25.69"
+        cognitoVersion = "2.26.12"
         commonsCollectionsVersion = "4.4"
 
-        junitVersion = "5.10.2"
+        junitVersion = "5.10.3"
 
         gitUrl = "https://github.com/michaelruocco/naughts-and-crosses-api"
         pomConfig = {

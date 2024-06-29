@@ -44,12 +44,12 @@ public class Status {
     return players.getCurrentPlayerToken();
   }
 
-  public Optional<Character> getWinner() {
-    return Optional.ofNullable(winner);
+  public void validatePlayerTurn(Turn turn) {
+    players.validatePlayerTurn(turn);
   }
 
-  public void validateIsTurn(char token) {
-    players.validateIsTurn(token);
+  public Optional<Character> getWinner() {
+    return Optional.ofNullable(winner);
   }
 
   public boolean isDraw() {

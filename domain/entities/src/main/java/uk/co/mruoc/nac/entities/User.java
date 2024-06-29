@@ -19,6 +19,10 @@ public class User {
   private final Collection<String> groups;
   private final String status;
 
+  public boolean hasUsername(String otherUsername) {
+    return Objects.equals(username, otherUsername);
+  }
+
   public String getFullName() {
     Collection<String> names = new ArrayList<>();
     if (Objects.nonNull(firstName)) {

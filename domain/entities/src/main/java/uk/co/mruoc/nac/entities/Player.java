@@ -10,6 +10,10 @@ public class Player {
   private final User user;
   private final char token;
 
+  public boolean hasUsername(String otherUsername) {
+    return user.hasUsername(otherUsername);
+  }
+
   public boolean hasToken(char otherToken) {
     return token == otherToken;
   }
