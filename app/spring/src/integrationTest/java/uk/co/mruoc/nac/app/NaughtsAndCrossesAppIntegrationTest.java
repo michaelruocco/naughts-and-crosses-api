@@ -4,10 +4,13 @@ import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.awaitility.Awaitility.await;
+import static uk.co.mruoc.nac.api.dto.ApiPlayerMother.buildMinimalCrossesPlayer;
+import static uk.co.mruoc.nac.api.dto.ApiPlayerMother.buildMinimalNaughtsPlayer;
 
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 import lombok.extern.slf4j.Slf4j;
@@ -289,8 +292,9 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     ApiGame game = client.getMinimalGame(createdGame.getId());
 
     assertThatJson(game).whenIgnoringPaths("board", "players").isEqualTo(createdGame);
+    assertThatJson(game.getPlayers())
+        .isEqualTo(List.of(buildMinimalCrossesPlayer(), buildMinimalNaughtsPlayer()));
     assertThat(game.getBoard()).isNull();
-    assertThat(game.getPlayers()).isNull();
   }
 
   @Test

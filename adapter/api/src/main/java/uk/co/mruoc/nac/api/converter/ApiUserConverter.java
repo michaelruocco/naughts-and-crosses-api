@@ -66,4 +66,8 @@ public class ApiUserConverter {
         .groups(Optional.ofNullable(apiRequest.getGroups()).orElse(Collections.emptySet()))
         .build();
   }
+
+  public ApiUser toMinimalUser(User user) {
+    return ApiUser.builder().username(user.getUsername()).build();
+  }
 }
