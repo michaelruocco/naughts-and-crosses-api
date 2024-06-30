@@ -13,7 +13,12 @@ class GameTest {
   private final Status status = mock(Status.class);
   private final Board board = mock(Board.class);
 
-  private final Turn turn = Turn.builder().coordinates(new Coordinates(0, 0)).token('X').build();
+  private final Player crossesPlayer = PlayerMother.crossesPlayer();
+  private final Turn turn =
+      Turn.builder()
+          .coordinates(new Coordinates(0, 0))
+          .username(crossesPlayer.getUsername())
+          .build();
 
   private final Game game = Game.builder().id(1).status(status).board(board).build();
 
@@ -30,8 +35,8 @@ class GameTest {
 
   @Test
   void shouldThrowErrorIfNotPlayersTurn() {
-    Throwable expectedError = new NotPlayersTurnException(turn.getToken());
-    doThrow(expectedError).when(status).validatePlayerTurn(turn);
+    Throwable expectedError = new NotPlayersTurnException(crossesPlayer.getUsername());
+    doThrow(expectedError).when(status).validate(turn);
 
     Throwable error = catchThrowable(() -> game.take(turn));
 

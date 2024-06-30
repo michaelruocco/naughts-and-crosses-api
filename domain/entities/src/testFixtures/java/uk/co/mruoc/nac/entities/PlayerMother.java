@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PlayerMother {
 
+  public static Players of(Player... players) {
+    return new Players(players);
+  }
+
   public static Players empty() {
     return new Players();
   }

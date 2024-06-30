@@ -18,7 +18,7 @@ public class DbStatusConverter {
         .turn(status.getTurn())
         .complete(status.isComplete())
         .players(playerConverter.toDbPlayers(status.getPlayers()))
-        .winner(status.getWinner().orElse(null))
+        .winner(status.getWinner().map(playerConverter::toDbPlayer).orElse(null))
         .build();
   }
 
@@ -27,7 +27,7 @@ public class DbStatusConverter {
         .turn(dbStatus.getTurn())
         .complete(dbStatus.isComplete())
         .players(playerConverter.toPlayers(dbStatus.getPlayers()))
-        .winner(dbStatus.getWinner())
+        .winner(dbStatus.getWinner().map(playerConverter::toPlayer).orElse(null))
         .build();
   }
 }

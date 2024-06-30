@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     implementation project(":entities")
+    implementation project(":use-cases")
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-csv:${jacksonVersion}"
     implementation "org.apache.commons:commons-collections4:${commonsCollectionsVersion}"
 

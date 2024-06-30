@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import uk.co.mruoc.nac.entities.Game;
+import uk.co.mruoc.nac.entities.Player;
 import uk.co.mruoc.nac.entities.PlayerMother;
 import uk.co.mruoc.nac.entities.Players;
 import uk.co.mruoc.nac.entities.Turn;
@@ -22,7 +23,6 @@ class GameServiceTest {
 
   private final AuthenticatedUserValidator userValidator = mock(AuthenticatedUserValidator.class);
   private final GameFactory factory = mock(GameFactory.class);
-  private final TurnTaker turnTaker = mock(TurnTaker.class);
   private final GameRepository repository = mock(GameRepository.class);
   private final BoardFormatter formatter = mock(BoardFormatter.class);
   private final GameEventPublisher eventPublisher = mock(GameEventPublisher.class);
@@ -32,7 +32,6 @@ class GameServiceTest {
       GameService.builder()
           .userValidator(userValidator)
           .factory(factory)
-          .turnTaker(turnTaker)
           .repository(repository)
           .formatter(formatter)
           .eventPublisher(eventPublisher)
@@ -186,7 +185,8 @@ class GameServiceTest {
 
   private Game givenTurnTaken(Game game, Turn turn) {
     Game updated = mock(Game.class);
-    when(turnTaker.takeTurn(game, turn)).thenReturn(updated);
+    Player player = mock(Player.class);
+    when(game.take(turn)).thenReturn(updated);
     return updated;
   }
 

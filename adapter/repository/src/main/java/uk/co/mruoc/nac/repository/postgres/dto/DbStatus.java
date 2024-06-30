@@ -1,5 +1,6 @@
 package uk.co.mruoc.nac.repository.postgres.dto;
 
+import java.util.Optional;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,5 +15,9 @@ public class DbStatus {
   private final long turn;
   private final boolean complete;
   private final DbPlayers players;
-  private final Character winner;
+  private final DbPlayer winner;
+
+  public Optional<DbPlayer> getWinner() {
+    return Optional.ofNullable(winner);
+  }
 }

@@ -13,7 +13,7 @@ public class Game {
 
   public Game take(Turn turn) {
     validateGameNotComplete();
-    validatePlayerTurn(turn);
+    validate(turn);
     Board updatedBoard = board.update(turn);
     return toBuilder()
         .status(toUpdatedStatus(updatedBoard, turn.getToken()))
@@ -29,8 +29,8 @@ public class Game {
     return status.getPlayers();
   }
 
-  private void validatePlayerTurn(Turn turn) {
-    status.validatePlayerTurn(turn);
+  private void validate(Turn turn) {
+    status.validate(turn);
   }
 
   private void validateGameNotComplete() {

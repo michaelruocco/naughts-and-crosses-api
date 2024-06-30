@@ -39,18 +39,16 @@ public class Players {
     return chars.stream().filter(i -> Collections.frequency(chars, i) > 1).distinct().toList();
   }
 
-  public void validatePlayerTurn(Turn turn) {
-    Player currentPlayer = getCurrentPlayer().orElseThrow(() -> new NotPlayersTurnException(turn));
-    if (!currentPlayer.hasUsername(turn.getUsername())) {
-      throw new NotPlayersTurnException(turn.getUsername());
+  public void validate(Turn turn) {
+    String username = turn.getUsername();
+    Player currentPlayer =
+        getCurrentPlayer().orElseThrow(() -> new NotPlayersTurnException(username));
+    if (!currentPlayer.hasUsername(username)) {
+      throw new NotPlayersTurnException(username);
     }
     if (!currentPlayer.hasToken(turn.getToken())) {
-      throw new NotPlayersTurnException(turn.getToken());
+      throw new IncorrectTokenForPlayerException(turn);
     }
-  }
-
-  public Optional<Character> getCurrentPlayerToken() {
-    return getCurrentPlayer().map(Player::getToken);
   }
 
   public Players clearCurrentPlayer() {
@@ -61,12 +59,19 @@ public class Players {
     return toBuilder().currentIndex(nextTurnIndex()).build();
   }
 
-  private Optional<Player> getCurrentPlayer() {
+  public Optional<Player> getCurrentPlayer() {
     if (currentIndex < 0) {
       return Optional.empty();
     }
     Player player = values.get(currentIndex);
     return Optional.of(player);
+  }
+
+  public Player getPlayerByToken(Character token) {
+    return stream()
+        .filter(p -> p.hasToken(token))
+        .findFirst()
+        .orElseThrow(() -> new PlayerWithTokenNotFound(token));
   }
 
   private int nextTurnIndex() {
