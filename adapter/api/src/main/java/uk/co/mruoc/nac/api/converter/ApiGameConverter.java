@@ -19,6 +19,7 @@ public class ApiGameConverter {
     return ApiGame.builder()
         .id(game.getId())
         .status(statusConverter.toApiStatus(game.getStatus()))
+        .players(playerConverter.toMinimalPlayers(game.getPlayers()))
         .build();
   }
 

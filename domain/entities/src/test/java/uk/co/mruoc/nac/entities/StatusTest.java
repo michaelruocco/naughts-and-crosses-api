@@ -9,10 +9,10 @@ import org.junit.jupiter.api.Test;
 
 class StatusTest {
 
-  private static final char CROSS = 'X';
-  private static final char NAUGHT = 'O';
+  private static final Player CROSSES_PLAYER = PlayerMother.crossesPlayer();
+  private static final Player NAUGHTS_PLAYER = PlayerMother.naughtsPlayer();
 
-  private final Status status = new Status(PlayerMother.players());
+  private final Status status = new Status(PlayerMother.of(CROSSES_PLAYER, NAUGHTS_PLAYER));
 
   @Test
   void shouldReturnInitialTurnAsZero() {
@@ -26,34 +26,23 @@ class StatusTest {
 
   @Test
   void shouldReturnInitialCurrentPlayerAsCrosses() {
-    assertThat(status.getCurrentPlayerToken()).contains(CROSS);
+    assertThat(status.getCurrentPlayer()).contains(CROSSES_PLAYER);
   }
 
   @Test
   void shouldNotThrowExceptionIfIsPlayersTurn() {
-    Turn turn = Turn.builder().token(CROSS).username("user-1").build();
+    Turn turn = new Turn(0, 0, CROSSES_PLAYER);
 
-    ThrowingCallable call = () -> status.validatePlayerTurn(turn);
+    ThrowingCallable call = () -> status.validate(turn);
 
     assertThatCode(call).doesNotThrowAnyException();
   }
 
   @Test
-  void shouldThrowExceptionIfTurnHasIncorrectToken() {
-    Turn turn = Turn.builder().token(NAUGHT).username("user-1").build();
+  void shouldThrowExceptionIfTurnHasIncorrectPlayer() {
+    Turn turn = new Turn(0, 0, NAUGHTS_PLAYER);
 
-    Throwable error = catchThrowable(() -> status.validatePlayerTurn(turn));
-
-    assertThat(error)
-        .isInstanceOf(NotPlayersTurnException.class)
-        .hasMessage("not turn for token O");
-  }
-
-  @Test
-  void shouldThrowExceptionIfTurnHasIncorrectUsername() {
-    Turn turn = Turn.builder().token(CROSS).username("user-2").build();
-
-    Throwable error = catchThrowable(() -> status.validatePlayerTurn(turn));
+    Throwable error = catchThrowable(() -> status.validate(turn));
 
     assertThat(error)
         .isInstanceOf(NotPlayersTurnException.class)
@@ -62,14 +51,14 @@ class StatusTest {
 
   @Test
   void shouldThrowExceptionIfGameIsComplete() {
-    Turn turn = Turn.builder().token(CROSS).username("user-1").build();
-    Status completeStatus = status.winningTurnTaken(CROSS);
+    Turn turn = new Turn(0, 0, CROSSES_PLAYER);
+    Status completeStatus = status.winningTurnTaken(CROSSES_PLAYER.getToken());
 
-    Throwable error = catchThrowable(() -> completeStatus.validatePlayerTurn(turn));
+    Throwable error = catchThrowable(() -> completeStatus.validate(turn));
 
     assertThat(error)
         .isInstanceOf(NotPlayersTurnException.class)
-        .hasMessage("not turn for token X and username user-1");
+        .hasMessage("not turn for username user-1");
   }
 
   @Test
@@ -83,7 +72,7 @@ class StatusTest {
   void shouldChangeNextPlayersTurn() {
     Status updated = status.turnTaken();
 
-    assertThat(updated.getCurrentPlayerToken()).contains(NAUGHT);
+    assertThat(updated.getCurrentPlayer()).contains(NAUGHTS_PLAYER);
   }
 
   @Test
@@ -104,37 +93,43 @@ class StatusTest {
   void shouldReturnEmptyNextPlayerTurnAfterDrawGameTurn() {
     Status updated = status.drawGameTurnTaken();
 
-    assertThat(updated.getCurrentPlayerToken()).isEmpty();
+    assertThat(updated.getCurrentPlayer()).isEmpty();
   }
 
   @Test
   void shouldIncrementTurnOnWinningTurn() {
-    Status updated = status.winningTurnTaken(CROSS);
+    char token = CROSSES_PLAYER.getToken();
+
+    Status updated = status.winningTurnTaken(token);
 
     assertThat(updated.getTurn()).isOne();
   }
 
   @Test
   void shouldSetCompleteTrueOnWinningTurn() {
-    Status updated = status.winningTurnTaken(CROSS);
+    char token = CROSSES_PLAYER.getToken();
+
+    Status updated = status.winningTurnTaken(token);
 
     assertThat(updated.isComplete()).isTrue();
   }
 
   @Test
   void shouldReturnEmptyNextPlayerTurnAfterWinningTurn() {
-    Status updated = status.winningTurnTaken(CROSS);
+    char token = CROSSES_PLAYER.getToken();
 
-    assertThat(updated.getCurrentPlayerToken()).isEmpty();
+    Status updated = status.winningTurnTaken(token);
+
+    assertThat(updated.getCurrentPlayer()).isEmpty();
   }
 
   @Test
   void shouldSetWinnerAfterWinningTurn() {
-    char winner = CROSS;
+    char token = CROSSES_PLAYER.getToken();
 
-    Status updated = status.winningTurnTaken(winner);
+    Status updated = status.winningTurnTaken(token);
 
-    assertThat(updated.getWinner()).contains(winner);
+    assertThat(updated.getWinner()).contains(CROSSES_PLAYER);
   }
 
   @Test
@@ -144,9 +139,11 @@ class StatusTest {
 
   @Test
   void shouldReturnIsDrawTrueIfGameCompleteWithWinner() {
-    Status winnerStatus = status.winningTurnTaken(CROSS);
+    char token = CROSSES_PLAYER.getToken();
 
-    assertThat(winnerStatus.isDraw()).isFalse();
+    Status updated = status.winningTurnTaken(token);
+
+    assertThat(updated.isDraw()).isFalse();
   }
 
   @Test

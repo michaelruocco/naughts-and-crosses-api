@@ -110,7 +110,7 @@
   "status": {
     "complete": true,
     "draw": true,
-    "nextPlayerToken": null,
+    "nextPlayer": null,
     "turn": 9,
     "winner": null
   }

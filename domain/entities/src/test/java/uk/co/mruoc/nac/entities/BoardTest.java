@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 
 class BoardTest {
 
+  private final Player crossesPlayer = PlayerMother.crossesPlayer();
+
   private final Board board = new Board();
 
   @Test
@@ -33,16 +35,17 @@ class BoardTest {
   @Test
   void shouldUpdateBoardIfLocationAvailable() {
     Coordinates coordinates = new Coordinates(0, 0);
-    Turn turn = Turn.builder().coordinates(coordinates).token('X').build();
+    Turn turn = new Turn(coordinates, crossesPlayer);
 
     Board updatedBoard = board.update(turn);
 
-    assertThat(updatedBoard.getLocation(coordinates)).contains(new Location(coordinates, 'X'));
+    assertThat(updatedBoard.getLocation(coordinates))
+        .contains(new Location(coordinates, crossesPlayer.getToken()));
   }
 
   @Test
   void shouldThrowErrorOnUpdateBoardIfLocationIsNotAvailable() {
-    Turn turn = new Turn(0, 0, 'X');
+    Turn turn = new Turn(0, 0, crossesPlayer);
     Board updatedBoard = board.update(turn);
 
     Throwable error = catchThrowable(() -> updatedBoard.update(turn));
@@ -80,28 +83,26 @@ class BoardTest {
 
   @Test
   void shouldReturnTrueIfWinner() {
-    char token = 'X';
     Board updatedBoard =
         board
-            .update(new Turn(0, 0, token))
-            .update(new Turn(1, 0, token))
-            .update(new Turn(2, 0, token));
+            .update(new Turn(0, 0, crossesPlayer))
+            .update(new Turn(1, 0, crossesPlayer))
+            .update(new Turn(2, 0, crossesPlayer));
 
-    boolean winner = updatedBoard.hasWinner(token);
+    boolean winner = updatedBoard.hasWinner(crossesPlayer.getToken());
 
     assertThat(winner).isTrue();
   }
 
   @Test
   void shouldWinningCoordinatesIfHorizontalWinner() {
-    char token = 'X';
     Board updatedBoard =
         board
-            .update(new Turn(0, 0, token))
-            .update(new Turn(1, 0, token))
-            .update(new Turn(2, 0, token));
+            .update(new Turn(0, 0, crossesPlayer))
+            .update(new Turn(1, 0, crossesPlayer))
+            .update(new Turn(2, 0, crossesPlayer));
 
-    Collection<Coordinates> winner = updatedBoard.findWinningLine(token);
+    Collection<Coordinates> winner = updatedBoard.findWinningLine(crossesPlayer.getToken());
 
     assertThat(winner)
         .containsExactly(new Coordinates(0, 0), new Coordinates(1, 0), new Coordinates(2, 0));
@@ -109,14 +110,13 @@ class BoardTest {
 
   @Test
   void shouldReturnWinningCoordinatesIfVerticalWinner() {
-    char token = 'O';
     Board updatedBoard =
         board
-            .update(new Turn(0, 0, token))
-            .update(new Turn(0, 1, token))
-            .update(new Turn(0, 2, token));
+            .update(new Turn(0, 0, crossesPlayer))
+            .update(new Turn(0, 1, crossesPlayer))
+            .update(new Turn(0, 2, crossesPlayer));
 
-    Collection<Coordinates> winner = updatedBoard.findWinningLine(token);
+    Collection<Coordinates> winner = updatedBoard.findWinningLine(crossesPlayer.getToken());
 
     assertThat(winner)
         .containsExactly(new Coordinates(0, 0), new Coordinates(0, 1), new Coordinates(0, 2));
@@ -124,14 +124,13 @@ class BoardTest {
 
   @Test
   void shouldCoordinatesIfForwardSlashWinner() {
-    char token = 'X';
     Board updatedBoard =
         board
-            .update(new Turn(0, 2, token))
-            .update(new Turn(1, 1, token))
-            .update(new Turn(2, 0, token));
+            .update(new Turn(0, 2, crossesPlayer))
+            .update(new Turn(1, 1, crossesPlayer))
+            .update(new Turn(2, 0, crossesPlayer));
 
-    Collection<Coordinates> winner = updatedBoard.findWinningLine(token);
+    Collection<Coordinates> winner = updatedBoard.findWinningLine(crossesPlayer.getToken());
 
     assertThat(winner)
         .containsExactlyInAnyOrder(
@@ -140,14 +139,13 @@ class BoardTest {
 
   @Test
   void shouldCoordinatesIfBackSlashWinner() {
-    char token = 'X';
     Board updatedBoard =
         board
-            .update(new Turn(0, 0, token))
-            .update(new Turn(1, 1, token))
-            .update(new Turn(2, 2, token));
+            .update(new Turn(0, 0, crossesPlayer))
+            .update(new Turn(1, 1, crossesPlayer))
+            .update(new Turn(2, 2, crossesPlayer));
 
-    Collection<Coordinates> winner = updatedBoard.findWinningLine(token);
+    Collection<Coordinates> winner = updatedBoard.findWinningLine(crossesPlayer.getToken());
 
     assertThat(winner)
         .containsExactly(new Coordinates(0, 0), new Coordinates(1, 1), new Coordinates(2, 2));

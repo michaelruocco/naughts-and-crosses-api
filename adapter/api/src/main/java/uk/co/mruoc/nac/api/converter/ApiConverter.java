@@ -7,6 +7,7 @@ import uk.co.mruoc.nac.api.dto.ApiTurn;
 import uk.co.mruoc.nac.entities.CreateGameRequest;
 import uk.co.mruoc.nac.entities.Game;
 import uk.co.mruoc.nac.entities.Turn;
+import uk.co.mruoc.nac.usecases.AuthenticatedUserSupplier;
 
 @RequiredArgsConstructor
 public class ApiConverter {
@@ -15,8 +16,11 @@ public class ApiConverter {
   private final ApiTurnConverter turnConverter;
   private final ApiRequestedPlayerConverter requestedPlayerConverter;
 
-  public ApiConverter() {
-    this(new ApiGameConverter(), new ApiTurnConverter(), new ApiRequestedPlayerConverter());
+  public ApiConverter(AuthenticatedUserSupplier userSupplier) {
+    this(
+        new ApiGameConverter(),
+        new ApiTurnConverter(userSupplier),
+        new ApiRequestedPlayerConverter());
   }
 
   public ApiGame toMinimalApiGame(Game game) {

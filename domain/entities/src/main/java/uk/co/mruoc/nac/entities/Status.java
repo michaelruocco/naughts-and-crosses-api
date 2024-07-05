@@ -13,7 +13,7 @@ public class Status {
   private final long turn;
   private final Players players;
   private final boolean complete;
-  private final Character winner;
+  private final Player winner;
 
   public Status(Players players) {
     this(0, players, false, null);
@@ -28,7 +28,7 @@ public class Status {
         .turn(nextTurn())
         .players(players.clearCurrentPlayer())
         .complete(true)
-        .winner(token)
+        .winner(players.getPlayerByToken(token))
         .build();
   }
 
@@ -40,15 +40,15 @@ public class Status {
         .build();
   }
 
-  public Optional<Character> getCurrentPlayerToken() {
-    return players.getCurrentPlayerToken();
+  public Optional<Player> getCurrentPlayer() {
+    return players.getCurrentPlayer();
   }
 
-  public void validatePlayerTurn(Turn turn) {
-    players.validatePlayerTurn(turn);
+  public void validate(Turn turn) {
+    players.validate(turn);
   }
 
-  public Optional<Character> getWinner() {
+  public Optional<Player> getWinner() {
     return Optional.ofNullable(winner);
   }
 

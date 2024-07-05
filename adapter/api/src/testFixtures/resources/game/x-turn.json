@@ -110,7 +110,10 @@
   "status": {
     "complete": false,
     "draw": false,
-    "nextPlayerToken": "O",
+    "nextPlayer": {
+      "token": "O",
+      "username": "user-2"
+    },
     "turn": 1,
     "winner": null
   }

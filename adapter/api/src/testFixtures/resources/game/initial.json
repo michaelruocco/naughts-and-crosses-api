@@ -80,7 +80,7 @@
   "players": [
     {
       "user": {
-        "id":"707d9fa6-13dd-4985-93aa-a28f01e89a6b",
+        "id": "707d9fa6-13dd-4985-93aa-a28f01e89a6b",
         "username": "user-1",
         "firstName": "User",
         "lastName": "One",
@@ -88,13 +88,15 @@
         "email": "user-1@email.com",
         "emailVerified": true,
         "status": "CONFIRMED",
-        "groups": [ "player" ]
+        "groups": [
+          "player"
+        ]
       },
       "token": "X"
     },
     {
       "user": {
-        "id":"dadfde25-9924-4982-802d-dfd0bce2218d",
+        "id": "dadfde25-9924-4982-802d-dfd0bce2218d",
         "username": "user-2",
         "firstName": "User",
         "lastName": "Two",
@@ -102,7 +104,9 @@
         "email": "user-2@email.com",
         "emailVerified": true,
         "status": "CONFIRMED",
-        "groups": [ "player" ]
+        "groups": [
+          "player"
+        ]
       },
       "token": "O"
     }
@@ -110,7 +114,10 @@
   "status": {
     "complete": false,
     "draw": false,
-    "nextPlayerToken": "X",
+    "nextPlayer": {
+      "token": "X",
+      "username": "user-1"
+    },
     "turn": 0,
     "winner": null
   }

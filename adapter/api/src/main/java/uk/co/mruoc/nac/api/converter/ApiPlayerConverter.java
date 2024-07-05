@@ -25,4 +25,15 @@ public class ApiPlayerConverter {
         .token(player.getToken())
         .build();
   }
+
+  public Collection<ApiPlayer> toMinimalPlayers(Players players) {
+    return players.stream().map(this::toMinimalPlayer).toList();
+  }
+
+  private ApiPlayer toMinimalPlayer(Player player) {
+    return ApiPlayer.builder()
+        .user(userConverter.toMinimalUser(player.getUser()))
+        .token(player.getToken())
+        .build();
+  }
 }

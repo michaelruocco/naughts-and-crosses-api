@@ -10,6 +10,7 @@ import java.util.function.LongSupplier;
 import org.junit.jupiter.api.Test;
 import uk.co.mruoc.nac.entities.Board;
 import uk.co.mruoc.nac.entities.Game;
+import uk.co.mruoc.nac.entities.Player;
 import uk.co.mruoc.nac.entities.PlayerMother;
 import uk.co.mruoc.nac.entities.Players;
 import uk.co.mruoc.nac.entities.Status;
@@ -19,7 +20,9 @@ class GameFactoryTest {
   private final LongSupplier idSupplier = mock(LongSupplier.class);
   private final PlayersValidator playersValidator = mock(PlayersValidator.class);
 
-  private final Players players = PlayerMother.players();
+  private final Player crossesPlayer = PlayerMother.crossesPlayer();
+  private final Player naughtsPlayer = PlayerMother.naughtsPlayer();
+  private final Players players = PlayerMother.of(crossesPlayer, naughtsPlayer);
 
   private final GameFactory factory = new GameFactory(idSupplier, playersValidator);
 
@@ -64,7 +67,8 @@ class GameFactoryTest {
     Game game = factory.buildGame(players);
 
     Status status = game.getStatus();
-    assertThat(status.getCurrentPlayerToken()).contains('X');
+
+    assertThat(status.getCurrentPlayer()).contains(crossesPlayer);
   }
 
   @Test

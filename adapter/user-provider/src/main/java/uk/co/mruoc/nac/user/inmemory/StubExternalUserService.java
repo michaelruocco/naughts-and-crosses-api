@@ -19,7 +19,8 @@ import uk.co.mruoc.nac.usecases.UserNotFoundException;
 @RequiredArgsConstructor
 public class StubExternalUserService implements ExternalUserService {
 
-  private static final String PLAYER_GROUP = "player";
+  private static final String PLAYER = "player";
+  private static final String ADMIN = "admin";
   private static final String CONFIRMED_STATUS = "CONFIRMED";
 
   private final Map<String, User> users;
@@ -66,7 +67,7 @@ public class StubExternalUserService implements ExternalUserService {
 
   @Override
   public Collection<String> getAllGroups() {
-    return Set.of("admin", PLAYER_GROUP);
+    return Set.of(ADMIN, PLAYER);
   }
 
   private User toUser(UpsertUserRequest request) {
@@ -89,14 +90,14 @@ public class StubExternalUserService implements ExternalUserService {
 
   private static User admin() {
     return User.builder()
-        .username("admin")
+        .username(ADMIN)
         .id("42bfdad9-c66a-4d5a-aa48-a97d6d3574af")
         .firstName("Admin")
         .lastName("User")
         .email("admin@email.com")
         .emailVerified(true)
         .status(CONFIRMED_STATUS)
-        .groups(Set.of("admin"))
+        .groups(Set.of(ADMIN))
         .build();
   }
 
@@ -109,7 +110,7 @@ public class StubExternalUserService implements ExternalUserService {
         .email("user-1@email.com")
         .emailVerified(true)
         .status(CONFIRMED_STATUS)
-        .groups(Set.of(PLAYER_GROUP))
+        .groups(Set.of(PLAYER))
         .build();
   }
 
@@ -122,7 +123,7 @@ public class StubExternalUserService implements ExternalUserService {
         .email("user-2@email.com")
         .emailVerified(true)
         .status(CONFIRMED_STATUS)
-        .groups(Set.of(PLAYER_GROUP))
+        .groups(Set.of(PLAYER))
         .build();
   }
 }

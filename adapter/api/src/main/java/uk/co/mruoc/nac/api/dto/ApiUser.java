@@ -18,7 +18,7 @@ public class ApiUser {
   private final String lastName;
   private final String fullName;
   private final String email;
-  private final boolean emailVerified;
+  private final Boolean emailVerified;
   private final String status;
   private final Collection<String> groups;
 }
