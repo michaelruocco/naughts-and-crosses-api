@@ -74,6 +74,10 @@ public class Players {
         .orElseThrow(() -> new PlayerWithTokenNotFound(token));
   }
 
+  public boolean containsUsername(String username) {
+    return stream().anyMatch(user -> user.hasUsername(username));
+  }
+
   private int nextTurnIndex() {
     int nextIndex = currentIndex + 1;
     if (nextIndex >= values.size()) {
