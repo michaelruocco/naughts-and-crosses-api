@@ -1,11 +1,13 @@
 package uk.co.mruoc.nac.entities;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
 
 class GameTest {
@@ -99,6 +101,16 @@ class GameTest {
     when(status.getPlayers()).thenReturn(expectedPlayers);
 
     assertThat(game.getPlayers()).isEqualTo(expectedPlayers);
+  }
+
+  @Test
+  void shouldDoNothingIfStatusDoesContainPlayer() {
+    User user = UserMother.user1();
+    when(status.containsPlayer(user)).thenReturn(true);
+
+    ThrowingCallable call = () -> game.validateIsPlayer(user);
+
+    assertThatCode(call).doesNotThrowAnyException();
   }
 
   @Test
