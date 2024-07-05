@@ -32,7 +32,7 @@ public class ApiPlayerConverter {
 
   private ApiPlayer toMinimalPlayer(Player player) {
     return ApiPlayer.builder()
-        .user(userConverter.toMinimalUser(player.getUser()))
+        .user(userConverter.toMinimalApiUser(player.getUser()))
         .token(player.getToken())
         .build();
   }

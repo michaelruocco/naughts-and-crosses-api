@@ -50,4 +50,8 @@ public class UriFactory {
   public String buildExternalUserSynchronizationsUri() {
     return String.format("%s/v1/external-user-synchronizations", baseUrl);
   }
+
+  public String buildGetCandidatePlayerUsernamesUri() {
+    return String.format("%s/v1/games/candidate-players/usernames", baseUrl);
+  }
 }

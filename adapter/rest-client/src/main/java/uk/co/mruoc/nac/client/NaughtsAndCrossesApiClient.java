@@ -72,6 +72,12 @@ public class NaughtsAndCrossesApiClient {
     return toCollection(batches);
   }
 
+  public Collection<String> getAllCandidatePlayerUsernames() {
+    String[] usernames =
+        performGet(uriFactory.buildGetCandidatePlayerUsernamesUri(), String[].class);
+    return toCollection(usernames);
+  }
+
   public void deleteAllUserBatches() {
     performDelete(uriFactory.buildUserBatchesUri());
   }
