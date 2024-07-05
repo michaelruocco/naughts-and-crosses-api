@@ -37,7 +37,9 @@ public class GameService {
   }
 
   public Game get(long id) {
-    return repository.get(id).orElseThrow(() -> new GameNotFoundException(id));
+    Game game = repository.get(id).orElseThrow(() -> new GameNotFoundException(id));
+    userValidator.validateIsAdminOrGamePlayer(game);
+    return game;
   }
 
   public void deleteAll() {
@@ -54,11 +56,13 @@ public class GameService {
   }
 
   private void create(Game game) {
+    userValidator.validateIsAdminOrGamePlayer(game);
     repository.create(game);
     eventPublisher.updated(game);
   }
 
   private void update(Game game) {
+    userValidator.validateIsAdminOrGamePlayer(game);
     repository.update(game);
     eventPublisher.updated(game);
   }

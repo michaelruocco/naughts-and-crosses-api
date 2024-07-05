@@ -14,6 +14,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import uk.co.mruoc.nac.entities.IncorrectTokenForPlayerException;
 import uk.co.mruoc.nac.entities.NotPlayersTurnException;
+import uk.co.mruoc.nac.entities.UserNotGamePlayerException;
 import uk.co.mruoc.nac.usecases.UserAlreadyExistsException;
 import uk.co.mruoc.nac.usecases.UserNotAuthenticatedException;
 import uk.co.mruoc.nac.usecases.UserNotFoundException;
@@ -49,6 +50,11 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(IncorrectTokenForPlayerException.class)
   public ResponseEntity<Object> handle(IncorrectTokenForPlayerException e, WebRequest request) {
+    return doHandle(e, BAD_REQUEST, request);
+  }
+
+  @ExceptionHandler(UserNotGamePlayerException.class)
+  public ResponseEntity<Object> handle(UserNotGamePlayerException e, WebRequest request) {
     return doHandle(e, BAD_REQUEST, request);
   }
 

@@ -29,6 +29,13 @@ public class Game {
     return status.getPlayers();
   }
 
+  public void validateIsPlayer(User user) {
+    if (status.containsPlayer(user)) {
+      return;
+    }
+    throw new UserNotGamePlayerException(user.getUsername(), id);
+  }
+
   private void validate(Turn turn) {
     status.validate(turn);
   }

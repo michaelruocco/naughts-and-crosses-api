@@ -2,6 +2,7 @@ package uk.co.mruoc.nac.entities;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import lombok.Builder;
 import lombok.Data;
@@ -42,6 +43,10 @@ public class User {
         .emailVerified(request.isEmailVerified())
         .groups(request.getGroups())
         .build();
+  }
+
+  public boolean isAdmin() {
+    return isMemberOfAtLeastOneGroup(List.of("admin"));
   }
 
   public boolean isMemberOfAtLeastOneGroup(Collection<String> groupsToCheck) {

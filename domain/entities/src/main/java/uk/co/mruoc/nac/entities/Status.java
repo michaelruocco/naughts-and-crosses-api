@@ -56,6 +56,10 @@ public class Status {
     return complete && getWinner().isEmpty();
   }
 
+  public boolean containsPlayer(User user) {
+    return players.containsUsername(user.getUsername());
+  }
+
   private long nextTurn() {
     return turn + 1;
   }
