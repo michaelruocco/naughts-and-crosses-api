@@ -109,8 +109,8 @@ class GameTest {
     Throwable error = catchThrowable(() -> game.validateIsPlayer(user));
 
     assertThat(error)
-            .isInstanceOf(UserNotGamePlayerException.class)
-            .hasMessage("user %s is not a player of game %d", user.getUsername(), game.getId());
+        .isInstanceOf(UserNotGamePlayerException.class)
+        .hasMessage("user %s is not a player of game %d", user.getUsername(), game.getId());
   }
 
   private void givenTurnTaken() {
