@@ -3,6 +3,10 @@ package uk.co.mruoc.nac.entities;
 public class UserNotGamePlayerException extends RuntimeException {
 
   public UserNotGamePlayerException(User user, Game game) {
-    super(String.format("user %s is not a player of game %s", user.getUsername(), game.getId()));
+    this(user.getUsername(), game.getId());
+  }
+
+  public UserNotGamePlayerException(String username, long gameId) {
+    super(String.format("user %s is not a player of game %s", username, gameId));
   }
 }
