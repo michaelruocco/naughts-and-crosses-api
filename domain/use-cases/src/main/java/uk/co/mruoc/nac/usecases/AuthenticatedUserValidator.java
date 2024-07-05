@@ -3,12 +3,21 @@ package uk.co.mruoc.nac.usecases;
 import java.util.Collection;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import uk.co.mruoc.nac.entities.Game;
 import uk.co.mruoc.nac.entities.User;
 
 @RequiredArgsConstructor
 public class AuthenticatedUserValidator {
 
   private final AuthenticatedUserSupplier supplier;
+
+  public void validateIsAdminOrGamePlayer(Game game) {
+    User user = supplier.get();
+    if (user.isAdmin()) {
+      return;
+    }
+    game.validateIsPlayer(user);
+  }
 
   public void validateIsAdmin() {
     validateUserMemberOfAtLeastOne("admin");
