@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import uk.co.mruoc.nac.entities.Game;
-import uk.co.mruoc.nac.entities.Player;
 import uk.co.mruoc.nac.entities.PlayerMother;
 import uk.co.mruoc.nac.entities.Players;
 import uk.co.mruoc.nac.entities.Turn;
@@ -185,7 +184,6 @@ class GameServiceTest {
 
   private Game givenTurnTaken(Game game, Turn turn) {
     Game updated = mock(Game.class);
-    Player player = mock(Player.class);
     when(game.take(turn)).thenReturn(updated);
     return updated;
   }

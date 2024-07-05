@@ -21,10 +21,6 @@ public class Turn {
     this(coordinates, player.getToken(), player.getUsername());
   }
 
-  public Turn(int x, int y, char token, String username) {
-    this(new Coordinates(x, y), token, username);
-  }
-
   public char getToken() {
     return token;
   }
