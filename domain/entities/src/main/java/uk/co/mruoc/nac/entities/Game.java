@@ -33,7 +33,7 @@ public class Game {
     if (status.containsPlayer(user)) {
       return;
     }
-    throw new UserNotGamePlayerException(user, this);
+    throw new UserNotGamePlayerException(user.getUsername(), id);
   }
 
   private void validate(Turn turn) {
