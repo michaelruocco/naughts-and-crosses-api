@@ -101,6 +101,18 @@ class GameTest {
     assertThat(game.getPlayers()).isEqualTo(expectedPlayers);
   }
 
+  @Test
+  void shouldThrowErrorIfStatusDoesNotContainPlayer() {
+    User user = UserMother.user1();
+    when(status.containsPlayer(user)).thenReturn(false);
+
+    Throwable error = catchThrowable(() -> game.validateIsPlayer(user));
+
+    assertThat(error)
+            .isInstanceOf(UserNotGamePlayerException.class)
+            .hasMessage("user %s is not a player of game %d", user.getUsername(), game.getId());
+  }
+
   private void givenTurnTaken() {
     Board updatedBoard = givenUpdatedBoard();
     givenTurnTaken(updatedBoard);
