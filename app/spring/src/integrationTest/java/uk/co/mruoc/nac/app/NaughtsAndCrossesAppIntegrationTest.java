@@ -94,6 +94,15 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
   }
 
   @Test
+  public void shouldReturnCandidatePlayerUsernames() {
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
+
+    Collection<String> usernames = client.getAllCandidatePlayerUsernames();
+
+    assertThat(usernames).contains("admin", "user-1", "user-2");
+  }
+
+  @Test
   public void shouldGetUser() {
     NaughtsAndCrossesApiClient client = getAdminAppClient();
 
