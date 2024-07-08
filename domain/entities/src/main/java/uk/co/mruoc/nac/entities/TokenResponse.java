@@ -1,6 +1,5 @@
 package uk.co.mruoc.nac.entities;
 
-import java.time.Instant;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Builder
 @Data
-public class CreateTokenResponse {
+public class TokenResponse {
   private final String accessToken;
-  private final Instant expiry;
+  private final String refreshToken;
 }

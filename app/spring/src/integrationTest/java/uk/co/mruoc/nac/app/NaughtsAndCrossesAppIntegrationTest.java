@@ -23,6 +23,8 @@ import uk.co.mruoc.nac.api.dto.ApiCreateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiCreateUserRequestMother;
 import uk.co.mruoc.nac.api.dto.ApiGame;
 import uk.co.mruoc.nac.api.dto.ApiGameJsonMother;
+import uk.co.mruoc.nac.api.dto.ApiTokenJsonMother;
+import uk.co.mruoc.nac.api.dto.ApiTokenResponse;
 import uk.co.mruoc.nac.api.dto.ApiTurn;
 import uk.co.mruoc.nac.api.dto.ApiUpdateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiUpdateUserRequestMother;
@@ -32,6 +34,8 @@ import uk.co.mruoc.nac.api.dto.ApiUserJsonMother;
 import uk.co.mruoc.nac.client.GameEventSubscriber;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClient;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClientException;
+import uk.co.mruoc.nac.client.NaughtsAndCrossesApiTokenClient;
+import uk.co.mruoc.nac.environment.integrated.cognito.AdminCognitoTokenCredentials;
 
 @Slf4j
 abstract class NaughtsAndCrossesAppIntegrationTest {
@@ -61,19 +65,34 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     return new Fixtures(getAdminAppClient());
   }
 
+  public NaughtsAndCrossesApiTokenClient getTokenClient() {
+    return getExtension().buildTokenClient();
+  }
+
   public NaughtsAndCrossesApiClient getAdminAppClient() {
-    return getExtension().getAdminRestClient();
+    return getExtension().buildAdminRestClient();
   }
 
   public NaughtsAndCrossesApiClient getUser1AppClient() {
-    return getExtension().getUser1RestClient();
+    return getExtension().buildUser1RestClient();
   }
 
   public NaughtsAndCrossesApiClient getUser2AppClient() {
-    return getExtension().getUser2RestClient();
+    return getExtension().buildUser2RestClient();
   }
 
   public abstract NaughtsAndCrossesAppExtension getExtension();
+
+  @Test
+  public void shouldRefreshAccessToken() {
+    NaughtsAndCrossesApiTokenClient client = getTokenClient();
+    ApiTokenResponse createResponse = client.createToken(new AdminCognitoTokenCredentials());
+
+    ApiTokenResponse refreshResponse = client.refreshToken(createResponse.getRefreshToken());
+
+    assertThatJson(refreshResponse).isEqualTo(ApiTokenJsonMother.refreshResponse());
+    assertThat(refreshResponse.getAccessToken()).isNotEqualTo(createResponse.getAccessToken());
+  }
 
   @Test
   public void shouldReturnAllUserGroups() {

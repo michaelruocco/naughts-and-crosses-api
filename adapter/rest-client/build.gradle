@@ -5,6 +5,7 @@ plugins {
 dependencies {
     implementation project(":api")
     implementation "org.springframework:spring-web:${springVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
 }
 
 apply from: rootProject.file("publish.gradle")

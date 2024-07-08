@@ -1,5 +1,6 @@
 package uk.co.mruoc.nac.app.config.user;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.common.util.StringUtils;
 import java.net.URI;
 import java.time.Clock;
@@ -66,8 +67,9 @@ public class CognitoUserConfig {
 
   @ConditionalOnProperty(value = "stub.token.service.enabled", havingValue = "true")
   @Bean
-  public TokenService stubTokenService(Clock clock) {
-    return new StubTokenService(clock);
+  public TokenService stubTokenService(
+      ObjectMapper mapper, Clock clock, Supplier<UUID> uuidSupplier) {
+    return new StubTokenService(clock, uuidSupplier, mapper);
   }
 
   @ConditionalOnProperty(

@@ -8,8 +8,8 @@ import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
-import uk.co.mruoc.nac.api.dto.ApiCreateTokenResponse;
 import uk.co.mruoc.nac.api.dto.ApiGame;
+import uk.co.mruoc.nac.api.dto.ApiTokenResponse;
 import uk.co.mruoc.nac.client.GameEventSubscriber;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClient;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesApiTokenClient;
@@ -42,14 +42,14 @@ public class NaughtsAndCrossesAppExtension
       appRunner.startIfNotStarted(environment);
       log.info("extension startup complete");
       started = true;
-      NaughtsAndCrossesApiClient client = getAdminRestClient();
+      NaughtsAndCrossesApiClient client = buildAdminRestClient();
       client.synchronizeExternalUsers();
     }
   }
 
   @Override
   public void beforeEach(ExtensionContext extensionContext) {
-    NaughtsAndCrossesApiClient client = getAdminRestClient();
+    NaughtsAndCrossesApiClient client = buildAdminRestClient();
     client.deleteAllGames();
     client.resetIds();
   }
@@ -64,20 +64,24 @@ public class NaughtsAndCrossesAppExtension
     shutdown();
   }
 
-  public NaughtsAndCrossesApiClient getAdminRestClient() {
-    return getAdminRestClient(new AdminCognitoTokenCredentials());
+  public NaughtsAndCrossesApiTokenClient buildTokenClient() {
+    return new NaughtsAndCrossesApiTokenClient(environment.getAppUrl());
   }
 
-  public NaughtsAndCrossesApiClient getUser1RestClient() {
-    return getAdminRestClient(new User1CognitoTokenCredentials());
+  public NaughtsAndCrossesApiClient buildAdminRestClient() {
+    return buildRestApiClient(new AdminCognitoTokenCredentials());
   }
 
-  public NaughtsAndCrossesApiClient getUser2RestClient() {
-    return getAdminRestClient(new User2CognitoTokenCredentials());
+  public NaughtsAndCrossesApiClient buildUser1RestClient() {
+    return buildRestApiClient(new User1CognitoTokenCredentials());
   }
 
-  public NaughtsAndCrossesApiClient getAdminRestClient(TokenCredentials credentials) {
-    return new NaughtsAndCrossesApiClient(environment.getAppUrl(), generateToken(credentials));
+  public NaughtsAndCrossesApiClient buildUser2RestClient() {
+    return buildRestApiClient(new User2CognitoTokenCredentials());
+  }
+
+  public NaughtsAndCrossesApiClient buildRestApiClient(TokenCredentials credentials) {
+    return new NaughtsAndCrossesApiClient(environment.getAppUrl(), toAccessToken(credentials));
   }
 
   public void connectToWebsocket() {
@@ -109,14 +113,17 @@ public class NaughtsAndCrossesAppExtension
 
   private NaughtsAndCrossesWebsocketClient buildWebsocketClient(TokenCredentials credentials) {
     return new NaughtsAndCrossesWebsocketClient(
-        environment.getAppUrl(), generateToken(credentials));
+        environment.getAppUrl(), toAccessToken(credentials));
   }
 
-  private String generateToken(TokenCredentials credentials) {
-    NaughtsAndCrossesApiTokenClient client =
-        new NaughtsAndCrossesApiTokenClient(environment.getAppUrl());
-    ApiCreateTokenResponse response = client.createToken(credentials);
+  private String toAccessToken(TokenCredentials credentials) {
+    ApiTokenResponse response = generateAccessToken(credentials);
     return response.getAccessToken();
+  }
+
+  private ApiTokenResponse generateAccessToken(TokenCredentials credentials) {
+    NaughtsAndCrossesApiTokenClient client = buildTokenClient();
+    return client.createToken(credentials);
   }
 
   private void shutdown() {
