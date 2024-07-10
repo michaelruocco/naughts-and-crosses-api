@@ -38,6 +38,7 @@ import uk.co.mruoc.nac.usecases.UserRepository;
 import uk.co.mruoc.nac.usecases.UserService;
 import uk.co.mruoc.nac.usecases.UserUpdater;
 import uk.co.mruoc.nac.usecases.UserUpserter;
+import uk.co.mruoc.nac.usecases.VirusScanner;
 
 @Configuration
 public class ApplicationConfig {
@@ -103,11 +104,13 @@ public class ApplicationConfig {
 
   @Bean
   public UserBatchService userBatchService(
+      VirusScanner virusScanner,
       AuthenticatedUserValidator userValidator,
       UserBatchFactory factory,
       UserBatchRepository repository,
       UserBatchExecutor executor) {
     return UserBatchService.builder()
+        .virusScanner(virusScanner)
         .userValidator(userValidator)
         .factory(factory)
         .repository(repository)

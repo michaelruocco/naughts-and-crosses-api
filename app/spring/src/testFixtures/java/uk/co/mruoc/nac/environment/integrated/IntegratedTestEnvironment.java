@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.nac.app.TestEnvironment;
 import uk.co.mruoc.nac.environment.LocalApp;
 import uk.co.mruoc.nac.environment.integrated.activemq.TestActiveMQContainer;
+import uk.co.mruoc.nac.environment.integrated.clamav.TestClamAvContainer;
 import uk.co.mruoc.nac.environment.integrated.cognito.TestCognitoContainer;
 import uk.co.mruoc.nac.environment.integrated.postgres.TestPostgresContainer;
 
@@ -19,6 +20,8 @@ public class IntegratedTestEnvironment implements TestEnvironment {
   private static final TestCognitoContainer COGNITO = new TestCognitoContainer();
 
   private static final TestActiveMQContainer ACTIVEMQ = new TestActiveMQContainer();
+
+  private static final TestClamAvContainer CLAM_AV = new TestClamAvContainer();
 
   private final LocalApp localApp;
 
@@ -34,6 +37,8 @@ public class IntegratedTestEnvironment implements TestEnvironment {
     POSTGRES.start();
     log.info("starting activemq");
     ACTIVEMQ.start();
+    log.info("starting clam av");
+    CLAM_AV.start();
   }
 
   @Override
@@ -44,6 +49,8 @@ public class IntegratedTestEnvironment implements TestEnvironment {
     POSTGRES.close();
     log.info("stopping cognito");
     COGNITO.close();
+    log.info("stopping clam av");
+    CLAM_AV.close();
   }
 
   @Override
@@ -75,6 +82,8 @@ public class IntegratedTestEnvironment implements TestEnvironment {
         .userPoolClientId(COGNITO.getUserPoolClientId())
         .awsAccessKeyId("abc")
         .awsSecretAccessKey("123")
+        .clamAvHost(CLAM_AV.getHost())
+        .clamAvPort(CLAM_AV.getFirstMappedPort())
         .build()
         .apply(Stream.of(localApp.getServerPortArg()))
         .toArray(String[]::new);

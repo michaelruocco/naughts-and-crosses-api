@@ -23,6 +23,9 @@ public class IntegratedTestEnvironmentArgsDecorator implements UnaryOperator<Str
   private final String awsAccessKeyId;
   private final String awsSecretAccessKey;
 
+  private final String clamAvHost;
+  private final int clamAvPort;
+
   @Override
   public Stream<String> apply(Stream<String> args) {
     return Stream.concat(args, args());
@@ -47,7 +50,11 @@ public class IntegratedTestEnvironmentArgsDecorator implements UnaryOperator<Str
         String.format("--aws.cognito.userPoolClientId=%s", userPoolClientId),
         String.format("--aws.cognito.endpointOverride=%s", cognitoEndpointOverride),
         String.format("--aws.cognito.accessKeyId=%s", awsAccessKeyId),
-        String.format("--aws.cognito.secretAccessKey=%s", awsSecretAccessKey));
+        String.format("--aws.cognito.secretAccessKey=%s", awsSecretAccessKey),
+        String.format("--clam.av.host=%s", clamAvHost),
+        String.format("--clam.av.port=%s", clamAvPort),
+        String.format("--clam.av.connect.timeout=%s", 2),
+        String.format("--clam.av.read.timeout=%s", 20));
   }
 
   private String buildJdbcUrl() {

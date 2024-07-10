@@ -30,6 +30,7 @@ public class UserBatchController {
   @PostMapping
   public ResponseEntity<ApiUserBatch> create(@RequestParam("data") MultipartFile csv) {
     try {
+      service.virusScan(csv.getInputStream());
       Collection<UpsertUserRequest> requests = converter.toCreateUserRequests(csv.getInputStream());
       UserBatch batch = service.create(requests);
       return ResponseEntity.accepted().body(converter.toApiUserBatch(batch));
