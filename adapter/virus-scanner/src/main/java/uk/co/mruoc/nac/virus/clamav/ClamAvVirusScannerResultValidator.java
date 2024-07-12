@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import uk.co.mruoc.nac.entities.VirusScanException;
 
 @RequiredArgsConstructor
@@ -11,7 +12,7 @@ public class ClamAvVirusScannerResultValidator {
 
   private static final String FOUND = "FOUND";
 
-  public void validate(InputStream stream) {
+  public void validate(InputStream stream) throws IOException {
     validate(toString(stream));
   }
 
@@ -19,7 +20,7 @@ public class ClamAvVirusScannerResultValidator {
     if ("stream: OK".equals(result)) {
       return;
     }
-    if (result == null || result.isEmpty()) {
+    if (StringUtils.isEmpty(result)) {
       throw new VirusScanException("empty result");
     }
     if (result.endsWith(FOUND)) {
@@ -28,12 +29,8 @@ public class ClamAvVirusScannerResultValidator {
     throw new VirusScanException("error");
   }
 
-  private static String toString(InputStream stream) {
-    try {
-      return new String(IOUtils.toByteArray(stream)).trim();
-    } catch (IOException e) {
-      throw new VirusScanException(e);
-    }
+  private static String toString(InputStream stream) throws IOException {
+    return new String(IOUtils.toByteArray(stream)).trim();
   }
 
   private static String toSignature(String s) {

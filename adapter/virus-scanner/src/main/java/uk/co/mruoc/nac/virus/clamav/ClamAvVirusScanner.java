@@ -50,17 +50,22 @@ public class ClamAvVirusScanner implements VirusScanner {
     byte[] buffer = new byte[2048];
     int read = fileStream.read(buffer);
     while (read >= 0) {
-      byte[] chunkSize = ByteBuffer.allocate(4).putInt(read).array();
-      outStream.write(chunkSize);
-      outStream.write(buffer, 0, read);
-      if (inStream.available() > 0) {
-        throwReplyError(inStream);
-      }
+      write(read, buffer, outStream, inStream);
       read = fileStream.read(buffer);
     }
     outStream.write(new byte[] {0, 0, 0, 0});
     outStream.flush();
     resultValidator.validate(inStream);
+  }
+
+  private void write(int read, byte[] buffer, OutputStream outStream, InputStream inStream)
+      throws IOException {
+    byte[] chunkSize = ByteBuffer.allocate(4).putInt(read).array();
+    outStream.write(chunkSize);
+    outStream.write(buffer, 0, read);
+    if (inStream.available() > 0) {
+      throwReplyError(inStream);
+    }
   }
 
   private void throwReplyError(InputStream inStream) throws IOException {

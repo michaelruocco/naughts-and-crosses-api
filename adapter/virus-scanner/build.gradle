@@ -6,6 +6,7 @@ dependencies {
     implementation project(":entities")
     implementation project(":use-cases")
     implementation "commons-io:commons-io:${commonsIoVersion}"
+    implementation "org.apache.commons:commons-text:${commonsText}"
 }
 
 apply from: rootProject.file("publish.gradle")
