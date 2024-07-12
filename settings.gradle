@@ -6,20 +6,23 @@ project(":entities").projectDir = file("domain/entities")
 include "use-cases"
 project(":use-cases").projectDir = file("domain/use-cases")
 
-include "repository"
-project(":repository").projectDir = file("adapter/repository")
-
 include "api"
 project(":api").projectDir = file("adapter/api")
+
+include "repository"
+project(":repository").projectDir = file("adapter/repository")
 
 include "rest-client"
 project(":rest-client").projectDir = file("adapter/rest-client")
 
-include "websocket-client"
-project(":websocket-client").projectDir = file("adapter/websocket-client")
-
 include "user-provider"
 project(":user-provider").projectDir = file("adapter/user-provider")
+
+include "virus-scanner"
+project(":virus-scanner").projectDir = file("adapter/virus-scanner")
+
+include "websocket-client"
+project(":websocket-client").projectDir = file("adapter/websocket-client")
 
 include "naughts-and-crosses-api-spring-app"
 project(":naughts-and-crosses-api-spring-app").projectDir = file("app/spring")

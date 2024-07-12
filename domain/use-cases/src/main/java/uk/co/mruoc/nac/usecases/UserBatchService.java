@@ -1,5 +1,6 @@
 package uk.co.mruoc.nac.usecases;
 
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.stream.Stream;
 import lombok.Builder;
@@ -11,10 +12,15 @@ import uk.co.mruoc.nac.entities.UserBatch;
 @Slf4j
 public class UserBatchService {
 
+  private final VirusScanner virusScanner;
   private final AuthenticatedUserValidator userValidator;
   private final UserBatchFactory factory;
   private final UserBatchRepository repository;
   private final UserBatchExecutor executor;
+
+  public void virusScan(InputStream stream) {
+    virusScanner.scan(stream);
+  }
 
   public UserBatch create(Collection<UpsertUserRequest> requests) {
     userValidator.validateIsAdmin();

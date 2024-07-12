@@ -10,6 +10,7 @@ import org.springframework.web.context.request.WebRequest;
 import uk.co.mruoc.nac.entities.IncorrectTokenForPlayerException;
 import uk.co.mruoc.nac.entities.NotPlayersTurnException;
 import uk.co.mruoc.nac.entities.UserNotGamePlayerException;
+import uk.co.mruoc.nac.entities.VirusScanException;
 import uk.co.mruoc.nac.usecases.UserAlreadyExistsException;
 import uk.co.mruoc.nac.usecases.UserNotAuthenticatedException;
 import uk.co.mruoc.nac.usecases.UserNotFoundException;
@@ -97,6 +98,18 @@ class ErrorHandlerTest {
   @Test
   void shouldReturnBadRequestStatusForUserNotGamePlayerException() {
     UserNotGamePlayerException error = new UserNotGamePlayerException(USERNAME, 1L);
+    WebRequest webRequest = mock(WebRequest.class);
+
+    ResponseEntity<Object> response = handler.handle(error, webRequest);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    assertThat(response.getBody()).isEqualTo(error.getMessage());
+    assertThat(response.getHeaders()).isEmpty();
+  }
+
+  @Test
+  void shouldReturnBadRequestStatusForVirusScanException() {
+    VirusScanException error = new VirusScanException("error");
     WebRequest webRequest = mock(WebRequest.class);
 
     ResponseEntity<Object> response = handler.handle(error, webRequest);

@@ -206,6 +206,18 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
   }
 
   @Test
+  public void shouldReturnErrorIfBatchFileIsMalicious() {
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
+    Resource resource = loadMaliciousUsersCsv();
+
+    Throwable error = catchThrowable(() -> client.uploadUserBatch(resource));
+
+    assertThat(error)
+        .isInstanceOf(NaughtsAndCrossesApiClientException.class)
+        .hasMessage("400 : \"failed with signature Win.Test.EICAR_HDB-1\"");
+  }
+
+  @Test
   public void userBatchShouldUpdateUsersIfUsersAlreadyExists() {
     NaughtsAndCrossesApiClient client = getAdminAppClient();
 
@@ -420,6 +432,10 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
   private Resource loadUsers2Csv() {
     return loadUsersCsv("users-2.csv");
+  }
+
+  private Resource loadMaliciousUsersCsv() {
+    return loadUsersCsv("users-malicious.csv");
   }
 
   private Resource loadUsersCsv(String filename) {

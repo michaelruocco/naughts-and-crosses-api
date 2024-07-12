@@ -68,7 +68,7 @@ public class StubTokenService implements TokenService {
   }
 
   private StubTokenConfig getConfig(String username) {
-    return Optional.of(userConfig.get(username))
+    return Optional.ofNullable(userConfig.get(username))
         .orElseThrow(() -> new CreateTokenFailedException(username));
   }
 
