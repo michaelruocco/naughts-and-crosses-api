@@ -35,7 +35,11 @@ public class StubTokenService implements TokenService {
   private final Map<String, StubTokenConfig> refreshTokens;
 
   public StubTokenService(Clock clock, Supplier<UUID> uuidSupplier, ObjectMapper mapper) {
-    this(clock, uuidSupplier, new JwtValidator(clock, mapper), buildSigner());
+    this(clock, uuidSupplier, new JwtValidator(clock, mapper));
+  }
+
+  public StubTokenService(Clock clock, Supplier<UUID> uuidSupplier, JwtValidator validator) {
+    this(clock, uuidSupplier, validator, buildSigner());
   }
 
   public StubTokenService(
