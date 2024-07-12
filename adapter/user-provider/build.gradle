@@ -10,6 +10,7 @@ dependencies {
     implementation "com.auth0:java-jwt:4.4.0"
     implementation "commons-io:commons-io:${commonsIoVersion}"
     implementation "org.apache.commons:commons-collections4:${commonsCollectionsVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
 }
 
 apply from: rootProject.file("publish.gradle")

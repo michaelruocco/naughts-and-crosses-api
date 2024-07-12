@@ -2,63 +2,102 @@ package uk.co.mruoc.nac.user.inmemory;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.nac.entities.CreateTokenRequest;
-import uk.co.mruoc.nac.entities.CreateTokenResponse;
+import uk.co.mruoc.nac.entities.RefreshTokenRequest;
+import uk.co.mruoc.nac.entities.TokenResponse;
 import uk.co.mruoc.nac.usecases.CreateTokenFailedException;
+import uk.co.mruoc.nac.usecases.RefreshTokenFailedException;
 import uk.co.mruoc.nac.usecases.TokenService;
 
 @RequiredArgsConstructor
 public class StubTokenService implements TokenService {
 
   private final Clock clock;
+  private final Supplier<UUID> uuidSupplier;
+  private final JwtValidator validator;
   private final Algorithm signer;
   private final Map<String, StubTokenConfig> userConfig;
+  private final Map<String, StubTokenConfig> refreshTokens;
 
-  public StubTokenService(Clock clock) {
-    this(clock, buildSigner());
+  public StubTokenService(Clock clock, Supplier<UUID> uuidSupplier, ObjectMapper mapper) {
+    this(clock, uuidSupplier, new JwtValidator(clock, mapper));
   }
 
-  public StubTokenService(Clock clock, Algorithm signer) {
-    this(clock, signer, buildUserConfig());
+  public StubTokenService(Clock clock, Supplier<UUID> uuidSupplier, JwtValidator validator) {
+    this(clock, uuidSupplier, validator, buildSigner());
+  }
+
+  public StubTokenService(
+      Clock clock, Supplier<UUID> uuidSupplier, JwtValidator validator, Algorithm signer) {
+    this(clock, uuidSupplier, validator, signer, buildUserConfig(), new HashMap<>());
   }
 
   @Override
-  public CreateTokenResponse create(CreateTokenRequest request) {
+  public TokenResponse create(CreateTokenRequest request) {
     StubTokenConfig config = getConfig(request.getUsername());
     if (Objects.equals(config.getPassword(), request.getPassword())) {
-      return toResponse(config);
+      TokenResponse response =
+          toResponseBuilder(config).refreshToken(toRefreshToken(config)).build();
+      refreshTokens.put(response.getRefreshToken(), config);
+      return response;
     }
     throw new CreateTokenFailedException(request.getUsername());
   }
 
+  @Override
+  public TokenResponse refresh(RefreshTokenRequest request) {
+    String refreshToken = request.getRefreshToken();
+    validator.validate(refreshToken);
+    if (refreshTokens.containsKey(refreshToken)) {
+      StubTokenConfig config = refreshTokens.get(refreshToken);
+      refreshTokens.remove(refreshToken);
+      return toResponseBuilder(config).build();
+    }
+    throw new RefreshTokenFailedException(refreshToken);
+  }
+
   private StubTokenConfig getConfig(String username) {
-    return Optional.of(userConfig.get(username))
+    return Optional.ofNullable(userConfig.get(username))
         .orElseThrow(() -> new CreateTokenFailedException(username));
   }
 
-  private CreateTokenResponse toResponse(StubTokenConfig config) {
+  private TokenResponse.TokenResponseBuilder toResponseBuilder(StubTokenConfig config) {
+    return TokenResponse.builder().accessToken(toAccessToken(config));
+  }
+
+  private String toAccessToken(StubTokenConfig config) {
+    return toToken(config, Duration.ofMinutes(15));
+  }
+
+  private String toRefreshToken(StubTokenConfig config) {
+    return toToken(config, Duration.ofHours(1));
+  }
+
+  private String toToken(StubTokenConfig config, Duration validFor) {
     Instant now = clock.instant();
-    Instant expiry = now.plus(Duration.ofHours(1));
-    String token =
-        JWT.create()
-            .withSubject(config.getSubject())
-            .withIssuer("nac-stub-token-service")
-            .withClaim("username", config.getUsername())
-            .withIssuedAt(now)
-            .withExpiresAt(expiry)
-            .sign(signer);
-    return CreateTokenResponse.builder().accessToken(token).expiry(expiry).build();
+    return JWT.create()
+        .withSubject(config.getSubject())
+        .withIssuer("nac-stub-token-service")
+        .withClaim("username", config.getUsername())
+        .withClaim("uniqueId", uuidSupplier.get().toString())
+        .withIssuedAt(now)
+        .withExpiresAt(now.plus(validFor))
+        .sign(signer);
   }
 
   private static Algorithm buildSigner() {
