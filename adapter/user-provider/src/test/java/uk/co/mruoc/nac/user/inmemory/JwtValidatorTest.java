@@ -33,6 +33,18 @@ class JwtValidatorTest {
   }
 
   @Test
+  void shouldThrowExceptionIfJwtExpiryIsNull() {
+    String jwt = jwtWithExpiry(null);
+
+    Throwable error = catchThrowable(() -> validator.validate(jwt));
+
+    assertThat(error)
+        .isInstanceOf(InvalidJwtException.class)
+        .hasMessage(
+            "expiry not found in body {\"sub\":\"test\",\"iss\":\"test-issuer\",\"exp\":null}");
+  }
+
+  @Test
   void shouldThrowExceptionIfJwtIsExpired() {
     String jwt = jwtWithExpiry(NOW.minusMillis(1));
 

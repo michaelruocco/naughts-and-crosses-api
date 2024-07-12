@@ -29,7 +29,6 @@ public class JwtValidator {
   private boolean isExpired(String jwt) {
     Instant expiry = toExpiry(jwt);
     Instant now = clock.instant();
-    System.out.println("now " + now + " expiry " + expiry + " expired " + now.isAfter(expiry));
     return now.isAfter(expiry);
   }
 
