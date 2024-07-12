@@ -7,7 +7,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.util.Base64;
 import lombok.RequiredArgsConstructor;
-import uk.co.mruoc.nac.usecases.TokenExpiredException;
+import uk.co.mruoc.nac.usecases.JwtExpiredException;
 
 @RequiredArgsConstructor
 public class JwtValidator {
@@ -22,13 +22,15 @@ public class JwtValidator {
 
   public void validate(String jwt) {
     if (isExpired(jwt)) {
-      throw new TokenExpiredException(jwt);
+      throw new JwtExpiredException(jwt);
     }
   }
 
   private boolean isExpired(String jwt) {
     Instant expiry = toExpiry(jwt);
-    return expiry.isBefore(clock.instant());
+    Instant now = clock.instant();
+    System.out.println("now " + now + " expiry " + expiry + " expired " + now.isAfter(expiry));
+    return now.isAfter(expiry);
   }
 
   private Instant toExpiry(String jwt) {
