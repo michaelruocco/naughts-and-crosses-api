@@ -135,7 +135,11 @@ you can run:
     -Daws.cognito.regionName=eu-central-1 \
     -Daws.cognito.endpointOverride=http://localhost:9229 \
     -Daws.cognito.accessKeyId=abc \
-    -Daws.cognito.secretAccessKey=123
+    -Daws.cognito.secretAccessKey=123 \
+    -Dclam.av.host=localhost \
+    -Dclam.av.port=3310 \
+    -Dclam.av.connect.timeout=2 \
+    -Dclam.av.read.timeout=20
 ```
 
 ### Running the API as a docker container with a postgres database repository, and kafka
