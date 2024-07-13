@@ -67,7 +67,6 @@ services:
 
   antivirus:
     image: clamav/clamav
-    mem_reservation: "4G"
-    mem_limit: "4G"
+    container_name: antivirus
     ports:
       - 3310:3310
