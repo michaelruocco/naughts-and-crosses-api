@@ -9,5 +9,5 @@ import lombok.Data;
 public class UserPage {
 
   private final long total;
-  private final Collection<User> items;
+  private final Collection<User> users;
 }

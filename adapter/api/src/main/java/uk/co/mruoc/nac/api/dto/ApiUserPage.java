@@ -13,5 +13,5 @@ import lombok.RequiredArgsConstructor;
 public class ApiUserPage {
 
   private final long total;
-  private final Collection<ApiUser> items;
+  private final Collection<ApiUser> users;
 }

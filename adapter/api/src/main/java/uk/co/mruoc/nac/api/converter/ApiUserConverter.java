@@ -17,21 +17,23 @@ import uk.co.mruoc.nac.entities.UserPageRequest;
 @RequiredArgsConstructor
 public class ApiUserConverter {
 
-  private final ApiPageRequestConverter pageConverter;
+  private final ApiSortConverter sortConverter;
 
   public ApiUserConverter() {
-    this(new ApiPageRequestConverter());
+    this(new ApiSortConverter());
   }
 
   public UserPageRequest toRequest(ApiUserPageRequest apiRequest) {
     return UserPageRequest.builder()
-        .page(pageConverter.toRequest(apiRequest.getPage()))
+        .limit(apiRequest.getLimit())
+        .offset(apiRequest.getOffset())
+        .sort(sortConverter.toSort(apiRequest.getSort()))
         .groups(apiRequest.getGroups())
         .build();
   }
 
   public ApiUserPage toApiUserPage(UserPage page) {
-    return ApiUserPage.builder().total(page.getTotal()).items(toApiUsers(page.getItems())).build();
+    return ApiUserPage.builder().total(page.getTotal()).users(toApiUsers(page.getUsers())).build();
   }
 
   public Collection<ApiUser> toApiUsers(Collection<User> users) {

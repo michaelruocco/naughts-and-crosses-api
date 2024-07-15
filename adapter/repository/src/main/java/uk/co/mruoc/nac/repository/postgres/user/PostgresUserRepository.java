@@ -38,11 +38,11 @@ public class PostgresUserRepository implements UserRepository {
   @Override
   public UserPage getPage(UserPageRequest request) {
     Specification<DbUser> spec = specFactory.toSpec(request);
-    Pageable pageable = pageableFactory.build(request.getPage());
+    Pageable pageable = pageableFactory.build(request);
     Page<DbUser> dbPage = jpaRepository.findAll(spec, pageable);
     return UserPage.builder()
         .total(dbPage.getTotalElements())
-        .items(converter.toUsers(dbPage.toList()))
+        .users(converter.toUsers(dbPage.toList()))
         .build();
   }
 

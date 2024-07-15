@@ -27,7 +27,6 @@ import uk.co.mruoc.nac.api.dto.ApiCreateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiCreateUserRequestMother;
 import uk.co.mruoc.nac.api.dto.ApiGame;
 import uk.co.mruoc.nac.api.dto.ApiGameJsonMother;
-import uk.co.mruoc.nac.api.dto.ApiPageRequestMother;
 import uk.co.mruoc.nac.api.dto.ApiTokenJsonMother;
 import uk.co.mruoc.nac.api.dto.ApiTokenResponse;
 import uk.co.mruoc.nac.api.dto.ApiTurn;
@@ -124,13 +123,12 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
   @MethodSource("offsetsAndUsernames")
   public void shouldReturnUsersPaginated(int offset, String username) {
     NaughtsAndCrossesApiClient client = getAdminAppClient();
-    ApiUserPageRequest request =
-        ApiUserPageRequestMother.withPage(ApiPageRequestMother.withOffset(offset));
+    ApiUserPageRequest request = ApiUserPageRequestMother.withOffset(offset);
 
     ApiUserPage page = client.getUserPage(request);
 
     assertThat(page.getTotal()).isEqualTo(3);
-    assertThat(page.getItems()).map(ApiUser::getUsername).containsExactly(username);
+    assertThat(page.getUsers()).map(ApiUser::getUsername).containsExactly(username);
   }
 
   @Test
