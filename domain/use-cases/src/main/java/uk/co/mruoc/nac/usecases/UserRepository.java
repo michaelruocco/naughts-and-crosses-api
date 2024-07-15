@@ -3,6 +3,8 @@ package uk.co.mruoc.nac.usecases;
 import java.util.Optional;
 import java.util.stream.Stream;
 import uk.co.mruoc.nac.entities.User;
+import uk.co.mruoc.nac.entities.UserPage;
+import uk.co.mruoc.nac.entities.UserPageRequest;
 
 public interface UserRepository {
 
@@ -17,6 +19,8 @@ public interface UserRepository {
   Optional<User> getByUsername(String username);
 
   Stream<User> getAll();
+
+  UserPage getPage(UserPageRequest request);
 
   void create(User user);
 

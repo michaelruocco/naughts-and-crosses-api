@@ -19,6 +19,8 @@ import uk.co.mruoc.nac.api.dto.ApiTurn;
 import uk.co.mruoc.nac.api.dto.ApiUpdateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiUser;
 import uk.co.mruoc.nac.api.dto.ApiUserBatch;
+import uk.co.mruoc.nac.api.dto.ApiUserPage;
+import uk.co.mruoc.nac.api.dto.ApiUserPageRequest;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -90,6 +92,11 @@ public class NaughtsAndCrossesApiClient {
   public Collection<ApiUser> getAllUsers() {
     ApiUser[] users = performGet(uriFactory.buildUsersUri(), ApiUser[].class);
     return toCollection(users);
+  }
+
+  public ApiUserPage getUserPage(ApiUserPageRequest request) {
+    return performPost(
+        uriFactory.buildUsersPagesUri(), entityFactory.buildRequest(request), ApiUserPage.class);
   }
 
   public Collection<ApiGame> getAllGames() {

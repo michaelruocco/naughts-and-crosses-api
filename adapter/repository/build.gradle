@@ -7,6 +7,8 @@ dependencies {
     implementation project(":entities")
     implementation "org.postgresql:postgresql:${postgresqlVersion}"
     implementation "com.github.michaelruocco:json-adapter:${jsonAdapterVersion}"
+    implementation "jakarta.persistence:jakarta.persistence-api:3.1.0"
+    implementation "org.springframework.data:spring-data-jpa:3.3.2"
 }
 
 apply from: rootProject.file("publish.gradle")

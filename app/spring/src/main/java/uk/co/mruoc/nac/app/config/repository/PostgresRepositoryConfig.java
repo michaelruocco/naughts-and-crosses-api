@@ -3,11 +3,14 @@ package uk.co.mruoc.nac.app.config.repository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.sql.DataSource;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import uk.co.mruoc.json.jackson.JacksonJsonConverter;
 import uk.co.mruoc.nac.repository.postgres.PostgresIdSupplier;
 import uk.co.mruoc.nac.repository.postgres.game.PostgresGameRepository;
+import uk.co.mruoc.nac.repository.postgres.user.JpaUserRepository;
 import uk.co.mruoc.nac.repository.postgres.user.PostgresUserBatchRepository;
 import uk.co.mruoc.nac.repository.postgres.user.PostgresUserRepository;
 import uk.co.mruoc.nac.usecases.IdSupplier;
@@ -19,6 +22,8 @@ import uk.co.mruoc.nac.usecases.UserRepository;
     name = "repository.in.memory.enabled",
     havingValue = "false",
     matchIfMissing = true)
+@EnableJpaRepositories("uk.co.mruoc.nac.repository.postgres")
+@EntityScan("uk.co.mruoc.nac.repository.postgres.dto")
 public class PostgresRepositoryConfig {
 
   @Bean
@@ -32,8 +37,8 @@ public class PostgresRepositoryConfig {
   }
 
   @Bean
-  public UserRepository postgresUserRepository(DataSource dataSource, ObjectMapper mapper) {
-    return new PostgresUserRepository(dataSource, new JacksonJsonConverter(mapper));
+  public UserRepository postgresUserRepository(JpaUserRepository jpaUserRepository) {
+    return new PostgresUserRepository(jpaUserRepository);
   }
 
   @Bean

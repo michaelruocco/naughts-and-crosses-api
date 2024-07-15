@@ -1,103 +1,63 @@
 package uk.co.mruoc.nac.repository.postgres.user;
 
-import java.sql.SQLException;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.Optional;
 import java.util.stream.Stream;
-import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import uk.co.mruoc.json.JsonConverter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import uk.co.mruoc.nac.entities.User;
-import uk.co.mruoc.nac.repository.UserRepositoryException;
+import uk.co.mruoc.nac.entities.UserPage;
+import uk.co.mruoc.nac.entities.UserPageRequest;
+import uk.co.mruoc.nac.repository.postgres.converter.DbUserConverter;
+import uk.co.mruoc.nac.repository.postgres.dto.DbUser;
 import uk.co.mruoc.nac.usecases.UserRepository;
 
 @RequiredArgsConstructor
-@Slf4j
 public class PostgresUserRepository implements UserRepository {
 
-  private final DataSource dataSource;
-  private final CreateUserDao createDao;
-  private final ReadUserDao readDao;
-  private final UpdateUserDao updateDao;
-  private final DeleteUserDao deleteDao;
+  private final JpaUserRepository jpaRepository;
+  private final PageableFactory pageableFactory;
+  private final SpecFactory specFactory;
+  private final DbUserConverter converter;
 
-  public PostgresUserRepository(DataSource dataSource, JsonConverter jsonConverter) {
-    this(dataSource, new PostgresUserConverter(jsonConverter));
-  }
-
-  public PostgresUserRepository(DataSource dataSource, PostgresUserConverter userConverter) {
-    this(
-        dataSource,
-        new CreateUserDao(userConverter),
-        new ReadUserDao(userConverter),
-        new UpdateUserDao(userConverter),
-        new DeleteUserDao());
-  }
-
-  @Override
-  public void create(User user) {
-    Instant start = Instant.now();
-    try (var connection = dataSource.getConnection()) {
-      createDao.create(connection, user);
-    } catch (SQLException e) {
-      throw new UserRepositoryException(e);
-    } finally {
-      var duration = Duration.between(start, Instant.now());
-      log.info("create user {} took {}ms", user.getUsername(), duration.toMillis());
-    }
+  public PostgresUserRepository(JpaUserRepository jpaRepository) {
+    this(jpaRepository, new PageableFactory(), new SpecFactory(), new DbUserConverter());
   }
 
   @Override
   public Optional<User> getByUsername(String username) {
-    Instant start = Instant.now();
-    try (var connection = dataSource.getConnection()) {
-      return readDao.findByUsername(connection, username);
-    } catch (SQLException e) {
-      throw new UserRepositoryException(e);
-    } finally {
-      var duration = Duration.between(start, Instant.now());
-      log.info("find user {} took {}ms", username, duration.toMillis());
-    }
-  }
-
-  @Override
-  public void update(User user) {
-    Instant start = Instant.now();
-    try (var connection = dataSource.getConnection()) {
-      updateDao.update(connection, user);
-    } catch (SQLException e) {
-      throw new UserRepositoryException(e);
-    } finally {
-      var duration = Duration.between(start, Instant.now());
-      log.info("update user {} took {}ms", user.getUsername(), duration.toMillis());
-    }
+    return jpaRepository.findById(username).map(converter::toUser);
   }
 
   @Override
   public Stream<User> getAll() {
-    Instant start = Instant.now();
-    try (var connection = dataSource.getConnection()) {
-      return readDao.getAll(connection);
-    } catch (SQLException e) {
-      throw new UserRepositoryException(e);
-    } finally {
-      var duration = Duration.between(start, Instant.now());
-      log.info("get all users took {}ms", duration.toMillis());
-    }
+    return jpaRepository.findAll().stream().map(converter::toUser);
+  }
+
+  @Override
+  public UserPage getPage(UserPageRequest request) {
+    Specification<DbUser> spec = specFactory.toSpec(request);
+    Pageable pageable = pageableFactory.build(request.getPage());
+    Page<DbUser> dbPage = jpaRepository.findAll(spec, pageable);
+    return UserPage.builder()
+        .total(dbPage.getTotalElements())
+        .items(converter.toUsers(dbPage.toList()))
+        .build();
+  }
+
+  @Override
+  public void create(User user) {
+    jpaRepository.save(converter.toDbUser(user));
+  }
+
+  @Override
+  public void update(User user) {
+    jpaRepository.save(converter.toDbUser(user));
   }
 
   @Override
   public void delete(String username) {
-    Instant start = Instant.now();
-    try (var connection = dataSource.getConnection()) {
-      deleteDao.delete(connection, username);
-    } catch (SQLException e) {
-      throw new UserRepositoryException(e);
-    } finally {
-      var duration = Duration.between(start, Instant.now());
-      log.info("delete user {} took {}ms", username, duration.toMillis());
-    }
+    jpaRepository.deleteById(username);
   }
 }
