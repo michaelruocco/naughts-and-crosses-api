@@ -33,7 +33,11 @@ public class InMemoryUserRepository implements UserRepository {
   @Override
   public UserPage getPage(UserPageRequest request) {
     log.info("returning page of users for request {}", request);
-    return UserPage.builder().total(users.size()).users(toPageUsers(request)).build();
+    Collection<User> filteredUsers = toFilteredUsers(request);
+    return UserPage.builder()
+        .total(filteredUsers.size())
+        .users(toPage(filteredUsers, request))
+        .build();
   }
 
   @Override
@@ -60,13 +64,15 @@ public class InMemoryUserRepository implements UserRepository {
     users.put(user.getUsername(), user);
   }
 
-  private Collection<User> toPageUsers(UserPageRequest request) {
+  private Collection<User> toFilteredUsers(UserPageRequest request) {
     return users.values().stream()
         .filter(toPredicate(request))
         .sorted(comparatorFactory.toComparator(request.getSort()))
-        .skip(request.getOffset())
-        .limit(request.getLimit())
         .toList();
+  }
+
+  private static Collection<User> toPage(Collection<User> filteredUsers, UserPageRequest request) {
+    return filteredUsers.stream().skip(request.getOffset()).limit(request.getLimit()).toList();
   }
 
   private static Predicate<User> toPredicate(UserPageRequest request) {

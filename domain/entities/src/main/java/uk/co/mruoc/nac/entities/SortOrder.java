@@ -1,6 +1,7 @@
 package uk.co.mruoc.nac.entities;
 
 import static uk.co.mruoc.nac.entities.SortOrder.Direction.ASC;
+import static uk.co.mruoc.nac.entities.SortOrder.Direction.DESC;
 
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +17,10 @@ public class SortOrder {
 
   public static SortOrder asc(String fieldName) {
     return new SortOrder(fieldName, ASC);
+  }
+
+  public static SortOrder desc(String fieldName) {
+    return new SortOrder(fieldName, DESC);
   }
 
   public boolean isAscending() {

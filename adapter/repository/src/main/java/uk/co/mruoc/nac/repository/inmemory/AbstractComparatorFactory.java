@@ -17,8 +17,8 @@ public abstract class AbstractComparatorFactory<T> implements ComparatorFactory<
   private final Comparator<T> defaultComparator;
 
   @Override
-  public Comparator<T> toComparator(Collection<SortOrder> sortCriteria) {
-    return sortCriteria.stream()
+  public Comparator<T> toComparator(Collection<SortOrder> sort) {
+    return sort.stream()
         .map(this::toComparator)
         .reduce(Comparator::thenComparing)
         .orElse(defaultComparator);

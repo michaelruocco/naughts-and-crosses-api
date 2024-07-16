@@ -16,6 +16,7 @@ public class UserPageRequest implements PageRequest {
   private final Collection<SortOrder> sort;
   private final Collection<String> groups;
 
+  @Override
   public Collection<SortOrder> getSort() {
     return defaultIfEmpty(sort, Set.of(SortOrder.asc("username")));
   }

@@ -27,6 +27,7 @@ import uk.co.mruoc.nac.api.dto.ApiCreateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiCreateUserRequestMother;
 import uk.co.mruoc.nac.api.dto.ApiGame;
 import uk.co.mruoc.nac.api.dto.ApiGameJsonMother;
+import uk.co.mruoc.nac.api.dto.ApiSortOrder;
 import uk.co.mruoc.nac.api.dto.ApiTokenJsonMother;
 import uk.co.mruoc.nac.api.dto.ApiTokenResponse;
 import uk.co.mruoc.nac.api.dto.ApiTurn;
@@ -123,12 +124,35 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
   @MethodSource("offsetsAndUsernames")
   public void shouldReturnUsersPaginated(int offset, String username) {
     NaughtsAndCrossesApiClient client = getAdminAppClient();
-    ApiUserPageRequest request = ApiUserPageRequestMother.withOffset(offset);
+    ApiUserPageRequest request = ApiUserPageRequestMother.builder().offset(offset).limit(1).build();
 
     ApiUserPage page = client.getUserPage(request);
 
     assertThat(page.getTotal()).isEqualTo(3);
     assertThat(page.getUsers()).map(ApiUser::getUsername).containsExactly(username);
+  }
+
+  @ParameterizedTest
+  @MethodSource("sortDirectionsAndUsernames")
+  public void shouldReturnPaginatedUsersSorted(String direction, Collection<String> usernames) {
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
+    ApiUserPageRequest request =
+        ApiUserPageRequestMother.withSorts(new ApiSortOrder("username", direction));
+
+    ApiUserPage page = client.getUserPage(request);
+
+    assertThat(page.getUsers()).map(ApiUser::getUsername).containsExactlyElementsOf(usernames);
+  }
+
+  @Test
+  public void shouldFilterPaginatedUsersByGroup() {
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
+    ApiUserPageRequest request = ApiUserPageRequestMother.withGroups("player");
+
+    ApiUserPage page = client.getUserPage(request);
+
+    // assertThat(page.getTotal()).isEqualTo(2);
+    assertThat(page.getUsers()).map(ApiUser::getUsername).containsExactly("user-1", "user-2");
   }
 
   @Test
@@ -490,7 +514,13 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
   private static Stream<Arguments> offsetsAndUsernames() {
     return Stream.of(
-        Arguments.of(0, "user-2"), Arguments.of(1, "user-1"), Arguments.of(2, "admin"));
+        Arguments.of(0, "admin"), Arguments.of(1, "user-1"), Arguments.of(2, "user-2"));
+  }
+
+  private static Stream<Arguments> sortDirectionsAndUsernames() {
+    return Stream.of(
+        Arguments.of("ASC", List.of("admin", "user-1", "user-2")),
+        Arguments.of("DESC", List.of("user-2", "user-1", "admin")));
   }
 
   private static void awaitMostRecentGameUpdateEquals(

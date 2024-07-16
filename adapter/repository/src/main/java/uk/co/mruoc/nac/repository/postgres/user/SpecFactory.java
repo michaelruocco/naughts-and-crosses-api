@@ -16,6 +16,6 @@ public class SpecFactory {
   }
 
   private Specification<DbUser> toInGroupSpec(Collection<String> groups) {
-    return (user, query, builder) -> builder.in(user.get("group_name")).value(groups);
+    return (user, query, builder) -> builder.in(user.join("groups")).value(groups);
   }
 }
