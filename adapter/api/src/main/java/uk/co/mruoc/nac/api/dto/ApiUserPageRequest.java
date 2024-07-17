@@ -3,7 +3,6 @@ package uk.co.mruoc.nac.api.dto;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
-
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
