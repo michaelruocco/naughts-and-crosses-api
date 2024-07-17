@@ -64,6 +64,6 @@ public class OffsetBasedPageable implements Pageable {
 
   @Override
   public boolean hasPrevious() {
-    return offset > limit;
+    return offset >= limit;
   }
 }
