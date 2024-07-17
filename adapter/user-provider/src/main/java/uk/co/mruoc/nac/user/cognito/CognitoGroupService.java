@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.stream.Stream;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -30,18 +31,17 @@ public class CognitoGroupService {
   private final CognitoIdentityProviderClient client;
   private final String userPoolId;
 
-  public Collection<String> getAllGroups() {
+  public Map<String, Collection<String>> getUsernamesWithGroups() {
+    return getUsernamesWithGroups(getAllGroups().toList());
+  }
+
+  public Stream<String> getAllGroups() {
     ListGroupsRequest request = ListGroupsRequest.builder().userPoolId(userPoolId).build();
     ListGroupsIterable responses = client.listGroupsPaginator(request);
     return responses.stream()
         .map(ListGroupsResponse::groups)
         .flatMap(Collection::stream)
-        .map(GroupType::groupName)
-        .toList();
-  }
-
-  public Map<String, Collection<String>> getUsernamesWithGroups() {
-    return getUsernamesWithGroups(getAllGroups());
+        .map(GroupType::groupName);
   }
 
   public void updateUserGroups(User user) {

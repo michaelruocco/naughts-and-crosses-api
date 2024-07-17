@@ -5,17 +5,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uk.co.mruoc.nac.usecases.ExternalUserService;
+import uk.co.mruoc.nac.usecases.UserGroupService;
 
 @RestController
 @RequestMapping("/v1/user-groups")
 @RequiredArgsConstructor
 public class UserGroupController {
 
-  private final ExternalUserService service;
+  private final UserGroupService service;
 
   @GetMapping
   public Collection<String> getAll() {
-    return service.getAllGroups();
+    return service.getAll();
   }
 }

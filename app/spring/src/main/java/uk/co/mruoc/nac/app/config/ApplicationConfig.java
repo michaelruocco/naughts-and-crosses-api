@@ -34,6 +34,7 @@ import uk.co.mruoc.nac.usecases.UserBatchService;
 import uk.co.mruoc.nac.usecases.UserCreator;
 import uk.co.mruoc.nac.usecases.UserDeleter;
 import uk.co.mruoc.nac.usecases.UserFinder;
+import uk.co.mruoc.nac.usecases.UserGroupService;
 import uk.co.mruoc.nac.usecases.UserRepository;
 import uk.co.mruoc.nac.usecases.UserService;
 import uk.co.mruoc.nac.usecases.UserUpdater;
@@ -132,6 +133,11 @@ public class ApplicationConfig {
         .deleter(deleter)
         .finder(finder)
         .build();
+  }
+
+  @Bean
+  public UserGroupService userGroupService(ExternalUserService externalUserService) {
+    return new UserGroupService(externalUserService);
   }
 
   @Bean

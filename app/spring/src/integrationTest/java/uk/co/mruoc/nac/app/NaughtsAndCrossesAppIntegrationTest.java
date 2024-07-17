@@ -108,7 +108,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
     Collection<String> groups = client.getUserGroups();
 
-    assertThat(groups).containsExactlyInAnyOrder("player", "admin");
+    assertThat(groups).containsExactly("admin", "player");
   }
 
   @Test
@@ -151,7 +151,6 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
     ApiUserPage page = client.getUserPage(request);
 
-    // assertThat(page.getTotal()).isEqualTo(2);
     assertThat(page.getUsers()).map(ApiUser::getUsername).containsExactly("user-1", "user-2");
   }
 
