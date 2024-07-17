@@ -2,4 +2,8 @@ plugins {
     id "naughts-and-crosses-api.java-conventions"
 }
 
+dependencies {
+    implementation "org.apache.commons:commons-collections4:${commonsCollectionsVersion}"
+}
+
 apply from: rootProject.file("publish.gradle")

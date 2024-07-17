@@ -9,9 +9,23 @@ create sequence game_id as bigint;
 
 create table user_record(
     username varchar(50) not null,
-    user_json jsonb,
+    id varchar(100) not null,
+    first_name varchar(100) not null,
+    last_name varchar(100) not null,
+    email varchar(100) not null,
+    email_verified boolean not null,
+    status varchar(100) not null,
 
     primary key(username)
+);
+
+create table user_group(
+    username varchar(50) not null,
+    group_name varchar(100) not null,
+
+    primary key(username, group_name),
+
+    foreign key(username) references user_record(username) on delete cascade
 );
 
 create table user_batch(

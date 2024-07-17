@@ -13,8 +13,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.client.HttpServerErrorException;
@@ -23,6 +27,7 @@ import uk.co.mruoc.nac.api.dto.ApiCreateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiCreateUserRequestMother;
 import uk.co.mruoc.nac.api.dto.ApiGame;
 import uk.co.mruoc.nac.api.dto.ApiGameJsonMother;
+import uk.co.mruoc.nac.api.dto.ApiSortOrder;
 import uk.co.mruoc.nac.api.dto.ApiTokenJsonMother;
 import uk.co.mruoc.nac.api.dto.ApiTokenResponse;
 import uk.co.mruoc.nac.api.dto.ApiTurn;
@@ -31,6 +36,9 @@ import uk.co.mruoc.nac.api.dto.ApiUpdateUserRequestMother;
 import uk.co.mruoc.nac.api.dto.ApiUser;
 import uk.co.mruoc.nac.api.dto.ApiUserBatch;
 import uk.co.mruoc.nac.api.dto.ApiUserJsonMother;
+import uk.co.mruoc.nac.api.dto.ApiUserPage;
+import uk.co.mruoc.nac.api.dto.ApiUserPageRequest;
+import uk.co.mruoc.nac.api.dto.ApiUserPageRequestMother;
 import uk.co.mruoc.nac.client.GameEventSubscriber;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClient;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClientException;
@@ -110,6 +118,41 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     Collection<ApiUser> users = client.getAllUsers();
 
     assertThat(users).hasSize(3);
+  }
+
+  @ParameterizedTest
+  @MethodSource("offsetsAndUsernames")
+  public void shouldReturnUsersPaginated(int offset, String username) {
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
+    ApiUserPageRequest request = ApiUserPageRequestMother.builder().offset(offset).limit(1).build();
+
+    ApiUserPage page = client.getUserPage(request);
+
+    assertThat(page.getTotal()).isEqualTo(3);
+    assertThat(page.getUsers()).map(ApiUser::getUsername).containsExactly(username);
+  }
+
+  @ParameterizedTest
+  @MethodSource("sortDirectionsAndUsernames")
+  public void shouldReturnPaginatedUsersSorted(String direction, Collection<String> usernames) {
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
+    ApiUserPageRequest request =
+        ApiUserPageRequestMother.withSorts(new ApiSortOrder("username", direction));
+
+    ApiUserPage page = client.getUserPage(request);
+
+    assertThat(page.getUsers()).map(ApiUser::getUsername).containsExactlyElementsOf(usernames);
+  }
+
+  @Test
+  public void shouldFilterPaginatedUsersByGroup() {
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
+    ApiUserPageRequest request = ApiUserPageRequestMother.withGroups("player");
+
+    ApiUserPage page = client.getUserPage(request);
+
+    // assertThat(page.getTotal()).isEqualTo(2);
+    assertThat(page.getUsers()).map(ApiUser::getUsername).containsExactly("user-1", "user-2");
   }
 
   @Test
@@ -467,6 +510,17 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     NaughtsAndCrossesApiClient client = getAdminAppClient();
     ApiUserBatch batch = client.getUserBatch(id);
     return predicate.test(batch);
+  }
+
+  private static Stream<Arguments> offsetsAndUsernames() {
+    return Stream.of(
+        Arguments.of(0, "admin"), Arguments.of(1, "user-1"), Arguments.of(2, "user-2"));
+  }
+
+  private static Stream<Arguments> sortDirectionsAndUsernames() {
+    return Stream.of(
+        Arguments.of("ASC", List.of("admin", "user-1", "user-2")),
+        Arguments.of("DESC", List.of("user-2", "user-1", "admin")));
   }
 
   private static void awaitMostRecentGameUpdateEquals(

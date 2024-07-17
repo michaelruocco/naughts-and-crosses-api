@@ -35,6 +35,10 @@ public class UriFactory {
     return String.format("%s/v1/users", baseUrl);
   }
 
+  public String buildUsersPagesUri() {
+    return String.format("%s/v1/users/pages", baseUrl);
+  }
+
   public String buildUserUri(String username) {
     return String.format("%s/%s", buildUsersUri(), username);
   }

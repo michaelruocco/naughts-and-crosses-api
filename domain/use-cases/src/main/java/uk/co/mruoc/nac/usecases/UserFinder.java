@@ -5,6 +5,8 @@ import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.nac.entities.User;
+import uk.co.mruoc.nac.entities.UserPage;
+import uk.co.mruoc.nac.entities.UserPageRequest;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -14,6 +16,10 @@ public class UserFinder {
 
   public Stream<User> getAll() {
     return repository.getAll();
+  }
+
+  public UserPage getPage(UserPageRequest request) {
+    return repository.getPage(request);
   }
 
   public User forceGetByUsername(String username) {

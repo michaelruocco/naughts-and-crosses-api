@@ -15,7 +15,10 @@ import uk.co.mruoc.nac.api.converter.ApiUserConverter;
 import uk.co.mruoc.nac.api.dto.ApiCreateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiUpdateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiUser;
+import uk.co.mruoc.nac.api.dto.ApiUserPage;
+import uk.co.mruoc.nac.api.dto.ApiUserPageRequest;
 import uk.co.mruoc.nac.entities.UpsertUserRequest;
+import uk.co.mruoc.nac.entities.UserPageRequest;
 import uk.co.mruoc.nac.usecases.UserService;
 
 @RestController
@@ -44,6 +47,13 @@ public class UserController {
   @GetMapping
   public Collection<ApiUser> getAll() {
     return service.getAll().map(converter::toApiUser).toList();
+  }
+
+  @PostMapping("/pages")
+  public ApiUserPage createPage(@RequestBody ApiUserPageRequest apiRequest) {
+    UserPageRequest request = converter.toRequest(apiRequest);
+    var page = service.createPage(request);
+    return converter.toApiUserPage(page);
   }
 
   @GetMapping("/{username}")
