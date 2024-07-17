@@ -1,6 +1,5 @@
 package uk.co.mruoc.nac.user.inmemory;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -66,8 +65,8 @@ public class StubExternalUserService implements ExternalUserService {
   }
 
   @Override
-  public Collection<String> getAllGroups() {
-    return Set.of(ADMIN, PLAYER);
+  public Stream<String> getAllGroups() {
+    return Stream.of(ADMIN, PLAYER);
   }
 
   private User toUser(UpsertUserRequest request) {

@@ -91,7 +91,7 @@ public class CognitoUserService implements ExternalUserService {
   }
 
   @Override
-  public Collection<String> getAllGroups() {
+  public Stream<String> getAllGroups() {
     return groupService.getAllGroups();
   }
 }
