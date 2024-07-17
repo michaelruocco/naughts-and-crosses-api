@@ -1,7 +1,6 @@
 package uk.co.mruoc.nac.api.dto;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Collection;
 import org.junit.jupiter.api.Test;
