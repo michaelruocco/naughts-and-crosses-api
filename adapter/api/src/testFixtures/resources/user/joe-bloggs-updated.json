@@ -1,9 +1,9 @@
 {
   "id": "${json-unit.any-string}",
   "username": "jbloggs",
+  "name": "Joe1 Bloggs1",
   "firstName": "Joe1",
   "lastName": "Bloggs1",
-  "fullName": "Joe1 Bloggs1",
   "email": "joe.bloggs.1@hotmail.com",
   "emailVerified": false,
   "status": "FORCE_CHANGE_PASSWORD",

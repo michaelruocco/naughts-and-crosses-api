@@ -1,9 +1,9 @@
 package uk.co.mruoc.nac.entities;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,6 +13,7 @@ public class User {
 
   private final String username;
   private final String id;
+  private final String name;
   private final String firstName;
   private final String lastName;
   private final String email;
@@ -22,17 +23,6 @@ public class User {
 
   public boolean hasUsername(String otherUsername) {
     return Objects.equals(username, otherUsername);
-  }
-
-  public String getFullName() {
-    Collection<String> names = new ArrayList<>();
-    if (Objects.nonNull(firstName)) {
-      names.add(firstName);
-    }
-    if (Objects.nonNull(lastName)) {
-      names.add(lastName);
-    }
-    return String.join(" ", names);
   }
 
   public User update(UpsertUserRequest request) {
@@ -51,5 +41,13 @@ public class User {
 
   public boolean isMemberOfAtLeastOneGroup(Collection<String> groupsToCheck) {
     return groupsToCheck.stream().anyMatch(groups::contains);
+  }
+
+  public String getName() {
+    return Optional.ofNullable(name).orElseGet(this::buildName);
+  }
+
+  private String buildName() {
+    return String.format("%s %s", firstName, lastName);
   }
 }

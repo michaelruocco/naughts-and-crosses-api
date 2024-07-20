@@ -23,6 +23,6 @@ public class Player {
   }
 
   public String getName() {
-    return user.getFullName();
+    return user.getName();
   }
 }
