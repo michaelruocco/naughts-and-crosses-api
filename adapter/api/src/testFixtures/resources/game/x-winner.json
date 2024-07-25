@@ -118,6 +118,7 @@
     "turn": 5,
     "winner": {
       "username": "user-1",
+      "fullName": "User One",
       "token": "X"
     }
   }

@@ -111,8 +111,9 @@
     "complete": false,
     "draw": false,
     "nextPlayer": {
-      "token": "O",
-      "username": "user-2"
+      "username": "user-2",
+      "fullName": "User Two",
+      "token": "O"
     },
     "turn": 1,
     "winner": null

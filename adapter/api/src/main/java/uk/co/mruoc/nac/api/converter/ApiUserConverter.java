@@ -100,9 +100,6 @@ public class ApiUserConverter {
   }
 
   public ApiUser toMinimalApiUser(User user) {
-    return ApiUser.builder()
-            .username(user.getUsername())
-            .fullName(user.getFullName())
-            .build();
+    return ApiUser.builder().username(user.getUsername()).fullName(user.getFullName()).build();
   }
 }
