@@ -3,7 +3,6 @@ package uk.co.mruoc.nac.entities;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,9 +12,7 @@ public class User {
 
   private final String username;
   private final String id;
-  private final String name;
-  private final String firstName;
-  private final String lastName;
+  private final UserName name;
   private final String email;
   private final boolean emailVerified;
   private final Collection<String> groups;
@@ -27,8 +24,7 @@ public class User {
 
   public User update(UpsertUserRequest request) {
     return toBuilder()
-        .firstName(request.getFirstName())
-        .lastName(request.getLastName())
+        .name(request.getName())
         .email(request.getEmail())
         .emailVerified(request.isEmailVerified())
         .groups(request.getGroups())
@@ -43,11 +39,15 @@ public class User {
     return groupsToCheck.stream().anyMatch(groups::contains);
   }
 
-  public String getName() {
-    return Optional.ofNullable(name).orElseGet(this::buildName);
+  public String getFullName() {
+    return name.getFull();
   }
 
-  private String buildName() {
-    return String.format("%s %s", firstName, lastName);
+  public String getFirstName() {
+    return name.getFirst();
+  }
+
+  public String getLastName() {
+    return name.getLast();
   }
 }

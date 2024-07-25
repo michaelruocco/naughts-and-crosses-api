@@ -1,7 +1,7 @@
 {
   "id": "${json-unit.any-string}",
   "username": "test-user",
-  "name": "updated-first updated-last",
+  "fullName": "updated-first updated-last",
   "firstName": "updated-first",
   "lastName": "updated-last",
   "email": "updated@email.com",

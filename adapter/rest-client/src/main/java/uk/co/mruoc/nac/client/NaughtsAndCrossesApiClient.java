@@ -12,6 +12,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import uk.co.mruoc.nac.api.dto.ApiCandidateGamePlayer;
 import uk.co.mruoc.nac.api.dto.ApiCreateGameRequest;
 import uk.co.mruoc.nac.api.dto.ApiCreateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiGame;
@@ -74,10 +75,10 @@ public class NaughtsAndCrossesApiClient {
     return toCollection(batches);
   }
 
-  public Collection<String> getAllCandidatePlayerUsernames() {
-    String[] usernames =
-        performGet(uriFactory.buildGetCandidatePlayerUsernamesUri(), String[].class);
-    return toCollection(usernames);
+  public Collection<ApiCandidateGamePlayer> getAllCandidatePlayers() {
+    ApiCandidateGamePlayer[] players =
+        performGet(uriFactory.buildGetCandidatePlayersUri(), ApiCandidateGamePlayer[].class);
+    return toCollection(players);
   }
 
   public void deleteAllUserBatches() {

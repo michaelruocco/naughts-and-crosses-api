@@ -9,9 +9,8 @@ import lombok.RequiredArgsConstructor;
 @NoArgsConstructor(force = true)
 @Builder
 @Data
-public class ApiStatusPlayer {
+public class ApiCandidateGamePlayer {
 
   private final String username;
   private final String fullName;
-  private final Character token;
 }

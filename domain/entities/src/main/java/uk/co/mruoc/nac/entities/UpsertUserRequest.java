@@ -8,9 +8,20 @@ import lombok.Data;
 @Data
 public class UpsertUserRequest {
   private final String username;
-  private final String firstName;
-  private final String lastName;
+  private final UserName name;
   private final String email;
   private final boolean emailVerified;
   private final Collection<String> groups;
+
+  public String getFullName() {
+    return name.getFull();
+  }
+
+  public String getFirstName() {
+    return name.getFirst();
+  }
+
+  public String getLastName() {
+    return name.getLast();
+  }
 }

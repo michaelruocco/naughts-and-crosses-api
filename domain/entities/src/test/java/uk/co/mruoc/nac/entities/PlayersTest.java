@@ -16,7 +16,7 @@ class PlayersTest {
 
   @Test
   void shouldReturnStreamOfPlayers() {
-    assertThat(players.stream()).map(Player::getName).containsExactly("User One", "User Two");
+    assertThat(players.stream()).map(Player::getFullName).containsExactly("User One", "User Two");
   }
 
   @Test

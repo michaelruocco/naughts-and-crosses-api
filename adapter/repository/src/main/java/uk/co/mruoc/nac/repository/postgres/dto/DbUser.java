@@ -24,7 +24,6 @@ public class DbUser {
 
   private final String id;
   @Id private final String username;
-  private final String name;
   private final String firstName;
   private final String lastName;
   private final String email;

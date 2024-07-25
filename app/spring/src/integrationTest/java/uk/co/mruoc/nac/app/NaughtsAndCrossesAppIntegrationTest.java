@@ -22,6 +22,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.client.HttpServerErrorException;
+import uk.co.mruoc.nac.api.dto.ApiCandidateGamePlayer;
+import uk.co.mruoc.nac.api.dto.ApiCandidateGamePlayerMother;
 import uk.co.mruoc.nac.api.dto.ApiCreateGameRequest;
 import uk.co.mruoc.nac.api.dto.ApiCreateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiCreateUserRequestMother;
@@ -155,12 +157,16 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
   }
 
   @Test
-  public void shouldReturnCandidatePlayerUsernames() {
+  public void shouldReturnCandidatePlayers() {
     NaughtsAndCrossesApiClient client = getAdminAppClient();
 
-    Collection<String> usernames = client.getAllCandidatePlayerUsernames();
+    Collection<ApiCandidateGamePlayer> players = client.getAllCandidatePlayers();
 
-    assertThat(usernames).contains("admin", "user-1", "user-2");
+    assertThat(players)
+        .containsExactly(
+            ApiCandidateGamePlayerMother.admin(),
+            ApiCandidateGamePlayerMother.user1(),
+            ApiCandidateGamePlayerMother.user2());
   }
 
   @Test
