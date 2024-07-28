@@ -54,7 +54,8 @@ public class IntegratedTestEnvironmentArgsDecorator implements UnaryOperator<Str
         String.format("--clam.av.host=%s", clamAvHost),
         String.format("--clam.av.port=%s", clamAvPort),
         String.format("--clam.av.connect.timeout=%s", 2),
-        String.format("--clam.av.read.timeout=%s", 20));
+        String.format("--clam.av.read.timeout=%s", 20),
+        "--stub.auth.code.client.enabled=true");
   }
 
   private String buildJdbcUrl() {

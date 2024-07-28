@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
@@ -18,12 +19,15 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClientBuilder;
+import uk.co.mruoc.nac.app.security.SpringAuthCodeClient;
+import uk.co.mruoc.nac.usecases.AuthCodeClient;
 import uk.co.mruoc.nac.usecases.ExternalUserService;
 import uk.co.mruoc.nac.usecases.TokenService;
 import uk.co.mruoc.nac.user.cognito.CognitoGroupService;
 import uk.co.mruoc.nac.user.cognito.CognitoTokenService;
 import uk.co.mruoc.nac.user.cognito.CognitoUserConverter;
 import uk.co.mruoc.nac.user.cognito.CognitoUserService;
+import uk.co.mruoc.nac.user.inmemory.StubAuthCodeClient;
 import uk.co.mruoc.nac.user.inmemory.StubExternalUserService;
 import uk.co.mruoc.nac.user.inmemory.StubTokenService;
 
@@ -63,6 +67,29 @@ public class CognitoUserConfig {
         .clientId(userPoolClientId)
         .clock(clock)
         .build();
+  }
+
+  @ConditionalOnProperty(
+      value = "stub.auth.code.client.enabled",
+      havingValue = "false",
+      matchIfMissing = true)
+  @Bean
+  public AuthCodeClient cognitoAuthCodeClient(
+      @Value("${aws.cognito.authCodeEndpoint}") String endpoint,
+      @Value("${aws.cognito.userPoolClientId}") String clientId) {
+    log.info("configuring auth code client with endpoint {}", endpoint);
+    return SpringAuthCodeClient.builder()
+        .uri(URI.create(endpoint))
+        .clientId(clientId)
+        .template(new RestTemplate())
+        .build();
+  }
+
+  @ConditionalOnProperty(value = "stub.auth.code.client.enabled", havingValue = "true")
+  @Bean
+  public AuthCodeClient stubAuthCodeClient() {
+    log.warn("stub auth code client configured, auth codes will not be supported");
+    return new StubAuthCodeClient();
   }
 
   @ConditionalOnProperty(value = "stub.token.service.enabled", havingValue = "true")

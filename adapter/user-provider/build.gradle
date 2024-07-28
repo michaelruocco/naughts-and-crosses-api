@@ -11,6 +11,7 @@ dependencies {
     implementation "commons-io:commons-io:${commonsIoVersion}"
     implementation "org.apache.commons:commons-collections4:${commonsCollectionsVersion}"
     implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    implementation "org.springframework:spring-web:${springVersion}"
 }
 
 apply from: rootProject.file("publish.gradle")

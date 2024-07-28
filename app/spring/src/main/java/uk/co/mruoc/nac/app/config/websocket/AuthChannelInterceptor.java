@@ -4,5 +4,5 @@ import org.springframework.messaging.support.ChannelInterceptor;
 
 public interface AuthChannelInterceptor extends ChannelInterceptor {
 
-  // intentionally blank marker interface
+  // intentionally blank
 }

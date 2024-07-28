@@ -53,7 +53,7 @@ public class NaughtsAndCrossesApiTokenClient {
 
   private ApiTokenResponse performUpdate(HttpMethod method, HttpEntity<?> request) {
     try {
-      var uri = String.format("%s/v1/tokens", baseUrl);
+      var uri = String.format("%s/v1/auth/tokens", baseUrl);
       ResponseEntity<ApiTokenResponse> response =
           template.exchange(uri, method, request, ApiTokenResponse.class);
       return toBodyIfNotNull(response);
