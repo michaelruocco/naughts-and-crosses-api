@@ -22,6 +22,7 @@ public class ApiAuthConverter {
     return ApiTokenResponse.builder()
         .accessToken(response.getAccessToken())
         .refreshToken(response.getRefreshToken())
+        .username(response.getUsername())
         .build();
   }
 

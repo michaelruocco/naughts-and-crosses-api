@@ -18,6 +18,9 @@ import uk.co.mruoc.nac.usecases.AuthCodeClient;
 import uk.co.mruoc.nac.usecases.AuthService;
 import uk.co.mruoc.nac.usecases.AuthenticatedUserSupplier;
 import uk.co.mruoc.nac.usecases.AuthenticatedUserValidator;
+import uk.co.mruoc.nac.usecases.ExternalUserPresentRetry;
+import uk.co.mruoc.nac.usecases.ExternalUserService;
+import uk.co.mruoc.nac.usecases.ExternalUserSynchronizer;
 import uk.co.mruoc.nac.usecases.TokenService;
 import uk.co.mruoc.nac.usecases.UserFinder;
 
@@ -59,7 +62,16 @@ public class SecurityConfig {
   }
 
   @Bean
-  public AuthService authService(TokenService tokenService, AuthCodeClient authCodeClient) {
-    return AuthService.builder().tokenService(tokenService).authCodeClient(authCodeClient).build();
+  public AuthService authService(
+      TokenService tokenService,
+      AuthCodeClient authCodeClient,
+      ExternalUserService externalUserService,
+      ExternalUserSynchronizer synchronizer) {
+    return AuthService.builder()
+        .tokenService(tokenService)
+        .authCodeClient(authCodeClient)
+        .externalUserPresentRetry(new ExternalUserPresentRetry(externalUserService))
+        .synchronizer(synchronizer)
+        .build();
   }
 }

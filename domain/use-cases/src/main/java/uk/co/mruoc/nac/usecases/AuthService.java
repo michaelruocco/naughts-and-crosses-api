@@ -11,6 +11,7 @@ public class AuthService {
 
   private final TokenService tokenService;
   private final AuthCodeClient authCodeClient;
+  private final ExternalUserPresentRetry externalUserPresentRetry;
   private final ExternalUserSynchronizer synchronizer;
 
   public TokenResponse create(CreateTokenRequest request) {
@@ -23,6 +24,7 @@ public class AuthService {
 
   public TokenResponse create(AuthCodeRequest request) {
     TokenResponse response = authCodeClient.create(request);
+    externalUserPresentRetry.waitUntilExternalUserPresent(response.getUsername());
     synchronizer.synchronizeIfNotPresent(response.getUsername());
     return response;
   }

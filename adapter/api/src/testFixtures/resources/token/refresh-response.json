@@ -1,3 +1,4 @@
 {
-  "accessToken": "${json-unit.any-string}"
+  "accessToken": "${json-unit.any-string}",
+  "username": "admin"
 }
