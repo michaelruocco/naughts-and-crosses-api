@@ -1,6 +1,5 @@
 package uk.co.mruoc.nac.app.config.user;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.URI;
 import java.time.Clock;
 import java.util.UUID;
@@ -11,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.web.client.RestTemplate;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
@@ -19,10 +19,11 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClientBuilder;
-import uk.co.mruoc.nac.app.security.SpringAuthCodeClient;
 import uk.co.mruoc.nac.usecases.AuthCodeClient;
 import uk.co.mruoc.nac.usecases.ExternalUserService;
 import uk.co.mruoc.nac.usecases.TokenService;
+import uk.co.mruoc.nac.user.JwtParser;
+import uk.co.mruoc.nac.user.cognito.CognitoAuthCodeClient;
 import uk.co.mruoc.nac.user.cognito.CognitoGroupService;
 import uk.co.mruoc.nac.user.cognito.CognitoTokenService;
 import uk.co.mruoc.nac.user.cognito.CognitoUserConverter;
@@ -60,13 +61,20 @@ public class CognitoUserConfig {
       CognitoIdentityProviderClient client,
       @Value("${aws.cognito.userPoolId}") String userPoolId,
       @Value("${aws.cognito.userPoolClientId}") String userPoolClientId,
-      Clock clock) {
+      Clock clock,
+      JwtParser jwtParser) {
     return CognitoTokenService.builder()
         .client(client)
         .userPoolId(userPoolId)
         .clientId(userPoolClientId)
         .clock(clock)
+        .jwtParser(jwtParser)
         .build();
+  }
+
+  @Bean
+  public JwtParser jwtParser(JwtDecoder jwtDecoder) {
+    return new SpringJwtParser(jwtDecoder);
   }
 
   @ConditionalOnProperty(
@@ -76,12 +84,14 @@ public class CognitoUserConfig {
   @Bean
   public AuthCodeClient cognitoAuthCodeClient(
       @Value("${aws.cognito.authCodeEndpoint}") String endpoint,
-      @Value("${aws.cognito.userPoolClientId}") String clientId) {
+      @Value("${aws.cognito.userPoolClientId}") String clientId,
+      JwtParser jwtParser) {
     log.info("configuring auth code client with endpoint {}", endpoint);
-    return SpringAuthCodeClient.builder()
+    return CognitoAuthCodeClient.builder()
         .uri(URI.create(endpoint))
         .clientId(clientId)
         .template(new RestTemplate())
+        .jwtParser(jwtParser)
         .build();
   }
 
@@ -95,8 +105,8 @@ public class CognitoUserConfig {
   @ConditionalOnProperty(value = "stub.token.service.enabled", havingValue = "true")
   @Bean
   public TokenService stubTokenService(
-      ObjectMapper mapper, Clock clock, Supplier<UUID> uuidSupplier) {
-    return new StubTokenService(clock, uuidSupplier, mapper);
+      Clock clock, Supplier<UUID> uuidSupplier, JwtParser jwtParser) {
+    return new StubTokenService(clock, uuidSupplier, jwtParser);
   }
 
   @ConditionalOnProperty(

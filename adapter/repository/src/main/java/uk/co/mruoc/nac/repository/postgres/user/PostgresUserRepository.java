@@ -60,4 +60,9 @@ public class PostgresUserRepository implements UserRepository {
   public void delete(String username) {
     jpaRepository.deleteById(username);
   }
+
+  @Override
+  public boolean exists(String username) {
+    return jpaRepository.exists(specFactory.toFindByUsername(username));
+  }
 }

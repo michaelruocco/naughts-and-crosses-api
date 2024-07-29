@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import uk.co.mruoc.nac.entities.AuthCodeRequest;
 import uk.co.mruoc.nac.entities.TokenResponse;
 import uk.co.mruoc.nac.usecases.AuthCodeClient;
+import uk.co.mruoc.nac.user.JwtParser;
 
 @RequiredArgsConstructor
 @Builder
@@ -23,6 +24,7 @@ public class CognitoAuthCodeClient implements AuthCodeClient {
   private final URI uri;
   private final String clientId;
   private final RestTemplate template;
+  private final JwtParser jwtParser;
 
   @Override
   public TokenResponse create(AuthCodeRequest request) {
@@ -30,6 +32,16 @@ public class CognitoAuthCodeClient implements AuthCodeClient {
     ResponseEntity<CognitoAuthCodeResponse> response =
         template.exchange(uri, HttpMethod.POST, entity, CognitoAuthCodeResponse.class);
     return toTokenResponse(Objects.requireNonNull(response.getBody()));
+  }
+
+  private TokenResponse toTokenResponse(CognitoAuthCodeResponse response) {
+    CognitoAuthCodeResponse responseBody = Objects.requireNonNull(response);
+    String accessToken = response.getAccessToken();
+    return TokenResponse.builder()
+        .accessToken(accessToken)
+        .refreshToken(responseBody.getRefreshToken())
+        .username(jwtParser.toUsername(accessToken))
+        .build();
   }
 
   private HttpEntity<MultiValueMap<String, String>> toRequestEntity(AuthCodeRequest request) {
@@ -49,13 +61,5 @@ public class CognitoAuthCodeClient implements AuthCodeClient {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
     return headers;
-  }
-
-  private static TokenResponse toTokenResponse(CognitoAuthCodeResponse response) {
-    CognitoAuthCodeResponse responseBody = Objects.requireNonNull(response);
-    return TokenResponse.builder()
-        .accessToken(responseBody.getAccessToken())
-        .refreshToken(responseBody.getRefreshToken())
-        .build();
   }
 }

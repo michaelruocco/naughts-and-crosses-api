@@ -12,6 +12,7 @@ import uk.co.mruoc.nac.entities.CreateTokenRequest;
 import uk.co.mruoc.nac.entities.RefreshTokenRequest;
 import uk.co.mruoc.nac.entities.TokenResponse;
 import uk.co.mruoc.nac.usecases.TokenService;
+import uk.co.mruoc.nac.user.JwtParser;
 
 @Builder
 public class CognitoTokenService implements TokenService {
@@ -20,6 +21,7 @@ public class CognitoTokenService implements TokenService {
   private final String userPoolId;
   private final String clientId;
   private final Clock clock;
+  private final JwtParser jwtParser;
 
   @Override
   public TokenResponse create(CreateTokenRequest request) {
@@ -50,9 +52,11 @@ public class CognitoTokenService implements TokenService {
   }
 
   private TokenResponse toResponse(AuthenticationResultType type) {
+    String accessToken = type.accessToken();
     return TokenResponse.builder()
-        .accessToken(type.accessToken())
+        .accessToken(accessToken)
         .refreshToken(type.refreshToken())
+        .username(jwtParser.toUsername(accessToken))
         .build();
   }
 

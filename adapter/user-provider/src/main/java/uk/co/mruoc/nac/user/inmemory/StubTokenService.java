@@ -2,7 +2,6 @@ package uk.co.mruoc.nac.user.inmemory;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
@@ -23,6 +22,7 @@ import uk.co.mruoc.nac.entities.TokenResponse;
 import uk.co.mruoc.nac.usecases.CreateTokenFailedException;
 import uk.co.mruoc.nac.usecases.RefreshTokenFailedException;
 import uk.co.mruoc.nac.usecases.TokenService;
+import uk.co.mruoc.nac.user.JwtParser;
 
 @RequiredArgsConstructor
 public class StubTokenService implements TokenService {
@@ -34,8 +34,8 @@ public class StubTokenService implements TokenService {
   private final Map<String, StubTokenConfig> userConfig;
   private final Map<String, StubTokenConfig> refreshTokens;
 
-  public StubTokenService(Clock clock, Supplier<UUID> uuidSupplier, ObjectMapper mapper) {
-    this(clock, uuidSupplier, new JwtValidator(clock, mapper));
+  public StubTokenService(Clock clock, Supplier<UUID> uuidSupplier, JwtParser jwtParser) {
+    this(clock, uuidSupplier, new JwtValidator(clock, jwtParser));
   }
 
   public StubTokenService(Clock clock, Supplier<UUID> uuidSupplier, JwtValidator validator) {
@@ -77,7 +77,9 @@ public class StubTokenService implements TokenService {
   }
 
   private TokenResponse.TokenResponseBuilder toResponseBuilder(StubTokenConfig config) {
-    return TokenResponse.builder().accessToken(toAccessToken(config));
+    return TokenResponse.builder()
+        .accessToken(toAccessToken(config))
+        .username(config.getUsername());
   }
 
   private String toAccessToken(StubTokenConfig config) {

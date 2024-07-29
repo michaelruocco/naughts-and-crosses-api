@@ -15,7 +15,7 @@ public interface ExternalUserService {
 
   Stream<User> getAllUsers();
 
-  Optional<User> getByUsername(String id);
+  Optional<User> getByUsername(String username);
 
   Stream<String> getAllGroups();
 }

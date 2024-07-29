@@ -7,6 +7,10 @@ import uk.co.mruoc.nac.repository.postgres.dto.DbUser;
 
 public class SpecFactory {
 
+  public Specification<DbUser> toFindByUsername(String username) {
+    return (user, query, builder) -> builder.equal(user.get("username"), username);
+  }
+
   public Specification<DbUser> toSpec(UserPageRequest request) {
     Collection<String> groups = request.getGroups();
     if (groups.isEmpty()) {

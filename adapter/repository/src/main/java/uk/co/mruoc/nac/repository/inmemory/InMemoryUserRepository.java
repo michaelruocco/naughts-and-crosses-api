@@ -56,6 +56,11 @@ public class InMemoryUserRepository implements UserRepository {
   }
 
   @Override
+  public boolean exists(String username) {
+    return users.containsKey(username);
+  }
+
+  @Override
   public Optional<User> getByUsername(String username) {
     return Optional.ofNullable(users.get(username));
   }
