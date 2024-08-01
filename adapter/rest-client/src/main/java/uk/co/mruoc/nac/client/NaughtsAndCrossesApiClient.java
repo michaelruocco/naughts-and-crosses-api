@@ -90,6 +90,11 @@ public class NaughtsAndCrossesApiClient {
     performPost(uri, entityFactory.buildRequest());
   }
 
+  public void synchronizeExternalUser(String username) {
+    String uri = uriFactory.buildExternalUserSynchronizationsUri(username);
+    performPost(uri, entityFactory.buildRequest());
+  }
+
   public Collection<ApiUser> getAllUsers() {
     ApiUser[] users = performGet(uriFactory.buildUsersUri(), ApiUser[].class);
     return toCollection(users);
