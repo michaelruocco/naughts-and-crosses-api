@@ -20,9 +20,7 @@ public class StubJwtParser implements JwtParser {
 
   @Override
   public String toUsername(String token) {
-    System.out.println("mruoc decoding token " + token);
     JsonNode body = extractBodyAsJsonNode(token);
-    System.out.println("mruoc decoded body " + body.toString());
     return toUsername(body);
   }
 
