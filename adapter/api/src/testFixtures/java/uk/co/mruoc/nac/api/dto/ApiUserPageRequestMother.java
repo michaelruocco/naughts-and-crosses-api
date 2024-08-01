@@ -10,10 +10,6 @@ import uk.co.mruoc.nac.api.dto.ApiUserPageRequest.ApiUserPageRequestBuilder;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ApiUserPageRequestMother {
 
-  public static ApiUserPageRequest withOffset(int offset) {
-    return builder().offset(offset).build();
-  }
-
   public static ApiUserPageRequest withSorts(ApiSortOrder... orders) {
     return builder().sort(List.of(orders)).build();
   }

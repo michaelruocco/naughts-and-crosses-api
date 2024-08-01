@@ -1,5 +1,6 @@
 package uk.co.mruoc.nac.app.config.user;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.URI;
 import java.time.Clock;
 import java.util.UUID;
@@ -30,6 +31,7 @@ import uk.co.mruoc.nac.user.cognito.CognitoUserConverter;
 import uk.co.mruoc.nac.user.cognito.CognitoUserService;
 import uk.co.mruoc.nac.user.inmemory.StubAuthCodeClient;
 import uk.co.mruoc.nac.user.inmemory.StubExternalUserService;
+import uk.co.mruoc.nac.user.inmemory.StubJwtParser;
 import uk.co.mruoc.nac.user.inmemory.StubTokenService;
 
 @Configuration
@@ -73,8 +75,20 @@ public class CognitoUserConfig {
   }
 
   @Bean
-  public JwtParser jwtParser(JwtDecoder jwtDecoder) {
+  @ConditionalOnProperty(
+      value = "stub.jwt.parser.enabled",
+      havingValue = "false",
+      matchIfMissing = true)
+  public JwtParser springJwtParser(JwtDecoder jwtDecoder) {
+    log.info("spring jwt parser configured");
     return new SpringJwtParser(jwtDecoder);
+  }
+
+  @Bean
+  @ConditionalOnProperty(value = "stub.jwt.parser.enabled", havingValue = "true")
+  public JwtParser stubJwtParser(ObjectMapper mapper) {
+    log.warn("stub jwt parser configured, this should only be used for local testing");
+    return new StubJwtParser(mapper);
   }
 
   @ConditionalOnProperty(
@@ -97,9 +111,9 @@ public class CognitoUserConfig {
 
   @ConditionalOnProperty(value = "stub.auth.code.client.enabled", havingValue = "true")
   @Bean
-  public AuthCodeClient stubAuthCodeClient() {
-    log.warn("stub auth code client configured, auth codes will not be supported");
-    return new StubAuthCodeClient();
+  public AuthCodeClient stubAuthCodeClient(Clock clock, Supplier<UUID> uuidSupplier) {
+    log.warn("stub auth code client configured");
+    return new StubAuthCodeClient(clock, uuidSupplier);
   }
 
   @ConditionalOnProperty(value = "stub.token.service.enabled", havingValue = "true")

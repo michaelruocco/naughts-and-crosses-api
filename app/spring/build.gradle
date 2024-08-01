@@ -60,6 +60,7 @@ dependencies {
     testFixturesImplementation "org.awaitility:awaitility:${awaitilityVersion}"
     testFixturesImplementation "org.testcontainers:postgresql:${testContainersVersion}"
     testFixturesImplementation "org.testcontainers:activemq:${testContainersVersion}"
+    testFixturesImplementation "org.testcontainers:mockserver:${testContainersVersion}"
     testFixturesImplementation "org.postgresql:postgresql:${postgresqlVersion}"
     testFixturesImplementation "software.amazon.awssdk:cognitoidentityprovider:${cognitoVersion}"
 }

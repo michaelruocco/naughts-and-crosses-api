@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import uk.co.mruoc.nac.api.dto.ApiAuthCodeRequest;
 import uk.co.mruoc.nac.api.dto.ApiCreateTokenRequest;
 import uk.co.mruoc.nac.api.dto.ApiRefreshTokenRequest;
 import uk.co.mruoc.nac.api.dto.ApiTokenResponse;
@@ -37,23 +38,35 @@ public class NaughtsAndCrossesApiTokenClient {
     return createToken(request);
   }
 
+  public ApiTokenResponse createToken(ApiAuthCodeRequest request) {
+    var entity = toHttpEntity(request);
+    return performUpdate(buildCodesUri(), POST, entity);
+  }
+
   public ApiTokenResponse refreshToken(String refreshToken) {
     return refreshToken(new ApiRefreshTokenRequest(refreshToken));
   }
 
   private ApiTokenResponse createToken(ApiCreateTokenRequest request) {
     var entity = toHttpEntity(request);
-    return performUpdate(POST, entity);
+    return performUpdate(buildTokensUri(), POST, entity);
   }
 
   private ApiTokenResponse refreshToken(ApiRefreshTokenRequest request) {
     var entity = toHttpEntity(request);
-    return performUpdate(PUT, entity);
+    return performUpdate(buildTokensUri(), PUT, entity);
   }
 
-  private ApiTokenResponse performUpdate(HttpMethod method, HttpEntity<?> request) {
+  private String buildTokensUri() {
+    return String.format("%s/v1/auth/tokens", baseUrl);
+  }
+
+  private String buildCodesUri() {
+    return String.format("%s/v1/auth/codes", baseUrl);
+  }
+
+  private ApiTokenResponse performUpdate(String uri, HttpMethod method, HttpEntity<?> request) {
     try {
-      var uri = String.format("%s/v1/auth/tokens", baseUrl);
       ResponseEntity<ApiTokenResponse> response =
           template.exchange(uri, method, request, ApiTokenResponse.class);
       return toBodyIfNotNull(response);

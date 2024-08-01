@@ -9,6 +9,7 @@ import uk.co.mruoc.nac.environment.LocalApp;
 import uk.co.mruoc.nac.environment.integrated.activemq.TestActiveMQContainer;
 import uk.co.mruoc.nac.environment.integrated.clamav.TestClamAvContainer;
 import uk.co.mruoc.nac.environment.integrated.cognito.TestCognitoContainer;
+import uk.co.mruoc.nac.environment.integrated.cognito.TestMockServerContainer;
 import uk.co.mruoc.nac.environment.integrated.postgres.TestPostgresContainer;
 
 @RequiredArgsConstructor
@@ -22,6 +23,8 @@ public class IntegratedTestEnvironment implements TestEnvironment {
   private static final TestActiveMQContainer ACTIVEMQ = new TestActiveMQContainer();
 
   private static final TestClamAvContainer CLAM_AV = new TestClamAvContainer();
+
+  private static final TestMockServerContainer MOCK_SERVER = new TestMockServerContainer();
 
   private final LocalApp localApp;
 
@@ -39,6 +42,8 @@ public class IntegratedTestEnvironment implements TestEnvironment {
     ACTIVEMQ.start();
     log.info("starting clam av");
     CLAM_AV.start();
+    log.info("starting mock server");
+    MOCK_SERVER.start();
   }
 
   @Override
@@ -51,6 +56,8 @@ public class IntegratedTestEnvironment implements TestEnvironment {
     COGNITO.close();
     log.info("stopping clam av");
     CLAM_AV.close();
+    log.info("stopping mock server");
+    MOCK_SERVER.stop();
   }
 
   @Override
@@ -76,6 +83,7 @@ public class IntegratedTestEnvironment implements TestEnvironment {
         .dbName(POSTGRES.getDatabaseName())
         .brokerHost(ACTIVEMQ.getHost())
         .brokerPort(ACTIVEMQ.getMappedStompPort())
+        .authCodeUrl(MOCK_SERVER.getUri())
         .authIssuerUrl(COGNITO.getIssuerUrl())
         .cognitoEndpointOverride(COGNITO.getBaseUri())
         .userPoolId(COGNITO.getUserPoolId())

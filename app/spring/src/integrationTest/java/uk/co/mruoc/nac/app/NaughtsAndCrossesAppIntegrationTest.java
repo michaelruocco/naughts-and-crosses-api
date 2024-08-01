@@ -22,6 +22,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.client.HttpServerErrorException;
+import uk.co.mruoc.nac.api.dto.ApiAuthCodeRequest;
+import uk.co.mruoc.nac.api.dto.ApiAuthCodeRequestMother;
 import uk.co.mruoc.nac.api.dto.ApiCandidateGamePlayer;
 import uk.co.mruoc.nac.api.dto.ApiCandidateGamePlayerMother;
 import uk.co.mruoc.nac.api.dto.ApiCreateGameRequest;
@@ -102,6 +104,16 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
     assertThatJson(refreshResponse).isEqualTo(ApiTokenJsonMother.refreshResponse());
     assertThat(refreshResponse.getAccessToken()).isNotEqualTo(createResponse.getAccessToken());
+  }
+
+  @Test
+  public void shouldReturnTokensForAuthCode() {
+    NaughtsAndCrossesApiTokenClient client = getTokenClient();
+    ApiAuthCodeRequest request = ApiAuthCodeRequestMother.build();
+
+    ApiTokenResponse response = client.createToken(request);
+
+    assertThatJson(response).isEqualTo(ApiTokenJsonMother.authCodeResponse());
   }
 
   @Test
