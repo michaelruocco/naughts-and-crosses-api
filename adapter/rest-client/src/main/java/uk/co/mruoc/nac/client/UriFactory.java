@@ -5,8 +5,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UriFactory {
 
-  private static final String DEFAULT_PATTERN = "%s/%s";
-
   private final String baseUrl;
 
   public String buildGetMinimalGameUri(long gameId) {
@@ -42,7 +40,7 @@ public class UriFactory {
   }
 
   public String buildUserUri(String username) {
-    return String.format(DEFAULT_PATTERN, buildUsersUri(), username);
+    return joinWithSlash(buildUsersUri(), username);
   }
 
   public String buildUserBatchesUri() {
@@ -50,11 +48,11 @@ public class UriFactory {
   }
 
   public String buildUserBatchUri(String id) {
-    return String.format(DEFAULT_PATTERN, buildUserBatchesUri(), id);
+    return joinWithSlash(buildUserBatchesUri(), id);
   }
 
   public String buildExternalUserSynchronizationsUri(String username) {
-    return String.format(DEFAULT_PATTERN, buildExternalUserSynchronizationsUri(), username);
+    return joinWithSlash(buildExternalUserSynchronizationsUri(), username);
   }
 
   public String buildExternalUserSynchronizationsUri() {
@@ -63,5 +61,9 @@ public class UriFactory {
 
   public String buildGetCandidatePlayersUri() {
     return String.format("%s/v1/games/candidate-players", baseUrl);
+  }
+
+  private static String joinWithSlash(String... parts) {
+    return String.join("/", parts);
   }
 }
