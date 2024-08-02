@@ -2,6 +2,7 @@ package uk.co.mruoc.nac.app;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.awaitility.Awaitility.await;
 import static uk.co.mruoc.nac.api.dto.ApiPlayerMother.buildMinimalCrossesPlayer;
@@ -15,6 +16,7 @@ import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -234,6 +236,15 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     } finally {
       client.deleteUser(originalUser.getUsername());
     }
+  }
+
+  @Test
+  public void shouldSynchronizeSpecificExternalUser() {
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
+
+    ThrowableAssert.ThrowingCallable call = () -> client.synchronizeExternalUser("admin");
+
+    assertThatCode(call).doesNotThrowAnyException();
   }
 
   @Test
