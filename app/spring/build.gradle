@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = "3.3.1"
+        springBootVersion = "3.3.2"
     }
 }
 
@@ -11,7 +11,7 @@ plugins {
 }
 
 ext {
-    testContainersVersion = "1.19.8"
+    testContainersVersion = "1.20.1"
     awaitilityVersion = "4.2.1"
 }
 ext["junit-jupiter.version"] = "${junitVersion}"
@@ -49,7 +49,7 @@ dependencies {
     integrationTestImplementation testFixtures(project(":api"))
     integrationTestImplementation project(":rest-client")
     integrationTestImplementation project(":websocket-client")
-    integrationTestImplementation "net.javacrumbs.json-unit:json-unit-assertj:3.3.0"
+    integrationTestImplementation "net.javacrumbs.json-unit:json-unit-assertj:3.4.1"
     integrationTestImplementation "org.awaitility:awaitility:${awaitilityVersion}"
 
     testFixturesImplementation project(":api")

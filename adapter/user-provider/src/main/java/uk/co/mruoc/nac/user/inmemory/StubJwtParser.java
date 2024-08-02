@@ -1,21 +1,21 @@
 package uk.co.mruoc.nac.user.inmemory;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Instant;
 import java.util.Base64;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import uk.co.mruoc.json.JsonConverter;
 import uk.co.mruoc.nac.user.JwtParser;
 
 @RequiredArgsConstructor
 public class StubJwtParser implements JwtParser {
 
-  private final ObjectMapper mapper;
+  private final JsonConverter jsonConverter;
   private final Base64.Decoder decoder;
 
-  public StubJwtParser(ObjectMapper mapper) {
-    this(mapper, Base64.getDecoder());
+  public StubJwtParser(JsonConverter jsonConverter) {
+    this(jsonConverter, Base64.getDecoder());
   }
 
   @Override
@@ -43,16 +43,12 @@ public class StubJwtParser implements JwtParser {
   }
 
   private JsonNode toJsonNode(String body) {
-    try {
-      return mapper.readTree(body);
-    } catch (JsonProcessingException e) {
-      throw new InvalidJwtException(e);
-    }
+    return jsonConverter.toObject(body, JsonNode.class);
   }
 
   private String toUsername(JsonNode body) {
     JsonNode username = body.get("username");
-    if (username.isNull()) {
+    if (isNull(username)) {
       throw new InvalidJwtException(String.format("username not found in body %s", body));
     }
     return username.asText();
@@ -60,9 +56,13 @@ public class StubJwtParser implements JwtParser {
 
   private Instant toExpiry(JsonNode body) {
     JsonNode expiry = body.get("exp");
-    if (expiry.isNull()) {
+    if (isNull(expiry)) {
       throw new InvalidJwtException(String.format("expiry not found in body %s", body));
     }
     return Instant.ofEpochSecond(expiry.asInt());
+  }
+
+  private static boolean isNull(JsonNode node) {
+    return Objects.isNull(node) || node.isNull();
   }
 }

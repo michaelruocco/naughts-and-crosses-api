@@ -12,6 +12,7 @@ dependencies {
     implementation "org.apache.commons:commons-collections4:${commonsCollectionsVersion}"
     implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
     implementation "org.springframework:spring-web:${springVersion}"
+    implementation "com.github.michaelruocco:json-adapter:${jsonAdapterVersion}"
 }
 
 apply from: rootProject.file("publish.gradle")

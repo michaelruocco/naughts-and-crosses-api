@@ -20,6 +20,7 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClientBuilder;
+import uk.co.mruoc.json.jackson.JacksonJsonConverter;
 import uk.co.mruoc.nac.usecases.AuthCodeClient;
 import uk.co.mruoc.nac.usecases.ExternalUserService;
 import uk.co.mruoc.nac.usecases.TokenService;
@@ -88,7 +89,7 @@ public class CognitoUserConfig {
   @ConditionalOnProperty(value = "stub.jwt.parser.enabled", havingValue = "true")
   public JwtParser stubJwtParser(ObjectMapper mapper) {
     log.warn("stub jwt parser configured, this should only be used for local testing");
-    return new StubJwtParser(mapper);
+    return new StubJwtParser(new JacksonJsonConverter(mapper));
   }
 
   @ConditionalOnProperty(
