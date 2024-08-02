@@ -13,11 +13,16 @@ import uk.co.mruoc.nac.entities.User;
 public class ExternalUserPresentRetry {
 
   private final ExternalUserService service;
-  private final String name;
   private final RetryConfig config;
+  private final String name;
 
   public ExternalUserPresentRetry(ExternalUserService service) {
-    this(service, "auth-code-external-user", buildDefaultConfig());
+    this(service, 5, Duration.ofMillis(200));
+  }
+
+  public ExternalUserPresentRetry(
+      ExternalUserService service, int maxAttempts, Duration waitDuration) {
+    this(service, buildRetryConfig(maxAttempts, waitDuration), "auth-code-external-user");
   }
 
   public void waitUntilExternalUserPresent(String username) {
@@ -26,17 +31,17 @@ public class ExternalUserPresentRetry {
 
   private void tryGetExternalUser(String username) {
     Optional<User> user = service.getByUsername(username);
-    log.info("performed lookup of external user {} present {}", username, user.isPresent());
+    log.info("performed lookup of external user {} present {}", username, user);
     if (user.isEmpty()) {
       throw new UserNotFoundException(username);
     }
   }
 
-  private static RetryConfig buildDefaultConfig() {
+  private static RetryConfig buildRetryConfig(int maxAttempts, Duration waitDuration) {
     return RetryConfig.custom()
         .retryExceptions(UserNotFoundException.class)
-        .maxAttempts(5)
-        .waitDuration(Duration.ofMillis(200))
+        .maxAttempts(maxAttempts)
+        .waitDuration(waitDuration)
         .failAfterMaxAttempts(true)
         .build();
   }

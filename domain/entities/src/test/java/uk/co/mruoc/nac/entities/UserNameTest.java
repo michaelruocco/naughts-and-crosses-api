@@ -71,4 +71,15 @@ class UserNameTest {
     assertThat(populatedName.getFirst()).isNull();
     assertThat(populatedName.getLast()).isEqualTo("Roberts");
   }
+
+  @Test
+  void shouldDoNothingIfNoNamesPopulated() {
+    UserName name = UserName.builder().build();
+
+    UserName populatedName = name.tryToPopulateAll();
+
+    assertThat(populatedName.getFull()).isNull();
+    assertThat(populatedName.getFirst()).isNull();
+    assertThat(populatedName.getLast()).isNull();
+  }
 }
