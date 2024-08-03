@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.nac.entities.UpsertUserRequest;
 import uk.co.mruoc.nac.entities.User;
+import uk.co.mruoc.nac.entities.UserNameUtils;
 import uk.co.mruoc.nac.usecases.ExternalUserService;
 import uk.co.mruoc.nac.usecases.UserAlreadyExistsException;
 import uk.co.mruoc.nac.usecases.UserNotFoundException;
@@ -74,8 +75,7 @@ public class StubExternalUserService implements ExternalUserService {
         .id(uuidSupplier.get().toString())
         .username(request.getUsername())
         .email(request.getEmail())
-        .firstName(request.getFirstName())
-        .lastName(request.getLastName())
+        .name(request.getName().tryToPopulateAll())
         .emailVerified(request.isEmailVerified())
         .status("FORCE_CHANGE_PASSWORD")
         .groups(request.getGroups())
@@ -91,8 +91,7 @@ public class StubExternalUserService implements ExternalUserService {
     return User.builder()
         .username(ADMIN)
         .id("42bfdad9-c66a-4d5a-aa48-a97d6d3574af")
-        .firstName("Admin")
-        .lastName("User")
+        .name(UserNameUtils.toUserName("Admin User"))
         .email("admin@email.com")
         .emailVerified(true)
         .status(CONFIRMED_STATUS)
@@ -104,8 +103,7 @@ public class StubExternalUserService implements ExternalUserService {
     return User.builder()
         .username("user-1")
         .id("707d9fa6-13dd-4985-93aa-a28f01e89a6b")
-        .firstName("User")
-        .lastName("One")
+        .name(UserNameUtils.toUserName("User One"))
         .email("user-1@email.com")
         .emailVerified(true)
         .status(CONFIRMED_STATUS)
@@ -117,8 +115,7 @@ public class StubExternalUserService implements ExternalUserService {
     return User.builder()
         .username("user-2")
         .id("dadfde25-9924-4982-802d-dfd0bce2218d")
-        .firstName("User")
-        .lastName("Two")
+        .name(UserNameUtils.toUserName("User Two"))
         .email("user-2@email.com")
         .emailVerified(true)
         .status(CONFIRMED_STATUS)

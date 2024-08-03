@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.web.client.RestTemplate;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
@@ -18,13 +20,19 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClientBuilder;
+import uk.co.mruoc.json.jackson.JacksonJsonConverter;
+import uk.co.mruoc.nac.usecases.AuthCodeClient;
 import uk.co.mruoc.nac.usecases.ExternalUserService;
 import uk.co.mruoc.nac.usecases.TokenService;
+import uk.co.mruoc.nac.user.JwtParser;
+import uk.co.mruoc.nac.user.cognito.CognitoAuthCodeClient;
 import uk.co.mruoc.nac.user.cognito.CognitoGroupService;
 import uk.co.mruoc.nac.user.cognito.CognitoTokenService;
 import uk.co.mruoc.nac.user.cognito.CognitoUserConverter;
 import uk.co.mruoc.nac.user.cognito.CognitoUserService;
+import uk.co.mruoc.nac.user.inmemory.StubAuthCodeClient;
 import uk.co.mruoc.nac.user.inmemory.StubExternalUserService;
+import uk.co.mruoc.nac.user.inmemory.StubJwtParser;
 import uk.co.mruoc.nac.user.inmemory.StubTokenService;
 
 @Configuration
@@ -56,20 +64,64 @@ public class CognitoUserConfig {
       CognitoIdentityProviderClient client,
       @Value("${aws.cognito.userPoolId}") String userPoolId,
       @Value("${aws.cognito.userPoolClientId}") String userPoolClientId,
-      Clock clock) {
+      Clock clock,
+      JwtParser jwtParser) {
     return CognitoTokenService.builder()
         .client(client)
         .userPoolId(userPoolId)
         .clientId(userPoolClientId)
         .clock(clock)
+        .jwtParser(jwtParser)
         .build();
+  }
+
+  @Bean
+  @ConditionalOnProperty(
+      value = "stub.jwt.parser.enabled",
+      havingValue = "false",
+      matchIfMissing = true)
+  public JwtParser springJwtParser(JwtDecoder jwtDecoder) {
+    log.info("spring jwt parser configured");
+    return new SpringJwtParser(jwtDecoder);
+  }
+
+  @Bean
+  @ConditionalOnProperty(value = "stub.jwt.parser.enabled", havingValue = "true")
+  public JwtParser stubJwtParser(ObjectMapper mapper) {
+    log.warn("stub jwt parser configured, this should only be used for local testing");
+    return new StubJwtParser(new JacksonJsonConverter(mapper));
+  }
+
+  @ConditionalOnProperty(
+      value = "stub.auth.code.client.enabled",
+      havingValue = "false",
+      matchIfMissing = true)
+  @Bean
+  public AuthCodeClient cognitoAuthCodeClient(
+      @Value("${aws.cognito.authCodeEndpoint}") String endpoint,
+      @Value("${aws.cognito.userPoolClientId}") String clientId,
+      JwtParser jwtParser) {
+    log.info("configuring auth code client with endpoint {}", endpoint);
+    return CognitoAuthCodeClient.builder()
+        .uri(URI.create(endpoint))
+        .clientId(clientId)
+        .template(new RestTemplate())
+        .jwtParser(jwtParser)
+        .build();
+  }
+
+  @ConditionalOnProperty(value = "stub.auth.code.client.enabled", havingValue = "true")
+  @Bean
+  public AuthCodeClient stubAuthCodeClient(Clock clock, Supplier<UUID> uuidSupplier) {
+    log.warn("stub auth code client configured");
+    return new StubAuthCodeClient(clock, uuidSupplier);
   }
 
   @ConditionalOnProperty(value = "stub.token.service.enabled", havingValue = "true")
   @Bean
   public TokenService stubTokenService(
-      ObjectMapper mapper, Clock clock, Supplier<UUID> uuidSupplier) {
-    return new StubTokenService(clock, uuidSupplier, mapper);
+      Clock clock, Supplier<UUID> uuidSupplier, JwtParser jwtParser) {
+    return new StubTokenService(clock, uuidSupplier, jwtParser);
   }
 
   @ConditionalOnProperty(

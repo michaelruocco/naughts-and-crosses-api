@@ -1,0 +1,5 @@
+{
+  "accessToken": "${json-unit.any-string}",
+  "refreshToken": "${json-unit.any-string}",
+  "username": "admin"
+}

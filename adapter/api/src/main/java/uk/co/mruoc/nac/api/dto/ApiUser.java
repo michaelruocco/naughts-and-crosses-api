@@ -14,9 +14,9 @@ public class ApiUser {
 
   private final String id;
   private final String username;
+  private final String fullName;
   private final String firstName;
   private final String lastName;
-  private final String fullName;
   private final String email;
   private final Boolean emailVerified;
   private final String status;

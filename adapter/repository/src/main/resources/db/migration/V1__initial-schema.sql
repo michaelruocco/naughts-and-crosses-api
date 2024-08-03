@@ -10,8 +10,9 @@ create sequence game_id as bigint;
 create table user_record(
     username varchar(50) not null,
     id varchar(100) not null,
-    first_name varchar(100) not null,
-    last_name varchar(100) not null,
+    name varchar(200),
+    first_name varchar(100),
+    last_name varchar(100),
     email varchar(100) not null,
     email_verified boolean not null,
     status varchar(100) not null,

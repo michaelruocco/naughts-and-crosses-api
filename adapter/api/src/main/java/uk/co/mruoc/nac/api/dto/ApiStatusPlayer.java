@@ -12,5 +12,6 @@ import lombok.RequiredArgsConstructor;
 public class ApiStatusPlayer {
 
   private final String username;
+  private final String fullName;
   private final Character token;
 }

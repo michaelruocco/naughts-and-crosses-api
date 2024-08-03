@@ -9,10 +9,12 @@ import software.amazon.awssdk.services.cognitoidentityprovider.model.AttributeTy
 import software.amazon.awssdk.services.cognitoidentityprovider.model.UserType;
 import uk.co.mruoc.nac.entities.UpsertUserRequest;
 import uk.co.mruoc.nac.entities.User;
+import uk.co.mruoc.nac.entities.UserName;
 
 public class CognitoUserConverter {
 
   private static final String SUB = "sub";
+  private static final String NAME = "name";
   private static final String GIVEN_NAME = "given_name";
   private static final String FAMILY_NAME = "family_name";
   private static final String EMAIL = "email";
@@ -31,8 +33,7 @@ public class CognitoUserConverter {
     return User.builder()
         .id(attributes.get(SUB))
         .username(user.username())
-        .firstName(attributes.get(GIVEN_NAME))
-        .lastName(attributes.get(FAMILY_NAME))
+        .name(toName(attributes))
         .email(attributes.get(EMAIL))
         .emailVerified(Boolean.parseBoolean(attributes.get(EMAIL_VERIFIED)))
         .groups(groups)
@@ -42,6 +43,7 @@ public class CognitoUserConverter {
 
   public Collection<AttributeType> toAttributes(UpsertUserRequest request) {
     return List.of(
+        toNameAttribute(request.getFullName()),
         toGivenNameAttribute(request.getFirstName()),
         toFamilyNameAttribute(request.getLastName()),
         toEmailAttribute(request.getEmail()),
@@ -50,10 +52,24 @@ public class CognitoUserConverter {
 
   public Collection<AttributeType> toAttributes(User user) {
     return List.of(
+        toNameAttribute(user.getFullName()),
         toGivenNameAttribute(user.getFirstName()),
         toFamilyNameAttribute(user.getLastName()),
         toEmailAttribute(user.getEmail()),
         toEmailVerifiedAttribute(user.isEmailVerified()));
+  }
+
+  private static UserName toName(Map<String, String> attributes) {
+    return UserName.builder()
+        .full(attributes.get(NAME))
+        .first(attributes.get(GIVEN_NAME))
+        .last(attributes.get(FAMILY_NAME))
+        .build()
+        .tryToPopulateAll();
+  }
+
+  private static AttributeType toNameAttribute(String value) {
+    return AttributeType.builder().name(NAME).value(value).build();
   }
 
   private static AttributeType toGivenNameAttribute(String value) {

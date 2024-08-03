@@ -2,6 +2,7 @@ package uk.co.mruoc.nac.repository.postgres.converter;
 
 import java.util.Collection;
 import uk.co.mruoc.nac.entities.UpsertUserRequest;
+import uk.co.mruoc.nac.entities.UserNameUtils;
 import uk.co.mruoc.nac.repository.postgres.dto.DbCreateUserRequest;
 
 public class DbCreateUserRequestConverter {
@@ -30,8 +31,7 @@ public class DbCreateUserRequestConverter {
   public UpsertUserRequest toCreateUserRequest(DbCreateUserRequest dbRequest) {
     return UpsertUserRequest.builder()
         .username(dbRequest.getUsername())
-        .firstName(dbRequest.getFirstName())
-        .lastName(dbRequest.getLastName())
+        .name(UserNameUtils.toUserName(dbRequest.getFirstName(), dbRequest.getLastName()))
         .email(dbRequest.getEmail())
         .emailVerified(dbRequest.isEmailVerified())
         .groups(dbRequest.getGroups())

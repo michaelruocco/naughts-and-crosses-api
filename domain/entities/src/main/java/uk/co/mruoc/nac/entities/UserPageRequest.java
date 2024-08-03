@@ -2,6 +2,7 @@ package uk.co.mruoc.nac.entities;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 import lombok.Builder;
 import lombok.Data;
@@ -15,6 +16,7 @@ public class UserPageRequest implements PageRequest {
   private final long offset;
   private final Collection<SortOrder> sort;
   private final Collection<String> groups;
+  private final String searchTerm;
 
   @Override
   public Collection<SortOrder> getSort() {
@@ -23,6 +25,10 @@ public class UserPageRequest implements PageRequest {
 
   public Collection<String> getGroups() {
     return defaultIfEmpty(groups, Collections.emptySet());
+  }
+
+  public Optional<String> getSearchTerm() {
+    return Optional.ofNullable(searchTerm);
   }
 
   private <T> Collection<T> defaultIfEmpty(Collection<T> values, Collection<T> defaults) {

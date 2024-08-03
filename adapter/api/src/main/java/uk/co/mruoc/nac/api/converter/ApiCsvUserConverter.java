@@ -11,6 +11,7 @@ import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.nac.api.dto.ApiCsvUser;
 import uk.co.mruoc.nac.entities.UpsertUserRequest;
+import uk.co.mruoc.nac.entities.UserNameUtils;
 
 @RequiredArgsConstructor
 public class ApiCsvUserConverter {
@@ -43,8 +44,7 @@ public class ApiCsvUserConverter {
   private static UpsertUserRequest toCreateUserRequest(ApiCsvUser line) {
     return UpsertUserRequest.builder()
         .username(line.getUsername())
-        .firstName(line.getFirstName())
-        .lastName(line.getLastName())
+        .name(UserNameUtils.toUserName(line.getFirstName(), line.getLastName()))
         .email(line.getEmail())
         .emailVerified(line.isEmailVerified())
         .groups(Set.of(line.getGroups().split("~")))

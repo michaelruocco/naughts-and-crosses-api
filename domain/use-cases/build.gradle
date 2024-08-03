@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     implementation project(":entities")
+    implementation "io.github.resilience4j:resilience4j-retry:2.2.0"
 
     testImplementation testFixtures(project(":entities"))
 }

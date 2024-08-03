@@ -40,7 +40,7 @@ public class UriFactory {
   }
 
   public String buildUserUri(String username) {
-    return String.format("%s/%s", buildUsersUri(), username);
+    return joinWithSlash(buildUsersUri(), username);
   }
 
   public String buildUserBatchesUri() {
@@ -48,14 +48,22 @@ public class UriFactory {
   }
 
   public String buildUserBatchUri(String id) {
-    return String.format("%s/%s", buildUserBatchesUri(), id);
+    return joinWithSlash(buildUserBatchesUri(), id);
+  }
+
+  public String buildExternalUserSynchronizationsUri(String username) {
+    return joinWithSlash(buildExternalUserSynchronizationsUri(), username);
   }
 
   public String buildExternalUserSynchronizationsUri() {
     return String.format("%s/v1/external-user-synchronizations", baseUrl);
   }
 
-  public String buildGetCandidatePlayerUsernamesUri() {
-    return String.format("%s/v1/games/candidate-players/usernames", baseUrl);
+  public String buildGetCandidatePlayersUri() {
+    return String.format("%s/v1/games/candidate-players", baseUrl);
+  }
+
+  private static String joinWithSlash(String... parts) {
+    return String.join("/", parts);
   }
 }

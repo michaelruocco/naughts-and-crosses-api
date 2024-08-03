@@ -14,8 +14,14 @@ import org.springframework.security.web.SecurityFilterChain;
 import uk.co.mruoc.nac.app.config.websocket.AuthChannelInterceptor;
 import uk.co.mruoc.nac.app.config.websocket.DefaultAuthChannelInterceptor;
 import uk.co.mruoc.nac.app.security.SpringAuthenticatedUserSupplier;
+import uk.co.mruoc.nac.usecases.AuthCodeClient;
+import uk.co.mruoc.nac.usecases.AuthService;
 import uk.co.mruoc.nac.usecases.AuthenticatedUserSupplier;
 import uk.co.mruoc.nac.usecases.AuthenticatedUserValidator;
+import uk.co.mruoc.nac.usecases.ExternalUserPresentRetry;
+import uk.co.mruoc.nac.usecases.ExternalUserService;
+import uk.co.mruoc.nac.usecases.ExternalUserSynchronizer;
+import uk.co.mruoc.nac.usecases.TokenService;
 import uk.co.mruoc.nac.usecases.UserFinder;
 
 @Configuration
@@ -25,12 +31,12 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    return http.csrf(csrf -> csrf.ignoringRequestMatchers("/v1/tokens"))
+    return http.csrf(csrf -> csrf.ignoringRequestMatchers("/v1/auth/**"))
         .authorizeHttpRequests(
             auth ->
                 auth.requestMatchers(HttpMethod.OPTIONS)
                     .permitAll()
-                    .requestMatchers("/v1/tokens", "/v1/game-events/**", "/actuator/info")
+                    .requestMatchers("/v1/auth/**", "/v1/game-events/**", "/actuator/info")
                     .permitAll()
                     .anyRequest()
                     .authenticated())
@@ -53,5 +59,19 @@ public class SecurityConfig {
   @Bean
   public AuthenticatedUserValidator authenticatedUserValidator(AuthenticatedUserSupplier supplier) {
     return new AuthenticatedUserValidator(supplier);
+  }
+
+  @Bean
+  public AuthService authService(
+      TokenService tokenService,
+      AuthCodeClient authCodeClient,
+      ExternalUserService externalUserService,
+      ExternalUserSynchronizer synchronizer) {
+    return AuthService.builder()
+        .tokenService(tokenService)
+        .authCodeClient(authCodeClient)
+        .externalUserPresentRetry(new ExternalUserPresentRetry(externalUserService))
+        .synchronizer(synchronizer)
+        .build();
   }
 }

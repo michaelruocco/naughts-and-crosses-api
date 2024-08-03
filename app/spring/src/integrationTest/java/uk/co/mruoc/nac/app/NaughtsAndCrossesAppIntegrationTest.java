@@ -2,6 +2,7 @@ package uk.co.mruoc.nac.app;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.awaitility.Awaitility.await;
 import static uk.co.mruoc.nac.api.dto.ApiPlayerMother.buildMinimalCrossesPlayer;
@@ -15,6 +16,7 @@ import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -22,6 +24,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.client.HttpServerErrorException;
+import uk.co.mruoc.nac.api.dto.ApiAuthCodeRequest;
+import uk.co.mruoc.nac.api.dto.ApiAuthCodeRequestMother;
+import uk.co.mruoc.nac.api.dto.ApiCandidateGamePlayer;
+import uk.co.mruoc.nac.api.dto.ApiCandidateGamePlayerMother;
 import uk.co.mruoc.nac.api.dto.ApiCreateGameRequest;
 import uk.co.mruoc.nac.api.dto.ApiCreateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiCreateUserRequestMother;
@@ -103,6 +109,16 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
   }
 
   @Test
+  public void shouldReturnTokensForAuthCode() {
+    NaughtsAndCrossesApiTokenClient client = getTokenClient();
+    ApiAuthCodeRequest request = ApiAuthCodeRequestMother.build();
+
+    ApiTokenResponse response = client.createToken(request);
+
+    assertThatJson(response).isEqualTo(ApiTokenJsonMother.authCodeResponse());
+  }
+
+  @Test
   public void shouldReturnAllUserGroups() {
     NaughtsAndCrossesApiClient client = getAdminAppClient();
 
@@ -155,12 +171,26 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
   }
 
   @Test
-  public void shouldReturnCandidatePlayerUsernames() {
+  public void shouldFilterPaginatedUsersSearchTerm() {
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
+    ApiUserPageRequest request = ApiUserPageRequestMother.withSearchTerm("ad");
+
+    ApiUserPage page = client.getUserPage(request);
+
+    assertThat(page.getUsers()).map(ApiUser::getUsername).containsExactly("admin");
+  }
+
+  @Test
+  public void shouldReturnCandidatePlayers() {
     NaughtsAndCrossesApiClient client = getAdminAppClient();
 
-    Collection<String> usernames = client.getAllCandidatePlayerUsernames();
+    Collection<ApiCandidateGamePlayer> players = client.getAllCandidatePlayers();
 
-    assertThat(usernames).contains("admin", "user-1", "user-2");
+    assertThat(players)
+        .containsExactly(
+            ApiCandidateGamePlayerMother.admin(),
+            ApiCandidateGamePlayerMother.user1(),
+            ApiCandidateGamePlayerMother.user2());
   }
 
   @Test
@@ -216,6 +246,15 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     } finally {
       client.deleteUser(originalUser.getUsername());
     }
+  }
+
+  @Test
+  public void shouldSynchronizeSpecificExternalUser() {
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
+
+    ThrowableAssert.ThrowingCallable call = () -> client.synchronizeExternalUser("admin");
+
+    assertThatCode(call).doesNotThrowAnyException();
   }
 
   @Test

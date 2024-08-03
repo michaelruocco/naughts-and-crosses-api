@@ -1,5 +1,6 @@
 package uk.co.mruoc.nac.usecases;
 
+import java.util.Comparator;
 import java.util.stream.Stream;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +35,7 @@ public class UserService {
   }
 
   public Stream<User> getAll() {
-    return finder.getAll();
+    return finder.getAll().sorted(Comparator.comparing(User::getUsername));
   }
 
   public UserPage createPage(UserPageRequest request) {

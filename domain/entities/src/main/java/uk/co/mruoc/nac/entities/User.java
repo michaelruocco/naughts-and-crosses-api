@@ -1,6 +1,5 @@
 package uk.co.mruoc.nac.entities;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -13,8 +12,7 @@ public class User {
 
   private final String username;
   private final String id;
-  private final String firstName;
-  private final String lastName;
+  private final UserName name;
   private final String email;
   private final boolean emailVerified;
   private final Collection<String> groups;
@@ -24,21 +22,9 @@ public class User {
     return Objects.equals(username, otherUsername);
   }
 
-  public String getFullName() {
-    Collection<String> names = new ArrayList<>();
-    if (Objects.nonNull(firstName)) {
-      names.add(firstName);
-    }
-    if (Objects.nonNull(lastName)) {
-      names.add(lastName);
-    }
-    return String.join(" ", names);
-  }
-
   public User update(UpsertUserRequest request) {
     return toBuilder()
-        .firstName(request.getFirstName())
-        .lastName(request.getLastName())
+        .name(request.getName())
         .email(request.getEmail())
         .emailVerified(request.isEmailVerified())
         .groups(request.getGroups())
@@ -51,5 +37,17 @@ public class User {
 
   public boolean isMemberOfAtLeastOneGroup(Collection<String> groupsToCheck) {
     return groupsToCheck.stream().anyMatch(groups::contains);
+  }
+
+  public String getFullName() {
+    return name.getFull();
+  }
+
+  public String getFirstName() {
+    return name.getFirst();
+  }
+
+  public String getLastName() {
+    return name.getLast();
   }
 }

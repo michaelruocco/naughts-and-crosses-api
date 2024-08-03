@@ -10,16 +10,16 @@ import uk.co.mruoc.nac.api.dto.ApiUserPageRequest.ApiUserPageRequestBuilder;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ApiUserPageRequestMother {
 
-  public static ApiUserPageRequest withOffset(int offset) {
-    return builder().offset(offset).build();
-  }
-
   public static ApiUserPageRequest withSorts(ApiSortOrder... orders) {
     return builder().sort(List.of(orders)).build();
   }
 
   public static ApiUserPageRequest withGroups(String... groups) {
     return builder().groups(Set.of(groups)).build();
+  }
+
+  public static ApiUserPageRequest withSearchTerm(String searchTerm) {
+    return builder().searchTerm(searchTerm).build();
   }
 
   public static ApiUserPageRequestBuilder builder() {

@@ -14,4 +14,5 @@ import lombok.RequiredArgsConstructor;
 public class ApiTokenResponse {
   private final String accessToken;
   private final String refreshToken;
+  private final String username;
 }

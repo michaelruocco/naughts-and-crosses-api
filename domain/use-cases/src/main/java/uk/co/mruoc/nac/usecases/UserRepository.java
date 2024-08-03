@@ -27,4 +27,6 @@ public interface UserRepository {
   void update(User user);
 
   void delete(String username);
+
+  boolean exists(String username);
 }

@@ -37,7 +37,7 @@ class StubTokenServiceTest {
 
     assertThat(error)
         .isInstanceOf(CreateTokenFailedException.class)
-        .hasMessage("create token failed for username %s", request.getUsername());
+        .hasMessage("create token failed for %s", request.getUsername());
   }
 
   @Test
@@ -49,7 +49,7 @@ class StubTokenServiceTest {
 
     assertThat(error)
         .isInstanceOf(CreateTokenFailedException.class)
-        .hasMessage("create token failed for username %s", request.getUsername());
+        .hasMessage("create token failed for %s", request.getUsername());
   }
 
   @Test

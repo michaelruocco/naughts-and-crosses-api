@@ -20,6 +20,7 @@ CMD java \
   -Dbroker.system.login="${BROKER_SYSTEM_LOGIN}" \
   -Dbroker.system.passcode="${BROKER_SYSTEM_PASSCODE}" \
   -Dauth.issuer.url="${AUTH_ISSUER_URL}" \
+  -Daws.cognito.authCodeEndpoint="${AWS_COGNITO_AUTH_CODE_ENDPOINT}" \
   -Daws.cognito.userPoolId="${AWS_COGNITO_USER_POOL_ID}" \
   -Daws.cognito.userPoolClientId="${AWS_COGNITO_USER_POOL_CLIENT_ID}" \
   -Daws.cognito.regionName="${AWS_COGNITO_REGION_NAME}" \

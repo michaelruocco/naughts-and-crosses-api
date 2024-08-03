@@ -11,4 +11,8 @@ public class ApiTokenJsonMother {
   public static String refreshResponse() {
     return loadContentFromClasspath("token/refresh-response.json");
   }
+
+  public static String authCodeResponse() {
+    return loadContentFromClasspath("token/auth-code-response.json");
+  }
 }

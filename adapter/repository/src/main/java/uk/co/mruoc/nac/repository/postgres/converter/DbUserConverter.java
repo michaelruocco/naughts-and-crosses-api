@@ -2,6 +2,7 @@ package uk.co.mruoc.nac.repository.postgres.converter;
 
 import java.util.Collection;
 import uk.co.mruoc.nac.entities.User;
+import uk.co.mruoc.nac.entities.UserNameUtils;
 import uk.co.mruoc.nac.repository.postgres.dto.DbUser;
 
 public class DbUserConverter {
@@ -31,8 +32,7 @@ public class DbUserConverter {
     return User.builder()
         .id(dbUser.getId())
         .username(dbUser.getUsername())
-        .firstName(dbUser.getFirstName())
-        .lastName(dbUser.getLastName())
+        .name(UserNameUtils.toUserName(dbUser.getFirstName(), dbUser.getLastName()))
         .email(dbUser.getEmail())
         .emailVerified(dbUser.isEmailVerified())
         .status(dbUser.getStatus())

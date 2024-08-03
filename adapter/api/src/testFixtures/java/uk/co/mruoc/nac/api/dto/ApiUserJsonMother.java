@@ -31,8 +31,4 @@ public class ApiUserJsonMother {
   public static String user1() {
     return loadContentFromClasspath("user/user-1.json");
   }
-
-  public static Object duplicateBatchErrors() {
-    return loadContentFromClasspath("user/duplicate-batch-errors.json");
-  }
 }

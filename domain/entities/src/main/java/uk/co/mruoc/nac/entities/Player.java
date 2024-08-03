@@ -22,7 +22,7 @@ public class Player {
     return token == otherToken;
   }
 
-  public String getName() {
+  public String getFullName() {
     return user.getFullName();
   }
 }

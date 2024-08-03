@@ -16,6 +16,7 @@ public class IntegratedTestEnvironmentArgsDecorator implements UnaryOperator<Str
   private final int brokerPort;
 
   private final String authIssuerUrl;
+  private final String authCodeUrl;
 
   private final String cognitoEndpointOverride;
   private final String userPoolId;
@@ -45,6 +46,7 @@ public class IntegratedTestEnvironmentArgsDecorator implements UnaryOperator<Str
         "--broker.system.login=artemis",
         "--broker.system.passcode=artemis",
         String.format("--auth.issuer.url=%s", authIssuerUrl),
+        String.format("--aws.cognito.authCodeEndpoint=%s/oauth2/token", authCodeUrl),
         "--aws.cognito.regionName=eu-central-1",
         String.format("--aws.cognito.userPoolId=%s", userPoolId),
         String.format("--aws.cognito.userPoolClientId=%s", userPoolClientId),
@@ -54,7 +56,8 @@ public class IntegratedTestEnvironmentArgsDecorator implements UnaryOperator<Str
         String.format("--clam.av.host=%s", clamAvHost),
         String.format("--clam.av.port=%s", clamAvPort),
         String.format("--clam.av.connect.timeout=%s", 2),
-        String.format("--clam.av.read.timeout=%s", 20));
+        String.format("--clam.av.read.timeout=%s", 20),
+        "--stub.jwt.parser.enabled=true");
   }
 
   private String buildJdbcUrl() {

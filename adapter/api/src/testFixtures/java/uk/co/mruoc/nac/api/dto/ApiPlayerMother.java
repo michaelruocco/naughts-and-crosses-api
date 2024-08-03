@@ -7,16 +7,16 @@ import lombok.NoArgsConstructor;
 public class ApiPlayerMother {
 
   public static ApiPlayer buildMinimalCrossesPlayer() {
-    return buildMinimalPlayer("user-1", 'X');
+    return buildMinimalPlayer("user-1", "User One", 'X');
   }
 
   public static ApiPlayer buildMinimalNaughtsPlayer() {
-    return buildMinimalPlayer("user-2", 'O');
+    return buildMinimalPlayer("user-2", "User Two", 'O');
   }
 
-  public static ApiPlayer buildMinimalPlayer(String username, char token) {
+  private static ApiPlayer buildMinimalPlayer(String username, String fullName, char token) {
     return ApiPlayer.builder()
-        .user(ApiUser.builder().username(username).build())
+        .user(ApiUser.builder().username(username).fullName(fullName).build())
         .token(token)
         .build();
   }

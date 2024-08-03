@@ -11,8 +11,4 @@ public class TestClamAvContainer extends GenericContainer<TestClamAvContainer> {
     super(DockerImageName.parse("clamav/clamav:latest"));
     withExposedPorts(PORT);
   }
-
-  public int getMappedPort() {
-    return getMappedPort(PORT);
-  }
 }
