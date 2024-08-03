@@ -18,6 +18,7 @@ public class ApiUserPageRequest {
   private final long offset;
   private final Collection<ApiSortOrder> sort;
   private final Collection<String> groups;
+  private final String searchTerm;
 
   public Collection<ApiSortOrder> getSort() {
     return emptyIfNull(sort);

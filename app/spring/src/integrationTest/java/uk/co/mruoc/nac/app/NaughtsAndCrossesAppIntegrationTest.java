@@ -171,6 +171,16 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
   }
 
   @Test
+  public void shouldFilterPaginatedUsersSearchTerm() {
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
+    ApiUserPageRequest request = ApiUserPageRequestMother.withSearchTerm("ad");
+
+    ApiUserPage page = client.getUserPage(request);
+
+    assertThat(page.getUsers()).map(ApiUser::getUsername).containsExactly("admin");
+  }
+
+  @Test
   public void shouldReturnCandidatePlayers() {
     NaughtsAndCrossesApiClient client = getAdminAppClient();
 

@@ -31,6 +31,7 @@ public class ApiUserConverter {
         .offset(apiRequest.getOffset())
         .sort(sortConverter.toSort(apiRequest.getSort()))
         .groups(apiRequest.getGroups())
+        .searchTerm(apiRequest.getSearchTerm())
         .build();
   }
 

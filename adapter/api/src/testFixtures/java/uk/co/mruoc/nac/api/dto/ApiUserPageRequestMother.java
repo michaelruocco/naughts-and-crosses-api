@@ -18,6 +18,10 @@ public class ApiUserPageRequestMother {
     return builder().groups(Set.of(groups)).build();
   }
 
+  public static ApiUserPageRequest withSearchTerm(String searchTerm) {
+    return builder().searchTerm(searchTerm).build();
+  }
+
   public static ApiUserPageRequestBuilder builder() {
     return ApiUserPageRequest.builder()
         .offset(0)

@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -71,16 +70,12 @@ public class InMemoryUserRepository implements UserRepository {
 
   private Collection<User> toFilteredUsers(UserPageRequest request) {
     return users.values().stream()
-        .filter(toPredicate(request))
+        .filter(new UserPageRequestPredicate(request))
         .sorted(comparatorFactory.toComparator(request.getSort()))
         .toList();
   }
 
   private static Collection<User> toPage(Collection<User> filteredUsers, UserPageRequest request) {
     return filteredUsers.stream().skip(request.getOffset()).limit(request.getLimit()).toList();
-  }
-
-  private static Predicate<User> toPredicate(UserPageRequest request) {
-    return new UserGroupsPredicate(request.getGroups());
   }
 }
