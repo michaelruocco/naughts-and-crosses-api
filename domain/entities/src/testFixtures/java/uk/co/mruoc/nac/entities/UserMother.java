@@ -40,12 +40,12 @@ public class UserMother {
 
   public static User.UserBuilder adminBuilder() {
     return User.builder()
-            .username("admin")
-            .id("id-0")
-            .name(UserNameMother.admin())
-            .email("admin-user@email.com")
-            .emailVerified(true)
-            .groups(Set.of("admin"))
-            .status(CONFIRMED_STATUS);
+        .username("admin")
+        .id("id-0")
+        .name(UserNameMother.admin())
+        .email("admin-user@email.com")
+        .emailVerified(true)
+        .groups(Set.of("admin"))
+        .status(CONFIRMED_STATUS);
   }
 }

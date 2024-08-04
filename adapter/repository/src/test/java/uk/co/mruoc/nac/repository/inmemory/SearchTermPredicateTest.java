@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -29,11 +28,8 @@ class SearchTermPredicateTest {
   @Test
   void shouldHandleNullSearchFields() {
     Predicate<User> predicate = new SearchTermPredicate("empty-test");
-    User user = UserMother.adminBuilder()
-            .name(UserNameMother.empty())
-            .email(null)
-            .username(null)
-            .build();
+    User user =
+        UserMother.adminBuilder().name(UserNameMother.empty()).email(null).username(null).build();
 
     boolean result = predicate.test(user);
 
