@@ -2,6 +2,7 @@ package uk.co.mruoc.nac.repository.inmemory;
 
 import io.micrometer.common.util.StringUtils;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import uk.co.mruoc.nac.entities.User;
 
@@ -15,6 +16,14 @@ public class SearchTermPredicate implements Predicate<User> {
     if (StringUtils.isEmpty(searchTerm)) {
       return true;
     }
-    return user.getUsername().contains(searchTerm) || user.getEmail().contains(searchTerm);
+    return Stream.of(user.getUsername(), user.getEmail(), user.getFirstName(), user.getLastName())
+        .anyMatch(this::containsSearchTerm);
+  }
+
+  private boolean containsSearchTerm(String value) {
+    if (StringUtils.isEmpty(value)) {
+      return false;
+    }
+    return value.toLowerCase().contains(searchTerm.toLowerCase());
   }
 }

@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.client.HttpServerErrorException;
@@ -170,10 +171,11 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     assertThat(page.getUsers()).map(ApiUser::getUsername).containsExactly("user-1", "user-2");
   }
 
-  @Test
-  public void shouldFilterPaginatedUsersSearchTerm() {
+  @ParameterizedTest
+  @ValueSource(strings = {"ad", "min@em", "Admin"})
+  public void shouldFilterPaginatedUsersSearchTerm(String searchTerm) {
     NaughtsAndCrossesApiClient client = getAdminAppClient();
-    ApiUserPageRequest request = ApiUserPageRequestMother.withSearchTerm("ad");
+    ApiUserPageRequest request = ApiUserPageRequestMother.withSearchTerm(searchTerm);
 
     ApiUserPage page = client.getUserPage(request);
 
