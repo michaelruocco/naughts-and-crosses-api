@@ -17,7 +17,6 @@ public class SearchTermPredicate implements Predicate<User> {
       return true;
     }
     return Stream.of(user.getUsername(), user.getEmail(), user.getFirstName(), user.getLastName())
-        .filter(StringUtils::isNotEmpty)
         .anyMatch(this::containsSearchTerm);
   }
 
