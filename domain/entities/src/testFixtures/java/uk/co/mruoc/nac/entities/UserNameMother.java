@@ -17,4 +17,8 @@ public class UserNameMother {
   public static UserName user2() {
     return UserName.builder().first("User").last("Two").build().tryToPopulateAll();
   }
+
+  public static UserName empty() {
+    return UserName.builder().build();
+  }
 }

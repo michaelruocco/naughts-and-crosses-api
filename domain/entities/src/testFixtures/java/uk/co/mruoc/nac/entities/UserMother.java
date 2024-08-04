@@ -11,15 +11,7 @@ public class UserMother {
   private static final String CONFIRMED_STATUS = "CONFIRMED";
 
   public static User admin() {
-    return User.builder()
-        .username("admin")
-        .id("id-0")
-        .name(UserNameMother.admin())
-        .email("admin-user@email.com")
-        .emailVerified(true)
-        .groups(Set.of("admin"))
-        .status(CONFIRMED_STATUS)
-        .build();
+    return adminBuilder().build();
   }
 
   public static User user1() {
@@ -44,5 +36,16 @@ public class UserMother {
         .groups(Set.of(PLAYER_GROUP))
         .status(CONFIRMED_STATUS)
         .build();
+  }
+
+  public static User.UserBuilder adminBuilder() {
+    return User.builder()
+            .username("admin")
+            .id("id-0")
+            .name(UserNameMother.admin())
+            .email("admin-user@email.com")
+            .emailVerified(true)
+            .groups(Set.of("admin"))
+            .status(CONFIRMED_STATUS);
   }
 }
