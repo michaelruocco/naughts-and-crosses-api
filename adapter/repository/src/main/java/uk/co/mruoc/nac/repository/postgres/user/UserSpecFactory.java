@@ -6,7 +6,7 @@ import org.springframework.data.jpa.domain.Specification;
 import uk.co.mruoc.nac.entities.UserPageRequest;
 import uk.co.mruoc.nac.repository.postgres.dto.DbUser;
 
-public class SpecFactory {
+public class UserSpecFactory {
 
   public Specification<DbUser> toFindByUsername(String username) {
     return (user, query, builder) -> builder.equal(user.get("username"), username);
@@ -30,7 +30,10 @@ public class SpecFactory {
   }
 
   private Specification<DbUser> toSearchTermSpec(String searchTerm) {
-    return toUsernameLike(searchTerm).or(toEmailLike(searchTerm));
+    return toUsernameLike(searchTerm)
+        .or(toEmailLike(searchTerm))
+        .or(toFirstNameLike(searchTerm))
+        .or(toLastNameLike(searchTerm));
   }
 
   private static Specification<DbUser> toUsernameLike(String searchTerm) {
@@ -41,11 +44,20 @@ public class SpecFactory {
     return toLike("email", searchTerm);
   }
 
+  private static Specification<DbUser> toFirstNameLike(String searchTerm) {
+    return toLike("firstName", searchTerm);
+  }
+
+  private static Specification<DbUser> toLastNameLike(String searchTerm) {
+    return toLike("lastName", searchTerm);
+  }
+
   private static Specification<DbUser> toLike(String fieldName, String searchTerm) {
-    return (user, query, builder) -> builder.like(user.get(fieldName), toLike(searchTerm));
+    return (user, query, builder) ->
+        builder.like(builder.upper(user.get(fieldName)), toLike(searchTerm));
   }
 
   private static String toLike(String value) {
-    return String.format("%%%s%%", value);
+    return String.format("%%%s%%", value.toUpperCase());
   }
 }

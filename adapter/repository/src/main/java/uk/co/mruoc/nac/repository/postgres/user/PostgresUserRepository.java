@@ -18,11 +18,11 @@ public class PostgresUserRepository implements UserRepository {
 
   private final JpaUserRepository jpaRepository;
   private final PageableFactory pageableFactory;
-  private final SpecFactory specFactory;
+  private final UserSpecFactory specFactory;
   private final DbUserConverter converter;
 
   public PostgresUserRepository(JpaUserRepository jpaRepository) {
-    this(jpaRepository, new PageableFactory(), new SpecFactory(), new DbUserConverter());
+    this(jpaRepository, new PageableFactory(), new UserSpecFactory(), new DbUserConverter());
   }
 
   @Override

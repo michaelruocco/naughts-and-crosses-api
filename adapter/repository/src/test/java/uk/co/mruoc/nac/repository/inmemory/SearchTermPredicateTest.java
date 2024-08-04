@@ -29,6 +29,8 @@ class SearchTermPredicateTest {
         Arguments.of("ema", true),
         Arguments.of("", true),
         Arguments.of(null, true),
+        Arguments.of("Admin", true),
+        Arguments.of("user", true),
         Arguments.of("blah", false));
   }
 }
