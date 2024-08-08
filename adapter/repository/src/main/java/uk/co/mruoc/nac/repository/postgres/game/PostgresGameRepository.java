@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.json.JsonConverter;
 import uk.co.mruoc.nac.entities.Game;
+import uk.co.mruoc.nac.entities.GamePage;
+import uk.co.mruoc.nac.entities.GamePageRequest;
 import uk.co.mruoc.nac.repository.GameRepositoryException;
 import uk.co.mruoc.nac.usecases.GameRepository;
 
@@ -111,6 +113,19 @@ public class PostgresGameRepository implements GameRepository {
     } finally {
       var duration = Duration.between(start, Instant.now());
       log.info("delete game with id {} took {}ms", id, duration.toMillis());
+    }
+  }
+
+  @Override
+  public GamePage getPage(GamePageRequest request) {
+    Instant start = Instant.now();
+    try (var connection = dataSource.getConnection()) {
+      return readDao.getPage(connection, request);
+    } catch (SQLException e) {
+      throw new GameRepositoryException(e);
+    } finally {
+      var duration = Duration.between(start, Instant.now());
+      log.info("get game took {}ms with request {}", duration.toMillis(), request);
     }
   }
 }

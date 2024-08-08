@@ -9,12 +9,21 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.nac.entities.Game;
+import uk.co.mruoc.nac.entities.GamePage;
+import uk.co.mruoc.nac.entities.GamePageRequest;
 
 @RequiredArgsConstructor
+@Slf4j
 public class ReadGameDao {
 
   private final PostgresGameConverter gameConverter;
+  private final GameQueryFactory queryFactory;
+
+  public ReadGameDao(PostgresGameConverter gameConverter) {
+    this(gameConverter, new GameQueryFactory());
+  }
 
   public Optional<Game> findById(Connection connection, long id) throws SQLException {
     try (PreparedStatement statement =
@@ -31,6 +40,33 @@ public class ReadGameDao {
     }
   }
 
+  public GamePage getPage(Connection connection, GamePageRequest request) throws SQLException {
+    long count = getTotal(connection, request);
+    try (PreparedStatement statement =
+        connection.prepareStatement(queryFactory.toGetPageQuery(request))) {
+      int index = 1;
+      Optional<Boolean> complete = request.getComplete();
+      if (complete.isPresent()) {
+        statement.setBoolean(index++, complete.get());
+      }
+      statement.setLong(index++, request.getLimit());
+      statement.setLong(index, request.getOffset());
+      log.info("executing statement {}", statement);
+      return toGamePage(statement, count);
+    }
+  }
+
+  private long getTotal(Connection connection, GamePageRequest request) throws SQLException {
+    try (PreparedStatement statement =
+        connection.prepareStatement(queryFactory.toTotalQuery(request))) {
+      Optional<Boolean> complete = request.getComplete();
+      if (complete.isPresent()) {
+        statement.setBoolean(1, complete.get());
+      }
+      return toTotal(statement);
+    }
+  }
+
   private Optional<Game> toGameIfPresent(PreparedStatement statement) throws SQLException {
     try (var resultSet = statement.executeQuery()) {
       return toGameIfPresent(resultSet);
@@ -42,6 +78,17 @@ public class ReadGameDao {
       return Optional.of(toGame(resultSet));
     }
     return Optional.empty();
+  }
+
+  private GamePage toGamePage(PreparedStatement statement, long total) throws SQLException {
+    return GamePage.builder().games(toGames(statement).toList()).total(total).build();
+  }
+
+  private long toTotal(PreparedStatement statement) throws SQLException {
+    try (ResultSet rs = statement.executeQuery()) {
+      rs.next();
+      return rs.getLong(1);
+    }
   }
 
   private Stream<Game> toGames(PreparedStatement statement) throws SQLException {

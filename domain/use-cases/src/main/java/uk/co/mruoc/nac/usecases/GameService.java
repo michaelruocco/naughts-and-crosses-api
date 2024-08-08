@@ -4,6 +4,8 @@ import java.util.stream.Stream;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import uk.co.mruoc.nac.entities.Game;
+import uk.co.mruoc.nac.entities.GamePage;
+import uk.co.mruoc.nac.entities.GamePageRequest;
 import uk.co.mruoc.nac.entities.Players;
 import uk.co.mruoc.nac.entities.Turn;
 
@@ -65,5 +67,9 @@ public class GameService {
     userValidator.validateIsAdminOrGamePlayer(game);
     repository.update(game);
     eventPublisher.updated(game);
+  }
+
+  public GamePage createPage(GamePageRequest request) {
+    return repository.getPage(request);
   }
 }
