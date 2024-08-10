@@ -16,7 +16,7 @@ public class GamePageRequest implements PageRequest {
 
   @Override
   public Collection<SortOrder> getSort() {
-    return Set.of(SortOrder.asc("id"));
+    return Set.of(SortOrder.desc("id"));
   }
 
   public Optional<Boolean> getComplete() {
