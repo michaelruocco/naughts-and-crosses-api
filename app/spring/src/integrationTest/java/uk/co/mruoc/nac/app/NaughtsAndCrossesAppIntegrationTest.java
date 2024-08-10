@@ -34,6 +34,8 @@ import uk.co.mruoc.nac.api.dto.ApiCreateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiCreateUserRequestMother;
 import uk.co.mruoc.nac.api.dto.ApiGame;
 import uk.co.mruoc.nac.api.dto.ApiGameJsonMother;
+import uk.co.mruoc.nac.api.dto.ApiGamePage;
+import uk.co.mruoc.nac.api.dto.ApiGamePageRequest;
 import uk.co.mruoc.nac.api.dto.ApiSortOrder;
 import uk.co.mruoc.nac.api.dto.ApiTokenJsonMother;
 import uk.co.mruoc.nac.api.dto.ApiTokenResponse;
@@ -46,6 +48,7 @@ import uk.co.mruoc.nac.api.dto.ApiUserJsonMother;
 import uk.co.mruoc.nac.api.dto.ApiUserPage;
 import uk.co.mruoc.nac.api.dto.ApiUserPageRequest;
 import uk.co.mruoc.nac.api.dto.ApiUserPageRequestMother;
+import uk.co.mruoc.nac.api.factory.ApiCreateGameRequestFactory;
 import uk.co.mruoc.nac.client.GameEventSubscriber;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClient;
 import uk.co.mruoc.nac.client.NaughtsAndCrossesApiClientException;
@@ -59,44 +62,6 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
   private static final char O = 'O';
   private static final String JBLOGGS = "jbloggs";
   private static final String JDOE = "jdoe";
-
-  public ApiCreateGameRequest buildCreateGameRequest() {
-    return getFixtures().buildCreateGameRequest();
-  }
-
-  public ApiGame givenGameExists() {
-    return getFixtures().givenGameExists();
-  }
-
-  public ApiUser givenUserExists() {
-    return getFixtures().givenUserExists();
-  }
-
-  public void givenUserExists(ApiCreateUserRequest request) {
-    getFixtures().givenUserExists(request);
-  }
-
-  public Fixtures getFixtures() {
-    return new Fixtures(getAdminAppClient());
-  }
-
-  public NaughtsAndCrossesApiTokenClient getTokenClient() {
-    return getExtension().buildTokenClient();
-  }
-
-  public NaughtsAndCrossesApiClient getAdminAppClient() {
-    return getExtension().buildAdminRestClient();
-  }
-
-  public NaughtsAndCrossesApiClient getUser1AppClient() {
-    return getExtension().buildUser1RestClient();
-  }
-
-  public NaughtsAndCrossesApiClient getUser2AppClient() {
-    return getExtension().buildUser2RestClient();
-  }
-
-  public abstract NaughtsAndCrossesAppExtension getExtension();
 
   @Test
   public void shouldRefreshAccessToken() {
@@ -369,6 +334,58 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
   }
 
   @Test
+  public void shouldReturnAllGamesWithMostRecentlyCreatedFirst() {
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
+    ApiGame game1 = givenGameExists();
+    ApiGame game2 = givenGameExists();
+
+    Collection<ApiGame> games = client.getAllGames();
+
+    assertThat(games).containsExactly(game2, game1);
+  }
+
+  @Test
+  public void shouldReturnPagedGamesWithMostRecentlyCreatedFirst() {
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
+    givenGameExists();
+    ApiGame game = givenGameExists();
+    ApiGamePageRequest request = ApiGamePageRequest.builder().limit(1).offset(0).build();
+
+    ApiGamePage page = client.getGamePage(request);
+
+    assertThat(page.getTotal()).isEqualTo(2);
+    assertThat(page.getGames()).map(ApiGame::getId).containsExactly(game.getId());
+  }
+
+  @Test
+  public void shouldReturnEmptyPagedGamesIfFilteringByCompleteAndNoCompletedGames() {
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
+    givenGameExists();
+    givenGameExists();
+    ApiGamePageRequest request =
+        ApiGamePageRequest.builder().limit(1).offset(0).complete(true).build();
+
+    ApiGamePage page = client.getGamePage(request);
+
+    assertThat(page.getTotal()).isZero();
+    assertThat(page.getGames()).isEmpty();
+  }
+
+  @Test
+  public void shouldReturnCompletedPagedGamesIfFilteringByComplete() {
+    NaughtsAndCrossesApiClient client = getAdminAppClient();
+    givenCompletedGameExists();
+    ApiGame game = givenCompletedGameExists();
+    ApiGamePageRequest request =
+        ApiGamePageRequest.builder().limit(1).offset(0).complete(true).build();
+
+    ApiGamePage page = client.getGamePage(request);
+
+    assertThat(page.getTotal()).isEqualTo(2);
+    assertThat(page.getGames()).map(ApiGame::getId).containsExactly(game.getId());
+  }
+
+  @Test
   public void shouldCreateGame() {
     NaughtsAndCrossesApiClient client = getAdminAppClient();
     ApiCreateGameRequest request = buildCreateGameRequest();
@@ -551,6 +568,53 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     ApiUserBatch batch = client.getUserBatch(id);
     return predicate.test(batch);
   }
+
+  public ApiCreateGameRequest buildCreateGameRequest() {
+    return getFixtures().buildCreateGameRequest();
+  }
+
+  public ApiGame givenGameExists() {
+    return getFixtures().givenGameExists();
+  }
+
+  public ApiGame givenCompletedGameExists() {
+    return getFixtures().givenCompletedGameExists();
+  }
+
+  public ApiUser givenUserExists() {
+    return getFixtures().givenUserExists();
+  }
+
+  public void givenUserExists(ApiCreateUserRequest request) {
+    getFixtures().givenUserExists(request);
+  }
+
+  public Fixtures getFixtures() {
+    return Fixtures.builder()
+        .adminClient(getAdminAppClient())
+        .user1Client(getUser1AppClient())
+        .user2Client(getUser2AppClient())
+        .requestFactory(new ApiCreateGameRequestFactory())
+        .build();
+  }
+
+  public NaughtsAndCrossesApiTokenClient getTokenClient() {
+    return getExtension().buildTokenClient();
+  }
+
+  public NaughtsAndCrossesApiClient getAdminAppClient() {
+    return getExtension().buildAdminRestClient();
+  }
+
+  public NaughtsAndCrossesApiClient getUser1AppClient() {
+    return getExtension().buildUser1RestClient();
+  }
+
+  public NaughtsAndCrossesApiClient getUser2AppClient() {
+    return getExtension().buildUser2RestClient();
+  }
+
+  public abstract NaughtsAndCrossesAppExtension getExtension();
 
   private static Stream<Arguments> offsetsAndUsernames() {
     return Stream.of(

@@ -19,6 +19,10 @@ public class UriFactory {
     return String.format("%s/%d", buildGamesUri(), gameId);
   }
 
+  public String buildGamesPageUri() {
+    return String.format("%s/pages", buildGamesUri());
+  }
+
   public String buildGamesUri() {
     return String.format("%s/v1/games", baseUrl);
   }
