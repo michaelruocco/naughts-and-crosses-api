@@ -36,9 +36,6 @@ public class GameQueryFactory {
   private static String toSortClause(Collection<SortOrder> sort) {
     String clauses =
         sort.stream().map(GameQueryFactory::toSortClause).collect(Collectors.joining(","));
-    if (clauses.isEmpty()) {
-      return "";
-    }
     return String.format("order by %s", clauses);
   }
 
