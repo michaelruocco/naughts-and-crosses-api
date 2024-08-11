@@ -63,6 +63,7 @@ public class ApiConverter {
         .limit(apiRequest.getLimit())
         .offset(apiRequest.getOffset())
         .complete(apiRequest.getComplete())
+        .username(apiRequest.getUsername())
         .build();
   }
 }

@@ -15,6 +15,7 @@ public class ApiGamePageRequest {
   private final long limit;
   private final long offset;
   private final Boolean complete;
+  private final String username;
   private final Boolean minimal;
 
   public boolean getMinimal() {
