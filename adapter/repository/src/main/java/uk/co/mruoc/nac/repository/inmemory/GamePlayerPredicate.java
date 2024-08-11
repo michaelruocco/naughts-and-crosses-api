@@ -15,6 +15,6 @@ public class GamePlayerPredicate implements Predicate<Game> {
     if (Objects.isNull(username)) {
       return true;
     }
-    return game.getPlayers().containsUsername(username);
+    return game.getPlayerUsernames().toList().contains(username);
   }
 }
