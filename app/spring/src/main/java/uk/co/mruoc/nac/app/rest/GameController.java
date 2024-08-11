@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.co.mruoc.nac.api.converter.ApiConverter;
 import uk.co.mruoc.nac.api.dto.ApiCreateGameRequest;
 import uk.co.mruoc.nac.api.dto.ApiGame;
+import uk.co.mruoc.nac.api.dto.ApiGamePage;
+import uk.co.mruoc.nac.api.dto.ApiGamePageRequest;
 import uk.co.mruoc.nac.api.dto.ApiTurn;
 import uk.co.mruoc.nac.entities.CreateGameRequest;
 import uk.co.mruoc.nac.entities.Game;
+import uk.co.mruoc.nac.entities.GamePageRequest;
 import uk.co.mruoc.nac.entities.Turn;
 import uk.co.mruoc.nac.usecases.GameFacade;
 
@@ -32,6 +35,13 @@ public class GameController {
   public Collection<ApiGame> getAll(
       @RequestParam(name = "minimal", required = false, defaultValue = "false") boolean minimal) {
     return facade.getAll().map(toGameConverter(minimal)).toList();
+  }
+
+  @PostMapping("/pages")
+  public ApiGamePage createPage(@RequestBody ApiGamePageRequest apiRequest) {
+    GamePageRequest request = converter.toRequest(apiRequest);
+    var page = facade.createPage(request);
+    return converter.toApiGamePage(page, toGameConverter(apiRequest.getMinimal()));
   }
 
   @DeleteMapping

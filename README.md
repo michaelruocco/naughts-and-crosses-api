@@ -139,7 +139,8 @@ you can run:
     -Dclam.av.host=localhost \
     -Dclam.av.port=3310 \
     -Dclam.av.connect.timeout=2 \
-    -Dclam.av.read.timeout=20
+    -Dclam.av.read.timeout=20 \
+    -Dstub.auth.code.client.enabled=true
 ```
 
 ### Running the API as a docker container with a postgres database repository, and kafka

@@ -3,6 +3,8 @@ package uk.co.mruoc.nac.usecases;
 import java.util.Optional;
 import java.util.stream.Stream;
 import uk.co.mruoc.nac.entities.Game;
+import uk.co.mruoc.nac.entities.GamePage;
+import uk.co.mruoc.nac.entities.GamePageRequest;
 
 public interface GameRepository {
 
@@ -17,4 +19,6 @@ public interface GameRepository {
   void deleteAll();
 
   void delete(long id);
+
+  GamePage getPage(GamePageRequest request);
 }

@@ -4,6 +4,8 @@ import java.util.stream.Stream;
 import lombok.Builder;
 import uk.co.mruoc.nac.entities.CreateGameRequest;
 import uk.co.mruoc.nac.entities.Game;
+import uk.co.mruoc.nac.entities.GamePage;
+import uk.co.mruoc.nac.entities.GamePageRequest;
 import uk.co.mruoc.nac.entities.Players;
 import uk.co.mruoc.nac.entities.Turn;
 
@@ -36,5 +38,9 @@ public class GameFacade {
 
   public void delete(long id) {
     gameService.delete(id);
+  }
+
+  public GamePage createPage(GamePageRequest request) {
+    return gameService.createPage(request);
   }
 }

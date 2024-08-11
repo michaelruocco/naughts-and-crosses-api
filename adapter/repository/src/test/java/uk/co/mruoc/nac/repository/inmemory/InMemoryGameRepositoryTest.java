@@ -46,7 +46,7 @@ class InMemoryGameRepositoryTest {
   }
 
   @Test
-  void shouldReturnAllGamesSortedById() {
+  void shouldReturnAllGamesSortedByIdDescending() {
     Game game3 = givenGameWithId(3);
     Game game2 = givenGameWithId(2);
     Game game1 = givenGameWithId(1);
@@ -56,7 +56,7 @@ class InMemoryGameRepositoryTest {
 
     Stream<Game> games = repository.getAll();
 
-    assertThat(games).containsExactly(game1, game2, game3);
+    assertThat(games).containsExactly(game3, game2, game1);
   }
 
   @Test

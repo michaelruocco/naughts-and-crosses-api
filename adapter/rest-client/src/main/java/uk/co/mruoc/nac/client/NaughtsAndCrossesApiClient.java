@@ -16,6 +16,8 @@ import uk.co.mruoc.nac.api.dto.ApiCandidateGamePlayer;
 import uk.co.mruoc.nac.api.dto.ApiCreateGameRequest;
 import uk.co.mruoc.nac.api.dto.ApiCreateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiGame;
+import uk.co.mruoc.nac.api.dto.ApiGamePage;
+import uk.co.mruoc.nac.api.dto.ApiGamePageRequest;
 import uk.co.mruoc.nac.api.dto.ApiTurn;
 import uk.co.mruoc.nac.api.dto.ApiUpdateUserRequest;
 import uk.co.mruoc.nac.api.dto.ApiUser;
@@ -108,6 +110,11 @@ public class NaughtsAndCrossesApiClient {
   public Collection<ApiGame> getAllGames() {
     ApiGame[] games = performGet(uriFactory.buildGamesUri(), ApiGame[].class);
     return toCollection(games);
+  }
+
+  public ApiGamePage getGamePage(ApiGamePageRequest request) {
+    return performPost(
+        uriFactory.buildGamesPageUri(), entityFactory.buildRequest(request), ApiGamePage.class);
   }
 
   public ApiGame createGame(ApiCreateGameRequest request) {
