@@ -49,6 +49,10 @@ public class ReadGameDao {
       if (complete.isPresent()) {
         statement.setBoolean(index++, complete.get());
       }
+      Optional<String> username = request.getUsername();
+      if (username.isPresent()) {
+        statement.setString(index++, username.get());
+      }
       statement.setLong(index++, request.getLimit());
       statement.setLong(index, request.getOffset());
       log.info("executing statement {}", statement);
@@ -59,9 +63,14 @@ public class ReadGameDao {
   private long getTotal(Connection connection, GamePageRequest request) throws SQLException {
     try (PreparedStatement statement =
         connection.prepareStatement(queryFactory.toTotalQuery(request))) {
+      int index = 1;
       Optional<Boolean> complete = request.getComplete();
       if (complete.isPresent()) {
-        statement.setBoolean(1, complete.get());
+        statement.setBoolean(index++, complete.get());
+      }
+      Optional<String> username = request.getUsername();
+      if (username.isPresent()) {
+        statement.setString(index, username.get());
       }
       return toTotal(statement);
     }
