@@ -11,6 +11,7 @@ import static uk.co.mruoc.nac.api.dto.ApiPlayerMother.buildMinimalNaughtsPlayer;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
@@ -357,32 +358,36 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     assertThat(page.getGames()).map(ApiGame::getId).containsExactly(game.getId());
   }
 
-  @Test
-  public void shouldReturnEmptyPagedGamesIfFilteringByCompleteAndNoCompletedGames() {
+  @ParameterizedTest
+  @MethodSource("completeFilterAndExpectedGameIds")
+  public void shouldReturnPagedGamesFilteredByComplete(
+      Boolean complete, Collection<Long> expectedGameIds) {
     NaughtsAndCrossesApiClient client = getAdminAppClient();
     givenGameExists();
-    givenGameExists();
+    givenCompletedGameExists();
     ApiGamePageRequest request =
-        ApiGamePageRequest.builder().limit(1).offset(0).complete(true).build();
+        ApiGamePageRequest.builder().limit(2).offset(0).complete(complete).build();
 
     ApiGamePage page = client.getGamePage(request);
 
-    assertThat(page.getTotal()).isZero();
-    assertThat(page.getGames()).isEmpty();
+    assertThat(page.getTotal()).isEqualTo(expectedGameIds.size());
+    assertThat(page.getGames()).map(ApiGame::getId).containsExactlyElementsOf(expectedGameIds);
   }
 
-  @Test
-  public void shouldReturnCompletedPagedGamesIfFilteringByComplete() {
+  @ParameterizedTest
+  @MethodSource("usernameFilterAndExpectedGameIds")
+  public void shouldReturnPagedGamesFilteredByUsername(
+      String username, Collection<Long> expectedGameIds) {
     NaughtsAndCrossesApiClient client = getAdminAppClient();
-    givenCompletedGameExists();
-    ApiGame game = givenCompletedGameExists();
+    givenGameExists();
+    givenGameExists();
     ApiGamePageRequest request =
-        ApiGamePageRequest.builder().limit(1).offset(0).complete(true).build();
+        ApiGamePageRequest.builder().limit(2).offset(0).username(username).build();
 
     ApiGamePage page = client.getGamePage(request);
 
-    assertThat(page.getTotal()).isEqualTo(2);
-    assertThat(page.getGames()).map(ApiGame::getId).containsExactly(game.getId());
+    assertThat(page.getTotal()).isEqualTo(expectedGameIds.size());
+    assertThat(page.getGames()).map(ApiGame::getId).containsExactlyElementsOf(expectedGameIds);
   }
 
   @Test
@@ -625,6 +630,20 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
     return Stream.of(
         Arguments.of("ASC", List.of("admin", "user-1", "user-2")),
         Arguments.of("DESC", List.of("user-2", "user-1", "admin")));
+  }
+
+  private static Stream<Arguments> completeFilterAndExpectedGameIds() {
+    return Stream.of(
+        Arguments.of(true, List.of(2L)),
+        Arguments.of(false, List.of(1L)),
+        Arguments.of(null, List.of(2L, 1L)));
+  }
+
+  private static Stream<Arguments> usernameFilterAndExpectedGameIds() {
+    return Stream.of(
+        Arguments.of("admin", Collections.emptyList()),
+        Arguments.of("user-1", List.of(2L, 1L)),
+        Arguments.of(null, List.of(2L, 1L)));
   }
 
   private static void awaitMostRecentGameUpdateEquals(

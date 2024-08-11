@@ -78,6 +78,10 @@ public class Players {
     return stream().anyMatch(user -> user.hasUsername(username));
   }
 
+  public Stream<String> getUsernames() {
+    return stream().map(Player::getUsername);
+  }
+
   private int nextTurnIndex() {
     int nextIndex = currentIndex + 1;
     if (nextIndex >= values.size()) {

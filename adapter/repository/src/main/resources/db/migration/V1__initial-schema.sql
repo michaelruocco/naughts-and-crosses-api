@@ -37,3 +37,13 @@ create table user_batch(
 
     primary key(id)
 );
+
+create table game_player (
+    game_id bigint not null,
+    username varchar(50) not null,
+
+    primary key(game_id, username),
+
+    foreign key(game_id) references game(id) on delete cascade,
+    foreign key(username) references user_record(username) on delete cascade
+);
