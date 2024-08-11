@@ -1,6 +1,7 @@
 package uk.co.mruoc.nac.entities;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -58,6 +59,10 @@ public class Status {
 
   public boolean containsPlayer(User user) {
     return players.containsUsername(user.getUsername());
+  }
+
+  public Stream<String> getPlayerUsernames() {
+    return players.getUsernames();
   }
 
   private long nextTurn() {

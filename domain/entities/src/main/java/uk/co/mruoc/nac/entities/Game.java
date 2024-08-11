@@ -1,5 +1,6 @@
 package uk.co.mruoc.nac.entities;
 
+import java.util.stream.Stream;
 import lombok.Builder;
 import lombok.Data;
 
@@ -27,6 +28,10 @@ public class Game {
 
   public Players getPlayers() {
     return status.getPlayers();
+  }
+
+  public Stream<String> getPlayerUsernames() {
+    return status.getPlayerUsernames();
   }
 
   public void validateIsPlayer(User user) {
