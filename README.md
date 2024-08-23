@@ -88,7 +88,9 @@ you can run:
     -Dbroker.in.memory.enabled=true \
     -Dstub.user.provider.enabled=true \
     -Dstub.token.service.enabled=true \
-    -Dauth.security.enabled=false
+    -Dauth.security.enabled=false \
+    -Dstub.auth.code.client.enabled=true \
+    -Dstub.jwt.parser.enabled=true
 ```
 
 ### Running the API locally with a postgres database repository, kafka and cognito

@@ -15,9 +15,13 @@ import uk.co.mruoc.nac.api.converter.ApiUserBatchConverter;
 import uk.co.mruoc.nac.api.converter.ApiUserConverter;
 import uk.co.mruoc.nac.app.config.security.CorsWebMvcConfigurer;
 import uk.co.mruoc.nac.app.config.websocket.BrokerConfig;
+import uk.co.mruoc.nac.app.security.SpringAuthenticatedUserSupplier;
+import uk.co.mruoc.nac.usecases.AuthCodeClient;
+import uk.co.mruoc.nac.usecases.AuthService;
 import uk.co.mruoc.nac.usecases.AuthenticatedUserSupplier;
 import uk.co.mruoc.nac.usecases.AuthenticatedUserValidator;
 import uk.co.mruoc.nac.usecases.BoardFormatter;
+import uk.co.mruoc.nac.usecases.ExternalUserPresentRetry;
 import uk.co.mruoc.nac.usecases.ExternalUserService;
 import uk.co.mruoc.nac.usecases.ExternalUserSynchronizer;
 import uk.co.mruoc.nac.usecases.GameEventPublisher;
@@ -27,6 +31,7 @@ import uk.co.mruoc.nac.usecases.GameRepository;
 import uk.co.mruoc.nac.usecases.GameService;
 import uk.co.mruoc.nac.usecases.IdSupplier;
 import uk.co.mruoc.nac.usecases.PlayerFactory;
+import uk.co.mruoc.nac.usecases.TokenService;
 import uk.co.mruoc.nac.usecases.UserBatchExecutor;
 import uk.co.mruoc.nac.usecases.UserBatchFactory;
 import uk.co.mruoc.nac.usecases.UserBatchRepository;
@@ -44,6 +49,29 @@ import uk.co.mruoc.nac.usecases.VirusScanner;
 @Configuration
 public class ApplicationConfig {
 
+  @Bean
+  public AuthenticatedUserSupplier authenticatedUserSupplier(UserFinder userFinder) {
+    return new SpringAuthenticatedUserSupplier(userFinder);
+  }
+
+  @Bean
+  public AuthenticatedUserValidator authenticatedUserValidator(AuthenticatedUserSupplier supplier) {
+    return new AuthenticatedUserValidator(supplier);
+  }
+
+  @Bean
+  public AuthService authService(
+          TokenService tokenService,
+          AuthCodeClient authCodeClient,
+          ExternalUserService externalUserService,
+          ExternalUserSynchronizer synchronizer) {
+    return AuthService.builder()
+            .tokenService(tokenService)
+            .authCodeClient(authCodeClient)
+            .externalUserPresentRetry(new ExternalUserPresentRetry(externalUserService))
+            .synchronizer(synchronizer)
+            .build();
+  }
   @Bean
   public GameFacade gameFacade(PlayerFactory playerFactory, GameService gameService) {
     return GameFacade.builder().playerFactory(playerFactory).gameService(gameService).build();
