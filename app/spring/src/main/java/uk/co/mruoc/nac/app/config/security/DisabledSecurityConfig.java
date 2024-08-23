@@ -8,8 +8,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.co.mruoc.nac.app.config.websocket.AuthChannelInterceptor;
 import uk.co.mruoc.nac.app.config.websocket.NoOpAuthChannelInterceptor;
+
 @Configuration
-@EnableAutoConfiguration(exclude = { SecurityAutoConfiguration.class, ManagementWebSecurityAutoConfiguration.class })
+@EnableAutoConfiguration(
+    exclude = {SecurityAutoConfiguration.class, ManagementWebSecurityAutoConfiguration.class})
 @ConditionalOnProperty(name = "auth.security.enabled", havingValue = "false")
 public class DisabledSecurityConfig {
   @Bean

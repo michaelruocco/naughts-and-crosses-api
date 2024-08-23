@@ -61,17 +61,18 @@ public class ApplicationConfig {
 
   @Bean
   public AuthService authService(
-          TokenService tokenService,
-          AuthCodeClient authCodeClient,
-          ExternalUserService externalUserService,
-          ExternalUserSynchronizer synchronizer) {
+      TokenService tokenService,
+      AuthCodeClient authCodeClient,
+      ExternalUserService externalUserService,
+      ExternalUserSynchronizer synchronizer) {
     return AuthService.builder()
-            .tokenService(tokenService)
-            .authCodeClient(authCodeClient)
-            .externalUserPresentRetry(new ExternalUserPresentRetry(externalUserService))
-            .synchronizer(synchronizer)
-            .build();
+        .tokenService(tokenService)
+        .authCodeClient(authCodeClient)
+        .externalUserPresentRetry(new ExternalUserPresentRetry(externalUserService))
+        .synchronizer(synchronizer)
+        .build();
   }
+
   @Bean
   public GameFacade gameFacade(PlayerFactory playerFactory, GameService gameService) {
     return GameFacade.builder().playerFactory(playerFactory).gameService(gameService).build();
