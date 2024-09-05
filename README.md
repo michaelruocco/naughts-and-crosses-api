@@ -88,6 +88,8 @@ you can run:
     -Dbroker.in.memory.enabled=true \
     -Dstub.user.provider.enabled=true \
     -Dstub.token.service.enabled=true \
+    -Dstub.auth.code.client.enabled=true \
+    -Dstub.jwt.parser.enabled=true \
     -Dauth.security.enabled=false
 ```
 
