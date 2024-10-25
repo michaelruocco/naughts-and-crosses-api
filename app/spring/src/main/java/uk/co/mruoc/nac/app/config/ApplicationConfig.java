@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.time.Clock;
 import java.util.UUID;
 import java.util.function.Supplier;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import uk.co.mruoc.nac.api.converter.ApiAuthConverter;
 import uk.co.mruoc.nac.api.converter.ApiConverter;
@@ -113,12 +115,21 @@ public class ApplicationConfig {
   }
 
   @Bean
+  public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
+    return new ThreadPoolTaskExecutor();
+  }
+
+  @Bean
   public UserBatchExecutor userBatchExecutor(
-      UserUpserter upserter, UserBatchRepository repository, Clock clock) {
+      UserUpserter upserter,
+      UserBatchRepository repository,
+      Clock clock,
+      @Qualifier("threadPoolTaskExecutor") ThreadPoolTaskExecutor executor) {
     return UserBatchExecutor.builder()
         .upserter(upserter)
         .repository(repository)
         .clock(clock)
+        .executor(executor)
         .build();
   }
 
