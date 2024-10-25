@@ -20,6 +20,8 @@ public class UserBatchRunnable implements Runnable {
   @Override
   public void run() {
     UserBatch updatedBatch = batch;
+    log.info(
+        "executing user batch {} on thread {}", batch.getId(), Thread.currentThread().getName());
     for (UpsertUserRequest request : updatedBatch.getRequests()) {
       updatedBatch = updateBatch(updatedBatch, request);
       repository.update(updatedBatch);
