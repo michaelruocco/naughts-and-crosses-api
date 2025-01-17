@@ -90,7 +90,7 @@ you can run:
     -Dstub.token.service.enabled=true \
     -Dstub.auth.code.client.enabled=true \
     -Dstub.jwt.parser.enabled=true \
-    -Dauth.security.enabled=false
+    -Dauth.issuer.public.key=classpath:/public-key.pem
 ```
 
 ### Running the API locally with a postgres database repository, kafka and cognito
