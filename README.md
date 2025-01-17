@@ -188,25 +188,18 @@ curl -X POST \
 ### Getting users
 
 ```bash
-curl http://localhost:3002/v1/users
-```
-
-or with a bearer token:
-
-```bash
 curl -H 'Authorization:Bearer <token>' http://localhost:3002/v1/users
 ```
 
 ### Creating a game
 
 Once the API is running locally, to generate a game you can run, note - for
-this command and any of the subsequent ones listed, if authentication is
-enabled on the API then the bearer token needs to be supplied in an
-authorization header on the request
+this command and any of the subsequent ones listed
 
 ```bash
 curl -H "Content-Type: application/json" \
-  -d '{"requestedPlayers":[{"userId":"707d9fa6-13dd-4985-93aa-a28f01e89a6b","token":"X"},{"userId":"dadfde25-9924-4982-802d-dfd0bce2218d","token":"O"}]}' \
+  -H 'Authorization:Bearer <token-value>' \
+  -d '{"requestedPlayers":[{"username":"707d9fa6-13dd-4985-93aa-a28f01e89a6b","token":"X"},{"username":"dadfde25-9924-4982-802d-dfd0bce2218d","token":"O"}]}' \
   -X POST http://localhost:3002/v1/games
 ```
 
@@ -221,6 +214,7 @@ To take a turn you can run:
 
 ```bash
 curl -H "Content-Type: application/json" \
+  -H 'Authorization:Bearer <token-value>' \
   -d '{"coordinates":{"x":1,"y":1},"token":"X"}' \
   -X POST http://localhost:3002/v1/games/{game-id}/turns  
 ```
@@ -228,7 +222,7 @@ curl -H "Content-Type: application/json" \
 To get all created games you can do either:
 
 ```bash
-curl http://localhost:3002/v1/games
+curl -H 'Authorization:Bearer <token-value>' http://localhost:3002/v1/games
 ```
 
 To get a full representation of all games including board state and all players.
@@ -236,5 +230,5 @@ Or if you want to get a minimal representation of all games that just includes
 id and game status then you can do:
 
 ```bash
-curl "http://localhost:3002/v1/games?minimal=true"
+curl -H 'Authorization:Bearer <token-value>' http://localhost:3002/v1/games?minimal=true
 ```
