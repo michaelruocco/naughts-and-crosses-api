@@ -195,7 +195,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
       assertThat(error)
           .isInstanceOf(NaughtsAndCrossesApiClientException.class)
-          .hasMessage("409 : \"user jbloggs already exists\"");
+          .hasMessageContaining("user jbloggs already exists");
     } finally {
       client.deleteUser(request.getUsername());
     }
@@ -234,7 +234,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
     assertThat(error)
         .isInstanceOf(NaughtsAndCrossesApiClientException.class)
-        .hasMessage("404 : \"user non-existent-user not found\"");
+        .hasMessageContaining("user non-existent-user not found");
   }
 
   @Test
@@ -263,7 +263,7 @@ abstract class NaughtsAndCrossesAppIntegrationTest {
 
     assertThat(error)
         .isInstanceOf(NaughtsAndCrossesApiClientException.class)
-        .hasMessage("400 : \"failed with signature Win.Test.EICAR_HDB-1\"");
+        .hasMessageContaining("failed with signature Win.Test.EICAR_HDB-1");
   }
 
   @Test

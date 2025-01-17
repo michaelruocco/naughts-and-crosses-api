@@ -8,7 +8,7 @@ dependencies {
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-csv:${jacksonVersion}"
     implementation "org.apache.commons:commons-collections4:${commonsCollectionsVersion}"
 
-    testFixturesImplementation "com.github.michaelruocco:file-loader:7.0.2"
+    testFixturesImplementation "com.github.michaelruocco:file-loader:7.0.4"
 }
 
 apply from: rootProject.file("publish.gradle")
