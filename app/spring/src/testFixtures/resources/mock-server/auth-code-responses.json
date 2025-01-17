@@ -5,7 +5,7 @@
       "path": "/oauth2/token",
       "headers": {
         "Content-Type": [
-          "application/x-www-form-urlencoded;charset=UTF-8"
+          "application/x-www-form-urlencoded"
         ]
       },
       "body": "grant_type=authorization_code&client_id=6b0j5hb1u25z290vv502lfl1c&code=1b50c4fa-1f74-44f9-800a-995793dc2595&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Flogin%2Fcallback"
