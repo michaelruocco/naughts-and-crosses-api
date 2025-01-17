@@ -107,7 +107,7 @@ To run the API using the postgres database, kafka and cognito, you will need to 
 an instance of each of those systems running in docker by running
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 This will start an instance of postgres running on port 5433, kafka running on 9094
@@ -158,7 +158,7 @@ Then to run the API linked up to postgres with both running as docker containers
 you can run:
 
 ```bash
-docker-compose --profile docker-api up -d
+docker compose --profile docker-api up -d
 ```
 
 ### Generating a bearer token from Cognito
