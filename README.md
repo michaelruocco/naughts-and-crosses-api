@@ -199,7 +199,7 @@ this command and any of the subsequent ones listed
 ```bash
 curl -H "Content-Type: application/json" \
   -H 'Authorization:Bearer <token-value>' \
-  -d '{"requestedPlayers":[{"username":"707d9fa6-13dd-4985-93aa-a28f01e89a6b","token":"X"},{"username":"dadfde25-9924-4982-802d-dfd0bce2218d","token":"O"}]}' \
+  -d '{"requestedPlayers":[{"username":"user-1","token":"X"},{"username":"user-2","token":"O"}]}' \
   -X POST http://localhost:3002/v1/games
 ```
 
