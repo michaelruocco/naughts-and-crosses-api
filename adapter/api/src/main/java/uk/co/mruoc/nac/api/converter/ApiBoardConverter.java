@@ -19,11 +19,4 @@ public class ApiBoardConverter {
         .locations(locationConverter.toApiLocations(board.getLocations()))
         .build();
   }
-
-  public Board toBoard(ApiBoard apiBoard) {
-    return Board.builder()
-        .size(apiBoard.getSize())
-        .locations(locationConverter.toLocationsMap(apiBoard.getLocations()))
-        .build();
-  }
 }
