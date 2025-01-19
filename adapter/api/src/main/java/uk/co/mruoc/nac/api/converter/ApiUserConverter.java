@@ -12,7 +12,7 @@ import uk.co.mruoc.nac.api.dto.ApiUserPage;
 import uk.co.mruoc.nac.api.dto.ApiUserPageRequest;
 import uk.co.mruoc.nac.entities.UpsertUserRequest;
 import uk.co.mruoc.nac.entities.User;
-import uk.co.mruoc.nac.entities.UserNameUtils;
+import uk.co.mruoc.nac.entities.UserName;
 import uk.co.mruoc.nac.entities.UserPage;
 import uk.co.mruoc.nac.entities.UserPageRequest;
 
@@ -67,7 +67,7 @@ public class ApiUserConverter {
   public UpsertUserRequest toCreateUserRequest(ApiCreateUserRequest apiRequest) {
     return UpsertUserRequest.builder()
         .username(apiRequest.getUsername())
-        .name(UserNameUtils.toUserName(apiRequest.getFirstName(), apiRequest.getLastName()))
+        .name(UserName.toUserName(apiRequest.getFirstName(), apiRequest.getLastName()))
         .email(apiRequest.getEmail())
         .emailVerified(apiRequest.isEmailVerified())
         .groups(apiRequest.getGroups())
@@ -93,7 +93,7 @@ public class ApiUserConverter {
   public UpsertUserRequest toUpsertUserRequest(String username, ApiUpdateUserRequest apiRequest) {
     return UpsertUserRequest.builder()
         .username(username)
-        .name(UserNameUtils.toUserName(apiRequest.getFirstName(), apiRequest.getLastName()))
+        .name(UserName.toUserName(apiRequest.getFirstName(), apiRequest.getLastName()))
         .email(apiRequest.getEmail())
         .emailVerified(apiRequest.isEmailVerified())
         .groups(Optional.ofNullable(apiRequest.getGroups()).orElse(Collections.emptySet()))
