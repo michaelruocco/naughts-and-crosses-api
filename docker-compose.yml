@@ -66,7 +66,7 @@ services:
       - 8161:8161
 
   antivirus:
-    image: clamav/clamav
+    image: clamav/clamav-debian
     container_name: antivirus
     ports:
       - 3310:3310
