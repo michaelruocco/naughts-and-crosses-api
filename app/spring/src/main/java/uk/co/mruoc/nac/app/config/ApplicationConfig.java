@@ -13,11 +13,14 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import uk.co.mruoc.nac.api.converter.ApiAuthConverter;
 import uk.co.mruoc.nac.api.converter.ApiConverter;
+import uk.co.mruoc.nac.api.converter.ApiMfaConverter;
 import uk.co.mruoc.nac.api.converter.ApiUserBatchConverter;
 import uk.co.mruoc.nac.api.converter.ApiUserConverter;
 import uk.co.mruoc.nac.app.config.security.CorsWebMvcConfigurer;
 import uk.co.mruoc.nac.app.config.websocket.BrokerConfig;
 import uk.co.mruoc.nac.app.security.SpringAuthenticatedUserSupplier;
+import uk.co.mruoc.nac.app.security.SpringJwtTokenSupplier;
+import uk.co.mruoc.nac.usecases.AccessTokenClient;
 import uk.co.mruoc.nac.usecases.AuthCodeClient;
 import uk.co.mruoc.nac.usecases.AuthService;
 import uk.co.mruoc.nac.usecases.AuthenticatedUserSupplier;
@@ -32,8 +35,11 @@ import uk.co.mruoc.nac.usecases.GameFactory;
 import uk.co.mruoc.nac.usecases.GameRepository;
 import uk.co.mruoc.nac.usecases.GameService;
 import uk.co.mruoc.nac.usecases.IdSupplier;
+import uk.co.mruoc.nac.usecases.JwtTokenSupplier;
+import uk.co.mruoc.nac.usecases.MfaSettingsRepository;
+import uk.co.mruoc.nac.usecases.MultiFactorAuthService;
 import uk.co.mruoc.nac.usecases.PlayerFactory;
-import uk.co.mruoc.nac.usecases.TokenService;
+import uk.co.mruoc.nac.usecases.SoftwareTokenClient;
 import uk.co.mruoc.nac.usecases.UserBatchExecutor;
 import uk.co.mruoc.nac.usecases.UserBatchFactory;
 import uk.co.mruoc.nac.usecases.UserBatchRepository;
@@ -57,21 +63,42 @@ public class ApplicationConfig {
   }
 
   @Bean
+  public JwtTokenSupplier jwtTokenSupplier(UserFinder userFinder) {
+    return new SpringJwtTokenSupplier(userFinder);
+  }
+
+  @Bean
   public AuthenticatedUserValidator authenticatedUserValidator(AuthenticatedUserSupplier supplier) {
     return new AuthenticatedUserValidator(supplier);
   }
 
   @Bean
   public AuthService authService(
-      TokenService tokenService,
+      AccessTokenClient accessTokenClient,
+      SoftwareTokenClient softwareTokenClient,
       AuthCodeClient authCodeClient,
       ExternalUserService externalUserService,
       ExternalUserSynchronizer synchronizer) {
     return AuthService.builder()
-        .tokenService(tokenService)
+        .accessTokenClient(accessTokenClient)
+        .softwareTokenClient(softwareTokenClient)
         .authCodeClient(authCodeClient)
         .externalUserPresentRetry(new ExternalUserPresentRetry(externalUserService))
         .synchronizer(synchronizer)
+        .build();
+  }
+
+  @Bean
+  public MultiFactorAuthService multiFactorAuthService(
+      JwtTokenSupplier tokenSupplier,
+      SoftwareTokenClient client,
+      AuthenticatedUserValidator userValidator,
+      MfaSettingsRepository repository) {
+    return MultiFactorAuthService.builder()
+        .tokenSupplier(tokenSupplier)
+        .softwareTokenClient(client)
+        .userValidator(userValidator)
+        .repository(repository)
         .build();
   }
 
@@ -241,6 +268,11 @@ public class ApplicationConfig {
   @Bean
   public ApiAuthConverter apiTokenConverter() {
     return new ApiAuthConverter();
+  }
+
+  @Bean
+  public ApiMfaConverter apiMfaConverter() {
+    return new ApiMfaConverter();
   }
 
   @Bean

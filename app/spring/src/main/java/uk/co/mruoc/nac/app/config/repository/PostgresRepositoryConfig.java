@@ -8,12 +8,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import uk.co.mruoc.json.jackson.JacksonJsonConverter;
+import uk.co.mruoc.nac.repository.inmemory.InMemoryMfaSettingsRepository;
 import uk.co.mruoc.nac.repository.postgres.PostgresIdSupplier;
 import uk.co.mruoc.nac.repository.postgres.game.PostgresGameRepository;
 import uk.co.mruoc.nac.repository.postgres.user.JpaUserRepository;
 import uk.co.mruoc.nac.repository.postgres.user.PostgresUserBatchRepository;
 import uk.co.mruoc.nac.repository.postgres.user.PostgresUserRepository;
 import uk.co.mruoc.nac.usecases.IdSupplier;
+import uk.co.mruoc.nac.usecases.MfaSettingsRepository;
 import uk.co.mruoc.nac.usecases.UserBatchRepository;
 import uk.co.mruoc.nac.usecases.UserRepository;
 
@@ -45,5 +47,11 @@ public class PostgresRepositoryConfig {
   public UserBatchRepository postgresUserBatchRepository(
       DataSource dataSource, ObjectMapper mapper) {
     return new PostgresUserBatchRepository(dataSource, new JacksonJsonConverter(mapper));
+  }
+
+  @Bean
+  public MfaSettingsRepository mfaSettingsRepository(UserRepository userRepository) {
+    // TODO replace with postgres repository
+    return new InMemoryMfaSettingsRepository(userRepository);
   }
 }

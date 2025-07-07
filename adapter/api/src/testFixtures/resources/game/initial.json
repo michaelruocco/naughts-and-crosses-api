@@ -90,7 +90,13 @@
         "status": "CONFIRMED",
         "groups": [
           "player"
-        ]
+        ],
+        "mfa": {
+          "softwareToken": {
+            "enabled": false,
+            "preferred": false
+          }
+        }
       },
       "token": "X"
     },
@@ -106,7 +112,13 @@
         "status": "CONFIRMED",
         "groups": [
           "player"
-        ]
+        ],
+        "mfa": {
+          "softwareToken": {
+            "enabled": false,
+            "preferred": false
+          }
+        }
       },
       "token": "O"
     }

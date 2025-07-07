@@ -3,8 +3,10 @@ package uk.co.mruoc.nac.entities;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.Builder;
 import lombok.Data;
+import lombok.With;
 
 @Builder(toBuilder = true)
 @Data
@@ -17,6 +19,7 @@ public class User {
   private final boolean emailVerified;
   private final Collection<String> groups;
   private final String status;
+  @With private final MfaSettings mfa;
 
   public boolean hasUsername(String otherUsername) {
     return Objects.equals(username, otherUsername);
@@ -49,5 +52,9 @@ public class User {
 
   public String getLastName() {
     return name.getLast();
+  }
+
+  public MfaSettings getMfa() {
+    return Optional.ofNullable(mfa).orElse(new MfaSettings());
   }
 }

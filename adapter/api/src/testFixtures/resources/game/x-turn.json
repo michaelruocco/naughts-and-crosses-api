@@ -80,7 +80,7 @@
   "players": [
     {
       "user": {
-        "id":"707d9fa6-13dd-4985-93aa-a28f01e89a6b",
+        "id": "707d9fa6-13dd-4985-93aa-a28f01e89a6b",
         "username": "user-1",
         "fullName": "User One",
         "firstName": "User",
@@ -88,13 +88,21 @@
         "email": "user-1@email.com",
         "emailVerified": true,
         "status": "CONFIRMED",
-        "groups": [ "player" ]
+        "groups": [
+          "player"
+        ],
+        "mfa": {
+          "softwareToken": {
+            "enabled": false,
+            "preferred": false
+          }
+        }
       },
       "token": "X"
     },
     {
       "user": {
-        "id":"dadfde25-9924-4982-802d-dfd0bce2218d",
+        "id": "dadfde25-9924-4982-802d-dfd0bce2218d",
         "username": "user-2",
         "fullName": "User Two",
         "firstName": "User",
@@ -102,7 +110,15 @@
         "email": "user-2@email.com",
         "emailVerified": true,
         "status": "CONFIRMED",
-        "groups": [ "player" ]
+        "groups": [
+          "player"
+        ],
+        "mfa": {
+          "softwareToken": {
+            "enabled": false,
+            "preferred": false
+          }
+        }
       },
       "token": "O"
     }

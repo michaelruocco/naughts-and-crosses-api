@@ -7,5 +7,13 @@
   "email": "user-1@email.com",
   "emailVerified": true,
   "status": "CONFIRMED",
-  "groups": [ "player" ]
+  "groups": [
+    "player"
+  ],
+  "mfa": {
+    "softwareToken": {
+      "enabled": false,
+      "preferred": false
+    }
+  }
 }

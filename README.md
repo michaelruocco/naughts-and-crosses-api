@@ -168,7 +168,7 @@ to generate a bearer token that you can provide when calling the API.
 To do this you can run the following command:
 
 ```bash
-curl -X POST "http://localhost:3002/v1/tokens" \
+curl -X POST "http://localhost:3002/v1/access-tokens" \
   -H 'Content-Type:application/json' \
   -d '{"username":"user-1","password":"pwd1"}'
 ```

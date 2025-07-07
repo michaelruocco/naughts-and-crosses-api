@@ -19,6 +19,14 @@ public class AuthenticatedUserValidator {
     game.validateIsPlayer(user);
   }
 
+  public void validateIsAdminOrUser(String username) {
+    User user = supplier.get();
+    if (user.isAdmin() || user.hasUsername(username)) {
+      return;
+    }
+    throw new CannotAccessOtherUserException(user.getUsername(), username);
+  }
+
   public void validateIsAdmin() {
     validateUserMemberOfAtLeastOne("admin");
   }

@@ -7,8 +7,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Builder
 @Data
-public class TokenResponse {
-  private final String accessToken;
-  private final String refreshToken;
+public class MfaPreferences {
+
   private final String username;
+  private final MfaSettings settings;
+
+  public MfaSetting getSoftwareTokenSetting() {
+    return settings.getSoftwareToken();
+  }
 }

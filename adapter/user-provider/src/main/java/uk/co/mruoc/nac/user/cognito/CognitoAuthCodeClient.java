@@ -12,8 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import uk.co.mruoc.nac.entities.AccessTokenResponse;
 import uk.co.mruoc.nac.entities.AuthCodeRequest;
-import uk.co.mruoc.nac.entities.TokenResponse;
 import uk.co.mruoc.nac.usecases.AuthCodeClient;
 import uk.co.mruoc.nac.user.JwtParser;
 
@@ -27,17 +27,17 @@ public class CognitoAuthCodeClient implements AuthCodeClient {
   private final JwtParser jwtParser;
 
   @Override
-  public TokenResponse create(AuthCodeRequest request) {
+  public AccessTokenResponse create(AuthCodeRequest request) {
     HttpEntity<MultiValueMap<String, String>> entity = toRequestEntity(request);
     ResponseEntity<CognitoAuthCodeResponse> response =
         template.exchange(uri, HttpMethod.POST, entity, CognitoAuthCodeResponse.class);
     return toTokenResponse(Objects.requireNonNull(response.getBody()));
   }
 
-  private TokenResponse toTokenResponse(CognitoAuthCodeResponse response) {
+  private AccessTokenResponse toTokenResponse(CognitoAuthCodeResponse response) {
     CognitoAuthCodeResponse responseBody = Objects.requireNonNull(response);
     String accessToken = response.getAccessToken();
-    return TokenResponse.builder()
+    return AccessTokenResponse.builder()
         .accessToken(accessToken)
         .refreshToken(responseBody.getRefreshToken())
         .username(jwtParser.toUsername(accessToken))

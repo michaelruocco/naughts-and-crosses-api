@@ -8,30 +8,30 @@ import java.time.Instant;
 import java.util.UUID;
 import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
-import uk.co.mruoc.nac.entities.TokenResponse;
-import uk.co.mruoc.nac.entities.TokenResponse.TokenResponseBuilder;
+import uk.co.mruoc.nac.entities.AccessTokenResponse;
+import uk.co.mruoc.nac.entities.AccessTokenResponse.AccessTokenResponseBuilder;
 
 @RequiredArgsConstructor
-public class StubTokenFactory {
+public class StubAccessTokenFactory {
 
   private final Clock clock;
   private final Supplier<UUID> uuidSupplier;
   private final Algorithm signer;
 
-  public StubTokenFactory(Clock clock, Supplier<UUID> uuidSupplier) {
+  public StubAccessTokenFactory(Clock clock, Supplier<UUID> uuidSupplier) {
     this(clock, uuidSupplier, buildSigner());
   }
 
-  public TokenResponse toAccessAndRefreshToken(StubUserTokenConfig config) {
+  public AccessTokenResponse toAccessAndRefreshToken(StubUserTokenConfig config) {
     return toResponseBuilder(config).refreshToken(toRefreshToken(config)).build();
   }
 
-  public TokenResponse toAccessTokenOnly(StubUserTokenConfig config) {
+  public AccessTokenResponse toAccessTokenOnly(StubUserTokenConfig config) {
     return toResponseBuilder(config).build();
   }
 
-  private TokenResponseBuilder toResponseBuilder(StubUserTokenConfig config) {
-    return TokenResponse.builder()
+  private AccessTokenResponseBuilder toResponseBuilder(StubUserTokenConfig config) {
+    return AccessTokenResponse.builder()
         .accessToken(toAccessToken(config))
         .username(config.getUsername());
   }

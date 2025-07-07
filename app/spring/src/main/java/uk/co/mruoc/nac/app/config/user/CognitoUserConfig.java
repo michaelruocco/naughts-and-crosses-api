@@ -21,19 +21,27 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClientBuilder;
 import uk.co.mruoc.json.jackson.JacksonJsonConverter;
+import uk.co.mruoc.nac.usecases.AccessTokenClient;
 import uk.co.mruoc.nac.usecases.AuthCodeClient;
 import uk.co.mruoc.nac.usecases.ExternalUserService;
-import uk.co.mruoc.nac.usecases.TokenService;
+import uk.co.mruoc.nac.usecases.SoftwareTokenClient;
 import uk.co.mruoc.nac.user.JwtParser;
+import uk.co.mruoc.nac.user.cognito.AccessTokenResponseFactory;
+import uk.co.mruoc.nac.user.cognito.CognitoAccessTokenClient;
 import uk.co.mruoc.nac.user.cognito.CognitoAuthCodeClient;
 import uk.co.mruoc.nac.user.cognito.CognitoGroupService;
-import uk.co.mruoc.nac.user.cognito.CognitoTokenService;
+import uk.co.mruoc.nac.user.cognito.CognitoSoftwareTokenClient;
 import uk.co.mruoc.nac.user.cognito.CognitoUserConverter;
 import uk.co.mruoc.nac.user.cognito.CognitoUserService;
+import uk.co.mruoc.nac.user.inmemory.JwtValidator;
+import uk.co.mruoc.nac.user.inmemory.StubAccessTokenClient;
+import uk.co.mruoc.nac.user.inmemory.StubAccessTokenFactory;
 import uk.co.mruoc.nac.user.inmemory.StubAuthCodeClient;
 import uk.co.mruoc.nac.user.inmemory.StubExternalUserService;
 import uk.co.mruoc.nac.user.inmemory.StubJwtParser;
-import uk.co.mruoc.nac.user.inmemory.StubTokenService;
+import uk.co.mruoc.nac.user.inmemory.StubRefreshTokens;
+import uk.co.mruoc.nac.user.inmemory.StubSoftwareTokenClient;
+import uk.co.mruoc.nac.user.inmemory.StubUserTokenConfigs;
 
 @Configuration
 @Slf4j
@@ -55,23 +63,46 @@ public class CognitoUserConfig {
     return builder.build();
   }
 
+  @Bean
+  public AccessTokenResponseFactory accessTokenResponseFactory(JwtParser jwtParser) {
+    return new AccessTokenResponseFactory(jwtParser);
+  }
+
   @ConditionalOnProperty(
       value = "stub.token.service.enabled",
       havingValue = "false",
       matchIfMissing = true)
   @Bean
-  public TokenService cognitoTokenService(
+  public AccessTokenClient cognitoAccessTokenService(
       CognitoIdentityProviderClient client,
       @Value("${aws.cognito.userPoolId}") String userPoolId,
       @Value("${aws.cognito.userPoolClientId}") String userPoolClientId,
       Clock clock,
-      JwtParser jwtParser) {
-    return CognitoTokenService.builder()
+      AccessTokenResponseFactory responseFactory) {
+    return CognitoAccessTokenClient.builder()
         .client(client)
         .userPoolId(userPoolId)
         .clientId(userPoolClientId)
         .clock(clock)
-        .jwtParser(jwtParser)
+        .responseFactory(responseFactory)
+        .build();
+  }
+
+  @ConditionalOnProperty(
+      value = "stub.token.service.enabled",
+      havingValue = "false",
+      matchIfMissing = true)
+  @Bean
+  public CognitoSoftwareTokenClient cognitoSoftwareTokenService(
+      CognitoIdentityProviderClient client,
+      @Value("${aws.cognito.userPoolId}") String userPoolId,
+      @Value("${aws.cognito.userPoolClientId}") String userPoolClientId,
+      AccessTokenResponseFactory responseFactory) {
+    return CognitoSoftwareTokenClient.builder()
+        .client(client)
+        .userPoolId(userPoolId)
+        .clientId(userPoolClientId)
+        .responseFactory(responseFactory)
         .build();
   }
 
@@ -119,9 +150,49 @@ public class CognitoUserConfig {
 
   @ConditionalOnProperty(value = "stub.token.service.enabled", havingValue = "true")
   @Bean
-  public TokenService stubTokenService(
-      Clock clock, Supplier<UUID> uuidSupplier, JwtParser jwtParser) {
-    return new StubTokenService(clock, uuidSupplier, jwtParser);
+  public StubUserTokenConfigs stubUserTokenConfigs() {
+    return new StubUserTokenConfigs();
+  }
+
+  @ConditionalOnProperty(value = "stub.token.service.enabled", havingValue = "true")
+  @Bean
+  public StubRefreshTokens stubRefreshTokens() {
+    return new StubRefreshTokens();
+  }
+
+  @ConditionalOnProperty(value = "stub.token.service.enabled", havingValue = "true")
+  @Bean
+  public StubAccessTokenFactory stubAccessTokenFactory(Clock clock, Supplier<UUID> uuidSupplier) {
+    return new StubAccessTokenFactory(clock, uuidSupplier);
+  }
+
+  @ConditionalOnProperty(value = "stub.token.service.enabled", havingValue = "true")
+  @Bean
+  public AccessTokenClient stubAccessTokenService(
+      StubUserTokenConfigs userConfigs,
+      StubRefreshTokens refreshTokens,
+      StubAccessTokenFactory tokenFactory,
+      Clock clock,
+      JwtParser jwtParser) {
+    return StubAccessTokenClient.builder()
+        .userConfigs(userConfigs)
+        .refreshTokens(refreshTokens)
+        .tokenFactory(tokenFactory)
+        .validator(new JwtValidator(clock, jwtParser))
+        .build();
+  }
+
+  @ConditionalOnProperty(value = "stub.token.service.enabled", havingValue = "true")
+  @Bean
+  public SoftwareTokenClient stubSoftwareTokenClient(
+      StubUserTokenConfigs userConfigs,
+      StubRefreshTokens refreshTokens,
+      StubAccessTokenFactory tokenFactory) {
+    return StubSoftwareTokenClient.builder()
+        .userConfigs(userConfigs)
+        .refreshTokens(refreshTokens)
+        .tokenFactory(tokenFactory)
+        .build();
   }
 
   @ConditionalOnProperty(

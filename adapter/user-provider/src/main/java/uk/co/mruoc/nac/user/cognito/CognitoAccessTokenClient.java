@@ -2,29 +2,30 @@ package uk.co.mruoc.nac.user.cognito;
 
 import java.time.Clock;
 import java.util.Map;
+import java.util.Objects;
 import lombok.Builder;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminInitiateAuthRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminInitiateAuthResponse;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AuthFlowType;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AuthenticationResultType;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.ChallengeNameType;
+import uk.co.mruoc.nac.entities.AccessTokenResponse;
 import uk.co.mruoc.nac.entities.CreateTokenRequest;
 import uk.co.mruoc.nac.entities.RefreshTokenRequest;
-import uk.co.mruoc.nac.entities.TokenResponse;
-import uk.co.mruoc.nac.usecases.TokenService;
-import uk.co.mruoc.nac.user.JwtParser;
+import uk.co.mruoc.nac.usecases.AccessTokenClient;
 
 @Builder
-public class CognitoTokenService implements TokenService {
+public class CognitoAccessTokenClient implements AccessTokenClient {
 
   private final CognitoIdentityProviderClient client;
   private final String userPoolId;
   private final String clientId;
   private final Clock clock;
-  private final JwtParser jwtParser;
+  private final AccessTokenResponseFactory responseFactory;
 
   @Override
-  public TokenResponse create(CreateTokenRequest request) {
+  public AccessTokenResponse create(CreateTokenRequest request) {
     AdminInitiateAuthRequest authRequest =
         AdminInitiateAuthRequest.builder()
             .clientId(clientId)
@@ -33,12 +34,19 @@ public class CognitoTokenService implements TokenService {
             .authFlow(AuthFlowType.ADMIN_USER_PASSWORD_AUTH)
             .build();
     AdminInitiateAuthResponse response = client.adminInitiateAuth(authRequest);
+    ChallengeNameType challengeNameType = response.challengeName();
+    if (Objects.nonNull(challengeNameType)) {
+      return AccessTokenResponse.builder()
+          .challenge(challengeNameType.name())
+          .session(response.session())
+          .build();
+    }
     AuthenticationResultType type = response.authenticationResult();
-    return toResponse(type);
+    return responseFactory.toResponse(type);
   }
 
   @Override
-  public TokenResponse refresh(RefreshTokenRequest request) {
+  public AccessTokenResponse refresh(RefreshTokenRequest request) {
     AdminInitiateAuthRequest authRequest =
         AdminInitiateAuthRequest.builder()
             .clientId(clientId)
@@ -48,16 +56,7 @@ public class CognitoTokenService implements TokenService {
             .build();
     AdminInitiateAuthResponse response = client.adminInitiateAuth(authRequest);
     AuthenticationResultType type = response.authenticationResult();
-    return toResponse(type);
-  }
-
-  private TokenResponse toResponse(AuthenticationResultType type) {
-    String accessToken = type.accessToken();
-    return TokenResponse.builder()
-        .accessToken(accessToken)
-        .refreshToken(type.refreshToken())
-        .username(jwtParser.toUsername(accessToken))
-        .build();
+    return responseFactory.toResponse(type);
   }
 
   private static Map<String, String> toAuthParameters(CreateTokenRequest request) {

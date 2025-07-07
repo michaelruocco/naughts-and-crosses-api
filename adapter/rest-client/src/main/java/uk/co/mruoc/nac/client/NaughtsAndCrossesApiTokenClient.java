@@ -58,7 +58,7 @@ public class NaughtsAndCrossesApiTokenClient {
   }
 
   private String buildTokensUri() {
-    return String.format("%s/v1/auth/tokens", baseUrl);
+    return String.format("%s/v1/auth/access-tokens", baseUrl);
   }
 
   private String buildCodesUri() {

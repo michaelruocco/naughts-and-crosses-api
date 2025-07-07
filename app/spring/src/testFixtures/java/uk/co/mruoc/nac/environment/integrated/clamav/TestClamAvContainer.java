@@ -8,7 +8,7 @@ public class TestClamAvContainer extends GenericContainer<TestClamAvContainer> {
   private static final int PORT = 3310;
 
   public TestClamAvContainer() {
-    super(DockerImageName.parse("clamav/clamav:latest"));
+    super(DockerImageName.parse("clamav/clamav-debian:latest"));
     withExposedPorts(PORT);
   }
 }

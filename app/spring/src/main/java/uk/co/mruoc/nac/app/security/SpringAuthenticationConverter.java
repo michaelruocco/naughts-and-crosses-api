@@ -14,8 +14,16 @@ public class SpringAuthenticationConverter {
   private final UserFinder userFinder;
 
   public User toUser(Authentication auth) {
+    return toUser(toJwtAuth(auth));
+  }
+
+  public String toJwtTokenValue(Authentication auth) {
+    return toJwtAuth(auth).getToken().getTokenValue();
+  }
+
+  private JwtAuthenticationToken toJwtAuth(Authentication auth) {
     if (auth instanceof JwtAuthenticationToken jwtAuth) {
-      return toUser(jwtAuth);
+      return jwtAuth;
     }
     throw new UserNotAuthenticatedException();
   }

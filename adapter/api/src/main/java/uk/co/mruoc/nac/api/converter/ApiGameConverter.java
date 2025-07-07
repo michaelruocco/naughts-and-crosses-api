@@ -28,6 +28,7 @@ public class ApiGameConverter {
         .id(game.getId())
         .status(statusConverter.toApiStatus(game.getStatus()))
         .board(boardConverter.toApiBoard(game.getBoard()))
+        // TODO can we use minimal players here
         .players(playerConverter.toApiPlayers(game.getPlayers()))
         .build();
   }

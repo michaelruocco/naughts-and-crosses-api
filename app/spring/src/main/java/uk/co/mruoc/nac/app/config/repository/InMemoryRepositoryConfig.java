@@ -9,10 +9,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.co.mruoc.nac.repository.inmemory.InMemoryGameRepository;
 import uk.co.mruoc.nac.repository.inmemory.InMemoryIdSupplier;
+import uk.co.mruoc.nac.repository.inmemory.InMemoryMfaSettingsRepository;
 import uk.co.mruoc.nac.repository.inmemory.InMemoryUserBatchRepository;
 import uk.co.mruoc.nac.repository.inmemory.InMemoryUserRepository;
 import uk.co.mruoc.nac.usecases.GameRepository;
 import uk.co.mruoc.nac.usecases.IdSupplier;
+import uk.co.mruoc.nac.usecases.MfaSettingsRepository;
 import uk.co.mruoc.nac.usecases.UserBatchRepository;
 import uk.co.mruoc.nac.usecases.UserRepository;
 
@@ -47,5 +49,11 @@ public class InMemoryRepositoryConfig {
   public UserBatchRepository inMemoryUserBatchRepository() {
     log.info("in memory user batch repository configured");
     return new InMemoryUserBatchRepository();
+  }
+
+  @Bean
+  public MfaSettingsRepository mfaSettingsRepository(UserRepository userRepository) {
+    log.info("in memory mfa settings repository configured");
+    return new InMemoryMfaSettingsRepository(userRepository);
   }
 }

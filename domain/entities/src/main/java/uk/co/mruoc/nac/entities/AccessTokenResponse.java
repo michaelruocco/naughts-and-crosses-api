@@ -1,17 +1,13 @@
-package uk.co.mruoc.nac.api.dto;
+package uk.co.mruoc.nac.entities;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-@NoArgsConstructor(force = true)
 @Builder
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class ApiTokenResponse {
+public class AccessTokenResponse {
   private final String accessToken;
   private final String refreshToken;
   private final String username;

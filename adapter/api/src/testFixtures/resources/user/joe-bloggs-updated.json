@@ -7,5 +7,13 @@
   "email": "joe.bloggs.1@hotmail.com",
   "emailVerified": false,
   "status": "FORCE_CHANGE_PASSWORD",
-  "groups": [ "admin" ]
+  "groups": [
+    "admin"
+  ],
+  "mfa": {
+    "softwareToken": {
+      "enabled": false,
+      "preferred": false
+    }
+  }
 }

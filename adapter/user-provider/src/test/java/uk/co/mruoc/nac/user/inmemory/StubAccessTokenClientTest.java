@@ -10,14 +10,14 @@ import java.time.Instant;
 import java.util.UUID;
 import java.util.function.Supplier;
 import org.junit.jupiter.api.Test;
+import uk.co.mruoc.nac.entities.AccessTokenResponse;
 import uk.co.mruoc.nac.entities.CreateTokenRequest;
 import uk.co.mruoc.nac.entities.RefreshTokenRequest;
-import uk.co.mruoc.nac.entities.TokenResponse;
-import uk.co.mruoc.nac.usecases.CreateTokenFailedException;
-import uk.co.mruoc.nac.usecases.RefreshTokenFailedException;
-import uk.co.mruoc.nac.usecases.TokenService;
+import uk.co.mruoc.nac.usecases.AccessTokenClient;
+import uk.co.mruoc.nac.usecases.CreateAccessTokenFailedException;
+import uk.co.mruoc.nac.usecases.RefreshAccessTokenFailedException;
 
-class StubTokenServiceTest {
+class StubAccessTokenClientTest {
 
   private static final Instant NOW = Instant.parse("2024-07-12T20:25:01.001Z");
   private static final UUID ID = UUID.fromString("44e5685b-189a-47f2-a8bd-0c7a0dd4dcb2");
@@ -26,7 +26,8 @@ class StubTokenServiceTest {
   private final Supplier<UUID> uuidSupplier = () -> ID;
   private final JwtValidator validator = mock(JwtValidator.class);
 
-  private final TokenService service = new StubTokenService(clock, uuidSupplier, validator);
+  private final AccessTokenClient service =
+      new StubAccessTokenClient(clock, uuidSupplier, validator);
 
   @Test
   void createShouldThrowExceptionIfUserDoesNotExist() {
@@ -36,8 +37,8 @@ class StubTokenServiceTest {
     Throwable error = catchThrowable(() -> service.create(request));
 
     assertThat(error)
-        .isInstanceOf(CreateTokenFailedException.class)
-        .hasMessage("create token failed for %s", request.getUsername());
+        .isInstanceOf(CreateAccessTokenFailedException.class)
+        .hasMessage("create access token failed for %s", request.getUsername());
   }
 
   @Test
@@ -48,8 +49,8 @@ class StubTokenServiceTest {
     Throwable error = catchThrowable(() -> service.create(request));
 
     assertThat(error)
-        .isInstanceOf(CreateTokenFailedException.class)
-        .hasMessage("create token failed for %s", request.getUsername());
+        .isInstanceOf(CreateAccessTokenFailedException.class)
+        .hasMessage("create access token failed for %s", request.getUsername());
   }
 
   @Test
@@ -57,7 +58,7 @@ class StubTokenServiceTest {
     CreateTokenRequest request =
         CreateTokenRequest.builder().username("admin").password("pwd").build();
 
-    TokenResponse response = service.create(request);
+    AccessTokenResponse response = service.create(request);
 
     assertThat(response.getAccessToken())
         .isEqualTo(
@@ -86,8 +87,8 @@ class StubTokenServiceTest {
     Throwable error = catchThrowable(() -> service.refresh(request));
 
     assertThat(error)
-        .isInstanceOf(RefreshTokenFailedException.class)
-        .hasMessage("refresh token failed for token %s", request.getRefreshToken());
+        .isInstanceOf(RefreshAccessTokenFailedException.class)
+        .hasMessage("refresh access token failed for token %s", request.getRefreshToken());
   }
 
   @Test
@@ -95,7 +96,7 @@ class StubTokenServiceTest {
     String refreshToken = givenValidRefreshToken();
     RefreshTokenRequest request = new RefreshTokenRequest(refreshToken);
 
-    TokenResponse response = service.refresh(request);
+    AccessTokenResponse response = service.refresh(request);
 
     assertThat(response.getAccessToken())
         .isEqualTo(
@@ -112,7 +113,7 @@ class StubTokenServiceTest {
   private String givenValidRefreshToken() {
     CreateTokenRequest request =
         CreateTokenRequest.builder().username("admin").password("pwd").build();
-    TokenResponse response = service.create(request);
+    AccessTokenResponse response = service.create(request);
     return response.getRefreshToken();
   }
 }

@@ -21,4 +21,5 @@ public class ApiUser {
   private final Boolean emailVerified;
   private final String status;
   private final Collection<String> groups;
+  private final ApiMfaSettings mfa;
 }

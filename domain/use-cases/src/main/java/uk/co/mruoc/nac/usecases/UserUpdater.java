@@ -19,6 +19,10 @@ public class UserUpdater {
             .getByUsername(username)
             .orElseThrow(() -> new UserNotFoundException(username));
     User updatedUser = existingUser.update(request);
+    update(updatedUser);
+  }
+
+  private void update(User updatedUser) {
     externalService.update(updatedUser);
     repository.update(updatedUser);
   }

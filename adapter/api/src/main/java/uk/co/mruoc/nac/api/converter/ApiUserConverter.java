@@ -19,10 +19,11 @@ import uk.co.mruoc.nac.entities.UserPageRequest;
 @RequiredArgsConstructor
 public class ApiUserConverter {
 
+  private final ApiMfaConverter mfaConverter;
   private final ApiSortConverter sortConverter;
 
   public ApiUserConverter() {
-    this(new ApiSortConverter());
+    this(new ApiMfaConverter(), new ApiSortConverter());
   }
 
   public UserPageRequest toRequest(ApiUserPageRequest apiRequest) {
@@ -54,6 +55,7 @@ public class ApiUserConverter {
         .emailVerified(user.isEmailVerified())
         .status(user.getStatus())
         .groups(user.getGroups())
+        .mfa(mfaConverter.toApiSettings(user.getMfa()))
         .build();
   }
 
