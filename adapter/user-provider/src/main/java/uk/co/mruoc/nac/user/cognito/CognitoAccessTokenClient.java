@@ -10,6 +10,8 @@ import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminInitia
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AuthFlowType;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AuthenticationResultType;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.ChallengeNameType;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.InitiateAuthRequest;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.InitiateAuthResponse;
 import uk.co.mruoc.nac.entities.AccessTokenResponse;
 import uk.co.mruoc.nac.entities.CreateTokenRequest;
 import uk.co.mruoc.nac.entities.RefreshTokenRequest;
@@ -26,14 +28,13 @@ public class CognitoAccessTokenClient implements AccessTokenClient {
 
   @Override
   public AccessTokenResponse create(CreateTokenRequest request) {
-    AdminInitiateAuthRequest authRequest =
-        AdminInitiateAuthRequest.builder()
+    InitiateAuthRequest authRequest =
+        InitiateAuthRequest.builder()
             .clientId(clientId)
-            .userPoolId(userPoolId)
             .authParameters(toAuthParameters(request))
-            .authFlow(AuthFlowType.ADMIN_USER_PASSWORD_AUTH)
+            .authFlow(AuthFlowType.USER_PASSWORD_AUTH)
             .build();
-    AdminInitiateAuthResponse response = client.adminInitiateAuth(authRequest);
+    InitiateAuthResponse response = client.initiateAuth(authRequest);
     ChallengeNameType challengeNameType = response.challengeName();
     if (Objects.nonNull(challengeNameType)) {
       return AccessTokenResponse.builder()

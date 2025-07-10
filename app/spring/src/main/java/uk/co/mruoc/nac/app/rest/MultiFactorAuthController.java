@@ -35,15 +35,15 @@ public class MultiFactorAuthController {
   }
 
   @PutMapping("/v1/users/{username}/mfa-settings")
-  public ApiMfaSettings updatePreferences(
+  public ApiMfaSettings update(
       @PathVariable String username, @RequestBody ApiMfaSettings apiSettings) {
     MfaPreferences preferences = converter.toPreferences(username, apiSettings);
     service.updatePreferences(preferences);
-    return getSettings(username);
+    return get(username);
   }
 
   @GetMapping("/v1/users/{username}/mfa-settings")
-  public ApiMfaSettings getSettings(@PathVariable String username) {
+  public ApiMfaSettings get(@PathVariable String username) {
     return converter.toApiSettings(service.getSettings(username));
   }
 }
