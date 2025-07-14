@@ -28,6 +28,7 @@ public class TestCognitoContainer extends FixedHostPortGenericContainer<TestCogn
     withEnv("AWS_SECRET_ACCESS_KEY", SECRET_ACCESS_KEY);
     withEnv("PORT", Integer.toString(port));
     withEnv("CODE", "9999");
+    withEnv("USE_EXTERNAL_IP_AS_HOSTNAME", "true");
     withFixedExposedPort(port, port);
     withFileCopiedToContainer("local_4RsGXSAf.json");
     withFileCopiedToContainer("clients.json");

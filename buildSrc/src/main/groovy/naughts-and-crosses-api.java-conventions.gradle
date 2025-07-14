@@ -28,6 +28,7 @@ dependencies {
 testing {
     suites {
         withType(JvmTestSuite) {
+
             useJUnitJupiter(junitVersion)
             dependencies {
                 runtimeOnly "org.slf4j:slf4j-simple:${slf4jVersion}"
@@ -41,6 +42,7 @@ testing {
             targets {
                 configureEach {
                     testTask.configure {
+                        jvmArgs "-javaagent:${configurations.testRuntimeClasspath.find { it.name.contains('mockito-core') }}", '-Xshare:off'
                         systemProperty "org.slf4j.simpleLogger.defaultLogLevel", "debug"
                         testLogging {
                             events = ["passed", "failed", "skipped"]

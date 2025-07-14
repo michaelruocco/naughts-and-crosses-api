@@ -35,15 +35,15 @@ public class CognitoAccessTokenClient implements AccessTokenClient {
             .authFlow(AuthFlowType.USER_PASSWORD_AUTH)
             .build();
     InitiateAuthResponse response = client.initiateAuth(authRequest);
-    ChallengeNameType challengeNameType = response.challengeName();
-    if (Objects.nonNull(challengeNameType)) {
-      return AccessTokenResponse.builder()
-          .challenge(challengeNameType.name())
-          .session(response.session())
-          .build();
+    AuthenticationResultType result = response.authenticationResult();
+    if (Objects.nonNull(result)) {
+      return responseFactory.toResponse(result);
     }
-    AuthenticationResultType type = response.authenticationResult();
-    return responseFactory.toResponse(type);
+    ChallengeNameType challengeName = response.challengeName();
+    return AccessTokenResponse.builder()
+        .challenge(challengeName.name())
+        .session(response.session())
+        .build();
   }
 
   @Override

@@ -55,6 +55,7 @@ services:
     environment:
       - AWS_ACCESS_KEY_ID=abc
       - AWS_SECRET_ACCESS_KEY=123
+      - USE_EXTERNAL_IP_AS_HOSTNAME=true
       - ISSUER_HOST=cognito
       - CODE=9999
 

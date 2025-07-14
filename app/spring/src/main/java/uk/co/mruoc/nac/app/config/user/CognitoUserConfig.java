@@ -58,6 +58,9 @@ public class CognitoUserConfig {
             .region(Region.of(regionName))
             .credentialsProvider(toCredentialsProvider(accessKeyId, secretAccessKey));
     if (!StringUtils.isEmpty(endpointOverride)) {
+      log.warn(
+          "configuring cognito identity provider client with endpoint override {}",
+          endpointOverride);
       builder.endpointOverride(URI.create(endpointOverride));
     }
     return builder.build();
